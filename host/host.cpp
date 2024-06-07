@@ -57,7 +57,8 @@ static void run_kernel(
 ) {
 	constexpr int FROM_HOST_FLAGS = 0;
 	cl_int err;
-	clock_t htod, dtoh, comp;
+	auto start, end;
+	double duration_us;
 
 	// INPUT BUFFERS
 	OCL_CHECK(err, cl::Buffer buffer_requests(
@@ -92,25 +93,21 @@ static void run_kernel(
 
 	// HOST -> DEVICE DATA TRANSFER
 	std::cout << "HOST -> DEVICE" << std::endl;
-	htod = clock();
 	OCL_CHECK(err, err = q.enqueueMigrateMemObjects(
 		{buffer_requests}, FROM_HOST_FLAGS
 	));
 	OCL_CHECK(err, err = q.enqueueMigrateMemObjects(
 		{buffer_memory}, FROM_HOST_FLAGS
 	));
-	q.finish();
-	htod = clock() - htod;
 	// STARTING KERNEL(S)
 	std::cout << "STARTING KERNEL(S)" << std::endl;
-	comp = clock();
+	start = std::chrono::high_resolution_clock::now();
 	OCL_CHECK(err, err = q.enqueueTask(krnl1));
 	q.finish();
-	comp = clock() - comp;
+	end = std::chrono::high_resolution_clock::now();
 	std::cout << "KERNEL(S) FINISHED" << std::endl;
 	// DEVICE -> HOST DATA TRANSFER
 	std::cout << "HOST <- DEVICE" << std::endl;
-	dtoh = clock();
 	OCL_CHECK(err, err = q.enqueueMigrateMemObjects(
 		{buffer_memory}, CL_MIGRATE_MEM_OBJECT_HOST
 	));
@@ -118,11 +115,9 @@ static void run_kernel(
 		{buffer_responses}, CL_MIGRATE_MEM_OBJECT_HOST
 	));
 	q.finish();
-	dtoh = clock() - dtoh;
 
-	printf("Host -> Device : %lf ms\n", 1000.0 * htod/CLOCKS_PER_SEC);
-	printf("Device -> Host : %lf ms\n", 1000.0 * dtoh/CLOCKS_PER_SEC);
-	printf("Computation : %lf ms\n",  1000.0 * comp/CLOCKS_PER_SEC);
+	duration_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count() / 1000.0;
+	printf("Computation : %lf us\n", duration_us);
 }
 
 
