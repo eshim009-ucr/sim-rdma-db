@@ -28,7 +28,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
 set(EXAMPLE_HLS_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/krnl.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_krnl.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_krnl.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/hls-tree.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/tree.c)
 
 
 #Setup HLS custom targets

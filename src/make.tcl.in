@@ -19,6 +19,8 @@ config_rtl -register_reset_num=3
 
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_krnl.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls-tree.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/tree.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 
 
 #Check which command

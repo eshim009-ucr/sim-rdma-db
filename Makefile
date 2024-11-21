@@ -89,7 +89,7 @@ INCLUDES = ./include
 PLATFORM_BLOCKLIST += nodma 
 ############################## Setting up Host Variables ##############################
 #Include Required Host Source Files
-HOST_SRCS += ./host.cpp 
+HOST_SRCS += ./host.cpp
 # Host compiler global settings
 CXXFLAGS += -fmessage-length=0 -I$(INCLUDES)
 LDFLAGS += -lrt -lstdc++ 
