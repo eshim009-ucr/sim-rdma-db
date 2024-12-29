@@ -1,0 +1,4 @@
+# User Preferences
+.vscode/
+# Output Files
+build/
