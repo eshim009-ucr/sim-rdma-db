@@ -253,6 +253,7 @@ void test_krnl(
     bval_t searchResult;
 
     Tree tree;
+    tree.memory = (Node*) network_ptr;
     init_tree(&tree);
     Node *root = &tree.memory[tree.root];
     bval_t result;

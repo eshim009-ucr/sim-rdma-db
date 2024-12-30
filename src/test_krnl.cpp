@@ -2,10 +2,14 @@
 #include <iostream>
 #include "hls_stream.h"
 
+extern "C" {
+#include "b-link-tree/defs.h"
+#include "b-link-tree/tree.h"
+}
 
 int main() {
     int myBoardNum = 1, RDMA_TYPE = 4, exec = 1000000;
-    int network_ptr[100];
+    int network_ptr[MEM_SIZE * (sizeof(Node)/sizeof(int))];
 
     hls::stream<pkt256> s_axis_tx_meta; 
     hls::stream<pkt64> s_axis_tx_data;
