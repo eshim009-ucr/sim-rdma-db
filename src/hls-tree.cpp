@@ -10,8 +10,8 @@ void hls_search(Tree& tree, hls::stream<bkey_t> &input,
         READ,
         RESP
     } state = INIT;
-    bkey_t key;
-    bval_t value;
+    static bkey_t key;
+    static bval_t value;
 
 
     switch(state) {
