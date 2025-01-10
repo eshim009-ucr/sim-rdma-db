@@ -1,7 +1,9 @@
 #include "hls-tree.hpp"
 
-void hls_search(Tree& tree, hls::stream<bkey_t> &input,
-    hls::stream<bval_t> &output,
+void sm_search(
+    Tree& tree,
+    hls::stream<bkey_t> &input,
+    hls::stream<bstatusval_t> &output,
     hls::stream<int> &search2mem,
     hls::stream<Node> &mem2search
 ) {
@@ -11,7 +13,7 @@ void hls_search(Tree& tree, hls::stream<bkey_t> &input,
         RESP
     } state = INIT;
     static bkey_t key;
-    static bval_t value;
+    static bstatusval_t result;
 
 
     switch(state) {
@@ -26,8 +28,8 @@ void hls_search(Tree& tree, hls::stream<bkey_t> &input,
             break;
         case RESP:
             if (!output.full()) {
-                search(&tree, key, &value);
-                output.write(value);
+                result = search(&tree, key);
+                output.write(result);
                 state = INIT;
             }
             break;

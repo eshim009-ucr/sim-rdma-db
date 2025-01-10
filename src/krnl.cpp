@@ -1,7 +1,7 @@
 #include "krnl.hpp"
 #include "hls-tree.hpp"
 
-const int NUM_NODES = 2; 
+const int NUM_NODES = 2;
 
 void rdma_read(
     int s_axi_lqpn,
@@ -247,10 +247,10 @@ void test_krnl(
 
     //TODO: Your kernel here
     static hls::stream<bkey_t> searchInput;
-    static hls::stream<bval_t> searchOutput;
+    static hls::stream<bstatusval_t> searchOutput;
     static hls::stream<int> search2mem;
     static hls::stream<Node> mem2search;
-    bval_t searchResult;
+    bstatusval_t searchResult;
 
     Tree tree;
     tree.memory = (Node*) network_ptr;
@@ -277,7 +277,7 @@ void test_krnl(
     uint_fast32_t opsOut = 0;
 
     while (opsOut < opsCount) {
-        hls_search(
+        sm_search(
             tree,
             searchInput,
             searchOutput,
@@ -288,11 +288,13 @@ void test_krnl(
         while (!searchOutput.empty()) {
             searchOutput.read(searchResult);
             std::cout << "Search Result: ";
-            if (searchResult.data == INVALID) {
+            if (searchResult.status != SUCCESS) {
+                std::cout << "ERROR " << ERROR_CODE_NAMES[searchResult.status] << std::endl;
+            } else if (searchResult.value.data == INVALID) {
                 std::cout << "Invalid" << std::endl;
             } else {
-                std::cout << searchResult.data << "\t0x" << std::hex
-                          << searchResult.data << std::dec << std::endl;
+                std::cout << searchResult.value.data << "\t0x" << std::hex
+                          << searchResult.value.data << std::dec << std::endl;
             }
             opsOut++;
         }

@@ -6,10 +6,12 @@ extern "C" {
 #ifndef HLS_TREE
 #define HLS_TREE
 
-void hls_search(Tree& tree,
+void sm_search(
+    Tree& tree,
     hls::stream<bkey_t> &input,
-    hls::stream<bval_t> &output,
+    hls::stream<bstatusval_t> &output,
     hls::stream<int> &search2mem,
-    hls::stream<Node> &mem2search);
+    hls::stream<Node> &mem2search
+);
 
 #endif
