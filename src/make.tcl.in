@@ -1,7 +1,7 @@
 if { [info exists ::env(LIBRARY_PATH)] } {
-    set ::env(LIBRARY_PATH) /usr/lib/x86_64-linux-gnu:$env(LIBRARY_PATH)
+	set ::env(LIBRARY_PATH) /usr/lib/x86_64-linux-gnu:$env(LIBRARY_PATH)
 } else {
-    set ::env(LIBRARY_PATH) /usr/lib/x86_64-linux-gnu
+	set ::env(LIBRARY_PATH) /usr/lib/x86_64-linux-gnu
 }
 
 open_project ${PROJECT_NAME}_prj
@@ -21,22 +21,25 @@ add_files ${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp -cflags "-I${CMAKE_CURRENT_BINARY
 add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_krnl.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls-tree.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/tree.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/tree-helpers.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/search.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/insert.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 
 
 #Check which command
 set command [lindex $argv 2]
 
 if {$command == "synthesis"} {
-   csynth_design
+	csynth_design
 } elseif {$command == "csim"} {
-   csim_design 
+	csim_design
 } elseif {$command == "ip"} {
-   export_design -format xo
+	export_design -format xo
 } elseif {$command == "installip"} {
-   file mkdir ${IPREPO_DIR}
-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/export.xo ${IPREPO_DIR}/${PROJECT_NAME}.xo
+	file mkdir ${IPREPO_DIR}
+	file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/export.xo ${IPREPO_DIR}/${PROJECT_NAME}.xo
 }  else {
-   puts "No valid command specified. Use vivado_hls -f make.tcl <synthesis|csim|ip|installip> ."
+	puts "No valid command specified. Use vivado_hls -f make.tcl <synthesis|csim|ip|installip> ."
 }
 
 

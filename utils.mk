@@ -17,7 +17,7 @@ ifeq ($(DEBUG), yes)
 VPP_LDFLAGS += --dk list_ports
 endif
 
-#Setting PLATFORM 
+#Setting PLATFORM
 ifeq ($(PLATFORM),)
 ifneq ($(DEVICE),)
 $(warning WARNING: DEVICE is deprecated in make command. Please use PLATFORM instead)
@@ -48,21 +48,21 @@ check-device:
 	inallowlist=False; \
 	inblocklist=False; \
 	if [ "$(PLATFORM_ALLOWLIST)" = "" ]; \
-	    then inallowlist=True; \
+		then inallowlist=True; \
 	fi; \
 	for dev in $(PLATFORM_ALLOWLIST); \
-	    do if [[ $$(echo $(PLATFORM) | grep $$dev) != "" ]]; \
-	    then inallowlist=True; fi; \
+		do if [[ $$(echo $(PLATFORM) | grep $$dev) != "" ]]; \
+		then inallowlist=True; fi; \
 	done ;\
 	for dev in $(PLATFORM_BLOCKLIST); \
-	    do if [[ $$(echo $(PLATFORM) | grep $$dev) != "" ]]; \
-	    then inblocklist=True; fi; \
+		do if [[ $$(echo $(PLATFORM) | grep $$dev) != "" ]]; \
+		then inblocklist=True; fi; \
 	done ;\
 	if [[ $$inblocklist == True ]]; \
-	    then echo "[ERROR]: This example is not supported for $(PLATFORM)."; exit 1;\
+		then echo "[ERROR]: This example is not supported for $(PLATFORM)."; exit 1;\
 	fi; \
 	if [[ $$inallowlist == False ]]; \
-	    then echo "[Warning]: The platform $(PLATFORM) not in allowlist."; \
+		then echo "[Warning]: The platform $(PLATFORM) not in allowlist."; \
 	fi;
 
 #Checks for Correct architecture
