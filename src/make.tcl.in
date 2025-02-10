@@ -31,6 +31,7 @@ set command [lindex $argv 2]
 
 if {$command == "synthesis"} {
 	csynth_design
+	cosim_design
 } elseif {$command == "csim"} {
 	csim_design
 } elseif {$command == "ip"} {
