@@ -4,7 +4,6 @@
 const int NUM_NODES = 2;
 
 
-
 void test_krnl(
 	//Outgoing RDMA
 	hls::stream<pkt256>& m_axis_tx_meta,
@@ -49,7 +48,6 @@ void test_krnl(
 	#pragma HLS DATAFLOW
 
 
-	//TODO: Your kernel here
 	static hls::stream<bkey_t> searchInput;
 	static hls::stream<bstatusval_t> searchOutput;
 	static hls::stream<int> search2mem;
