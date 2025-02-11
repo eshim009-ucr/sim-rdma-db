@@ -4,7 +4,7 @@
 const int NUM_NODES = 2;
 
 
-void test_krnl(
+void krnl(
 	//Outgoing RDMA
 	hls::stream<pkt256>& m_axis_tx_meta,
 	hls::stream<pkt64>& m_axis_tx_data,
