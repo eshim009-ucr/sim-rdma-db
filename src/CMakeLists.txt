@@ -15,7 +15,7 @@ set(CLOCK_PERIOD 300.000000MHz CACHE STRING "Target clock period in nanoseconds"
 # Installation directory
 if (DEFINED ENV{IPREPO_DIR})
 	set(IPREPO_DIR $ENV{IPREPO_DIR})
-elseif(NOT  IPREPO_DIR)
+elseif(NOT IPREPO_DIR)
 	set(IPREPO_DIR ${CMAKE_CURRENT_SOURCE_DIR}/iprepo/)
 endif()
 
