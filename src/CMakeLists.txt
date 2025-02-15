@@ -30,7 +30,10 @@ set(EXAMPLE_HLS_DEPENDS
 	${CMAKE_CURRENT_SOURCE_DIR}/krnl.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/hls-tree.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/tree.c)
+	${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/search.c
+	${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/tree-helpers.c
+	${CMAKE_CURRENT_SOURCE_DIR}/memory.c
+	${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/insert.c)
 
 
 #Setup HLS custom targets
