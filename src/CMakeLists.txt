@@ -26,14 +26,13 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
 
 
 set(EXAMPLE_HLS_DEPENDS
-	${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/krnl.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/hls-tree.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/search.c
-	${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/tree-helpers.c
-	${CMAKE_CURRENT_SOURCE_DIR}/memory.c
-	${CMAKE_CURRENT_SOURCE_DIR}/b-link-tree/insert.c)
+	${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/memory.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/node.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/rdma.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/search.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/trace.cpp)
 
 
 #Setup HLS custom targets

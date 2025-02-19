@@ -1,5 +1,5 @@
 #include "krnl.hpp"
-#include "hls-tree.hpp"
+#include "search.hpp"
 
 const int NUM_NODES = 2;
 
@@ -50,14 +50,11 @@ void krnl(
 
 	static hls::stream<bkey_t> searchInput;
 	static hls::stream<bstatusval_t> searchOutput;
-	static hls::stream<int> search2mem;
-	static hls::stream<Node> mem2search;
+	static hls::stream<bptr_t> searchAddrFifo;
+	static hls::stream<Node> searchNodeFifo;
 	bstatusval_t searchResult;
 
-	Tree tree;
-	tree.memory = (Node*) network_ptr;
-	init_tree(&tree);
-	Node *root = &tree.memory[tree.root];
+	Node *root = (Node *) &network_ptr[0];
 	bval_t result;
 
 	root->keys[0] = 1; root->values[0].data = 10;
@@ -80,11 +77,11 @@ void krnl(
 
 	while (opsOut < opsCount) {
 		sm_search(
-			tree,
+			0,
 			searchInput,
 			searchOutput,
-			search2mem,
-			mem2search
+			searchAddrFifo,
+			searchNodeFifo
 		);
 
 		while (!searchOutput.empty()) {

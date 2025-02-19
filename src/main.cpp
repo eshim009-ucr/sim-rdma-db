@@ -1,11 +1,6 @@
 #include "krnl.hpp"
+#include "search.hpp"
 #include <iostream>
-#include "hls_stream.h"
-
-extern "C" {
-#include "b-link-tree/defs.h"
-#include "b-link-tree/tree.h"
-}
 
 
 int main() {
@@ -21,6 +16,8 @@ int main() {
 	hls::stream<pkt64> m_axis_update;
 
 	//TODO: Set up inital state
+
+	std::cout << "Starting kernel..." << std::endl;
 
 	//Run kernel
 	krnl(

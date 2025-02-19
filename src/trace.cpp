@@ -1,0 +1,60 @@
+#include "trace.hpp"
+
+
+Tracer::Tracer(
+		bptr_t root,
+		hls::stream<bptr_t> &addrFifo,
+		hls::stream<Node> &nodeFifo
+	) : addrFifo(addrFifo),
+		nodeFifo(nodeFifo) {
+	// Traversals always start from the root
+	history[0] = root;
+}
+
+
+bool Tracer::sm_step() {
+	switch(state) {
+		case RESET:
+			i = 0;
+			state = IDLE;
+			break;
+		case IDLE:
+			// Start search at the root
+			node.addr = history[0];
+			state = READ_NODE;
+			break;
+		case READ_NODE:
+			if (!addrFifo.full()) {
+				addrFifo.write(node.addr);
+				state = CHECK_NODE;
+			}
+			break;
+		case CHECK_NODE:
+			if (!nodeFifo.empty()) {
+				nodeFifo.write(node);
+				// Try to traverse to the next node
+				result = node.find_next(key);
+				// If error or this is the last node
+				if (result.status != SUCCESS || node.is_leaf()) {
+					// Return search result and terminate
+					output.write(result);
+					state = DONE;
+					return true;
+				} else {
+					node.addr = result.value.ptr;
+					history[++i] = node.addr;
+					state = READ_NODE;
+				}
+			}
+			break;
+		case DONE:
+			return true;
+	}
+	return false;
+}
+
+
+void Tracer::reset(bkey_t key) {
+	this->key = key;
+	state = RESET;
+}
