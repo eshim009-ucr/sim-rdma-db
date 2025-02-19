@@ -27,6 +27,7 @@ void sm_search(
 		case IDLE:
 			if (!input.empty()) {
 				input.read(key);
+				t.reset(key);
 				state = TRAVERSE;
 			}
 			break;

@@ -29,7 +29,7 @@ struct Tracer {
 			CHECK_NODE,
 			//! Execution complete, awaiting reset
 			DONE
-		} state = RESET;
+		} state = DONE;
 		//! Buffer to hold history of traversed nodes
 		bptr_t history[MAX_LEVELS*2];
 		//! Pointer to current spot in history buffer

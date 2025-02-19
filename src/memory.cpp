@@ -5,5 +5,9 @@ void sm_memory(
 	hls::stream<Node> &nodeFifo1,
 	Node *hbm
 ) {
-	//! @todo Implement
+	AddrNode n;
+	if (!addrFifo1.empty()) {
+		addrFifo1.read(n.addr);
+		nodeFifo1.write_nb(hbm[n.addr]);
+	}
 }

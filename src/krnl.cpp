@@ -1,7 +1,6 @@
 #include "krnl.hpp"
 #include "search.hpp"
-
-const int NUM_NODES = 2;
+#include "memory.hpp"
 
 
 void krnl(
@@ -82,6 +81,11 @@ void krnl(
 			searchOutput,
 			searchAddrFifo,
 			searchNodeFifo
+		);
+		sm_memory(
+			searchAddrFifo,
+			searchNodeFifo,
+			(Node *)network_ptr
 		);
 
 		while (!searchOutput.empty()) {
