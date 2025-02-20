@@ -41,8 +41,6 @@ struct Tracer {
 		hls::stream<bptr_t> &addrFifo;
 		//! Results of address reads
 		hls::stream<Node> &nodeFifo;
-		//! Outputs
-		hls::stream<bstatusval_t> output;
 		//! Initialize the root for the history buffer
 		Tracer(
 			bptr_t root,
@@ -54,6 +52,8 @@ struct Tracer {
 		bool sm_step();
 		//! @brief Set a new key and reset internal state
 		void reset(bkey_t key);
+		//! @brief Get the result of the most recent operation.
+		bstatusval_t get_result() const;
 };
 
 

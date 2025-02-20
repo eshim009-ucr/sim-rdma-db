@@ -31,13 +31,12 @@ bool Tracer::sm_step() {
 			break;
 		case CHECK_NODE:
 			if (!nodeFifo.empty()) {
-				nodeFifo.write(node);
+				nodeFifo.read(node);
 				// Try to traverse to the next node
 				result = node.find_next(key);
 				// If error or this is the last node
 				if (result.status != SUCCESS || node.is_leaf()) {
 					// Return search result and terminate
-					output.write(result);
 					state = DONE;
 					return true;
 				} else {
@@ -57,4 +56,8 @@ bool Tracer::sm_step() {
 void Tracer::reset(bkey_t key) {
 	this->key = key;
 	state = RESET;
+}
+
+bstatusval_t Tracer::get_result() const {
+	return result;
 }

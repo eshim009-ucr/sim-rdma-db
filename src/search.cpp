@@ -34,7 +34,7 @@ void sm_search(
 		case TRAVERSE:
 			//! If reached a leaf
 			if (t.sm_step()) {
-				t.output.read(result);
+				result = t.get_result();
 				output.write(result);
 				state = IDLE;
 			}
