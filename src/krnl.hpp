@@ -7,7 +7,7 @@
 #include <ap_int.h>
 #include <ap_fixed.h>
 
-#include "types.hpp"
+#include "node.hpp"
 
 
 template <int K>
@@ -68,5 +68,6 @@ void krnl(
 	int myBoardNum,
 	int RDMA_TYPE,
 	int exec,
-	int *network_ptr
+	//! Pointer to on-chip high-bandwidth memory
+	Node *hbm
 );

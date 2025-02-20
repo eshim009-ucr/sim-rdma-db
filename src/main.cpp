@@ -5,7 +5,7 @@
 
 int main() {
 	int myBoardNum = 1, RDMA_TYPE = 4, exec = 1000000;
-	int network_ptr[MEM_SIZE * (sizeof(Node)/sizeof(int))];
+	Node network_ptr[MEM_SIZE];
 	hls::stream<pkt256> s_axis_tx_meta;
 	hls::stream<pkt64> s_axis_tx_data;
 	hls::stream<pkt64> m_axis_tx_status;

@@ -24,8 +24,7 @@ void krnl(
 	int RDMA_TYPE,
 	int exec,
 
-	//Local HBM
-	int *network_ptr
+	Node *hbm
 ) {
 
 	#pragma HLS INTERFACE axis port = m_axis_tx_meta
@@ -53,7 +52,7 @@ void krnl(
 	static hls::stream<Node> searchNodeFifo;
 	bstatusval_t searchResult;
 
-	Node *root = (Node *) &network_ptr[0];
+	Node *root = &hbm[0];
 	bval_t result;
 
 	root->keys[0] = 1; root->values[0].data = 10;
@@ -85,7 +84,7 @@ void krnl(
 		sm_memory(
 			searchAddrFifo,
 			searchNodeFifo,
-			(Node *)network_ptr
+			hbm
 		);
 
 		while (!searchOutput.empty()) {
