@@ -48,8 +48,10 @@ void krnl(
 
 	static hls::stream<bkey_t> searchInput;
 	static hls::stream<bstatusval_t> searchOutput;
-	static hls::stream<bptr_t> searchAddrFifo;
-	static hls::stream<Node> searchNodeFifo;
+	static FifoPair searchFifos;
+	static FifoPairRefList readFifoList = {
+		searchFifos
+	};
 	bstatusval_t searchResult;
 
 	Node *root = &hbm[0];
@@ -78,12 +80,11 @@ void krnl(
 			0,
 			searchInput,
 			searchOutput,
-			searchAddrFifo,
-			searchNodeFifo
+			searchFifos.addrFifo,
+			searchFifos.nodeFifo
 		);
 		sm_memory(
-			searchAddrFifo,
-			searchNodeFifo,
+			readFifoList,
 			hbm
 		);
 

@@ -4,12 +4,24 @@
 
 #include "node.hpp"
 #include <hls_stream.h>
+#include <list>
+#include <functional>
 
 
-void sm_memory(
-	hls::stream<bptr_t> &addrFifo1,
-	hls::stream<Node> &nodeFifo1,
-	Node *hbm
-);
+//! @brief Pair of address and data streams to use for memory lookups
+//!
+//! Can be used for reads or writes
+typedef struct {
+	//! @brief Stream of addresses to read/write from
+	hls::stream<bptr_t> addrFifo;
+	//! @brief Stream of вфеф to read/write to
+	hls::stream<Node> nodeFifo;
+} FifoPair;
+
+typedef std::list<std::reference_wrapper<FifoPair>> FifoPairRefList;
+
+
+void sm_memory(FifoPairRefList& rwFifos, Node *hbm);
+
 
 #endif

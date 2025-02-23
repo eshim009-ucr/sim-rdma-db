@@ -1,13 +1,12 @@
 #include "memory.hpp"
 
-void sm_memory(
-	hls::stream<bptr_t> &addrFifo1,
-	hls::stream<Node> &nodeFifo1,
-	Node *hbm
-) {
+
+void sm_memory(FifoPairRefList& rwFifos, Node *hbm) {
 	AddrNode n;
-	if (!addrFifo1.empty()) {
-		addrFifo1.read(n.addr);
-		nodeFifo1.write_nb(hbm[n.addr]);
+	for(FifoPair& readPair : rwFifos) {
+		if (!readPair.addrFifo.empty()) {
+			readPair.addrFifo.read(n.addr);
+			readPair.nodeFifo.write_nb(hbm[n.addr]);
+		}
 	}
 }
