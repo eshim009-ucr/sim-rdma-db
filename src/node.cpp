@@ -36,6 +36,19 @@ bstatusval_t Node::find_next(bkey_t key) const {
 }
 
 
+bstatusval_t Node::find_value(bkey_t key) const {
+	bstatusval_t result = {SUCCESS, INVALID};
+	for (li_t i = 0; i < TREE_ORDER; ++i) {
+		if (keys[i] == key) {
+			result.value = values[i];
+			return result;
+		}
+	}
+	result.status = NOT_FOUND;
+	return result;
+}
+
+
 bool AddrNode::is_leaf() const {
 	return addr < MAX_LEAVES;
 }

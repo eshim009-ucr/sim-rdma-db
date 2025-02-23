@@ -52,7 +52,7 @@ ERROR_CODE_XMACRO
 };
 //! @brief Result of an operation returning a value and a return code
 typedef struct {
-	uint_least8_t status;
+	ErrorCode status;
 	bval_t value;
 } bstatusval_t;
 

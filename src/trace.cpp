@@ -19,7 +19,7 @@ bool Tracer::sm_step() {
 			state = IDLE;
 			break;
 		case IDLE:
-			// Start search at the root
+			// (Re)start search at the root
 			node.addr = history[0];
 			state = READ_NODE;
 			break;
@@ -32,17 +32,24 @@ bool Tracer::sm_step() {
 		case CHECK_NODE:
 			if (!nodeFifo.empty()) {
 				nodeFifo.read(node);
-				// Try to traverse to the next node
-				result = node.find_next(key);
-				// If error or this is the last node
-				if (result.status != SUCCESS || node.is_leaf()) {
-					// Return search result and terminate
+				if (node.is_leaf()) {
+					// Search for the exact key within the node
+					result = node.find_value(key);
 					state = DONE;
 					return true;
 				} else {
-					node.addr = result.value.ptr;
-					history[++i] = node.addr;
-					state = READ_NODE;
+					// Try to traverse to the next node
+					result = node.find_next(key);
+					// If error, stop looking
+					if (result.status != SUCCESS) {
+						state = DONE;
+						return true;
+					} else {
+						// Save new address to current and stack
+						node.addr = result.value.ptr;
+						history[++i] = node.addr;
+						state = READ_NODE;
+					}
 				}
 			}
 			break;

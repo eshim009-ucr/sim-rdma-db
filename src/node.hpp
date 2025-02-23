@@ -28,12 +28,14 @@ struct Node {
 	bptr_t next;
 	//! @brief Used to restrict concurrent modifications to this node
 	lock_t lock;
-	//! Traverse the tree structure in search of the given key
+	//! @brief Traverse the tree structure in search of the given key
 	//! @param[in] key The key to search for
 	//! @return A result containing a status code for success/failure of the
 	//!         operation along with the address of the next node to check on
 	//!         success. If this is a leaf node, its data will be returned.
 	bstatusval_t find_next(bkey_t key) const;
+	//! @brief Find the value corresponding to a given key
+	bstatusval_t find_value(bkey_t key) const;
 };
 
 //! @brief A node that knows the address where it resides in the tree
