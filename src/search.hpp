@@ -7,7 +7,7 @@
 //! @brief State machine to execute search operations
 void sm_search(
 	//! [in] Root node of the tree to search
-	bptr_t root,
+	bptr_t const& root,
 	//! [in]  Keys to search for
 	hls::stream<bkey_t> &input,
 	//! [out] Results from searches

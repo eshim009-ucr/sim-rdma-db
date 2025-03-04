@@ -4,7 +4,7 @@
 
 void sm_search(
 	//! [in] Root node of the tree to search
-	bptr_t root,
+	bptr_t const& root,
 	//! [in]  Keys to search for
 	hls::stream<bkey_t> &input,
 	//! [out] Results from searches
@@ -17,8 +17,7 @@ void sm_search(
 	static Tracer t(root, addrFifo, nodeFifo);
 	static enum {
 		IDLE,
-		TRAVERSE,
-		RESPOND
+		TRAVERSE
 	} state = IDLE;
 	static bkey_t key;
 	static bstatusval_t result;

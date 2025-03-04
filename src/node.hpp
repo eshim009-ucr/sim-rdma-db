@@ -36,6 +36,13 @@ struct Node {
 	bstatusval_t find_next(bkey_t key) const;
 	//! @brief Find the value corresponding to a given key
 	bstatusval_t find_value(bkey_t key) const;
+	//! @brief "Is empty", returns true for unallocated memory
+	bool is_valid() const;
+	//! @brief Returns true if this node has no more space for new entries,
+	//!        false otherwise
+	bool is_full() const;
+	//! @brief Empty this node's contents and restore its default state
+	void clear();
 };
 
 //! @brief A node that knows the address where it resides in the tree

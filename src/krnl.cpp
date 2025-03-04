@@ -1,5 +1,6 @@
 #include "krnl.hpp"
 #include "search.hpp"
+#include "insert.hpp"
 #include "memory.hpp"
 
 
@@ -45,22 +46,29 @@ void krnl(
 
 	#pragma HLS DATAFLOW
 
-
 	static hls::stream<bkey_t> searchInput;
 	static hls::stream<bstatusval_t> searchOutput;
+	static hls::stream<KvPair> insertInput;
 	static FifoPair searchFifos;
+	static FifoPair insertReadFifos;
+	static FifoPair insertWriteFifos;
 	static FifoPairRefList readFifoList = {
-		searchFifos
+		searchFifos, insertReadFifos
+	};
+	static FifoPairRefList writeFifoList = {
+		insertWriteFifos
 	};
 	bstatusval_t searchResult;
 
-	Node *root = &hbm[0];
+	static bptr_t root;
+
+	Node *n = &hbm[0];
 	bval_t result;
 
-	root->keys[0] = 1; root->values[0].data = 10;
-	root->keys[1] = 2; root->values[1].data = 20;
-	root->keys[2] = 4; root->values[2].data = 40;
-	root->keys[3] = 5; root->values[3].data = 50;
+	n->keys[0] = 1; n->values[0].data = 10;
+	n->keys[1] = 2; n->values[1].data = 20;
+	n->keys[2] = 4; n->values[2].data = 40;
+	n->keys[3] = 5; n->values[3].data = 50;
 
 	searchInput.write(0);
 	searchInput.write(3);
@@ -77,14 +85,21 @@ void krnl(
 
 	while (opsOut < opsCount) {
 		sm_search(
-			0,
+			root,
 			searchInput,
 			searchOutput,
 			searchFifos.addrFifo,
 			searchFifos.nodeFifo
 		);
+		sm_insert(
+			root,
+			insertInput,
+			insertReadFifos,
+			insertWriteFifos
+		);
 		sm_memory(
 			readFifoList,
+			writeFifoList,
 			hbm
 		);
 

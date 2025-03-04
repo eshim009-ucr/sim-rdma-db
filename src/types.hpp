@@ -21,11 +21,16 @@ typedef uint32_t bptr_t;
 typedef int32_t bdata_t;
 //! @brief Datatype of node values, which can be either data or pointers within
 //!        the tree
-typedef union {
+union bval_t {
 	bptr_t ptr;   //!< Internal node value which points to another node
 	bdata_t data; //!< Leaf node value which holds data
-} bval_t;
+};
 
+//! @brief Key/value pair
+struct KvPair {
+	bkey_t key;
+	bval_t value;
+};
 
 //! Leaf index type
 typedef ap_uint<TREE_ORDER> li_t;
@@ -39,11 +44,11 @@ typedef ap_uint<TREE_ORDER> li_t;
 	X(INVALID_ARGUMENT, -4) \
 	X(OUT_OF_MEMORY, -5) \
 //! @brief Status codes returned from tree functions
-typedef enum {
+enum ErrorCode {
 #define X(codename, codeval) codename = codeval,
 ERROR_CODE_XMACRO
 #undef X
-} ErrorCode;
+};
 //! @brief Names of status codes, used for error messages
 static const char *const ERROR_CODE_NAMES[] = {
 #define X(codename, codeval) #codename,
@@ -51,10 +56,10 @@ ERROR_CODE_XMACRO
 #undef X
 };
 //! @brief Result of an operation returning a value and a return code
-typedef struct {
+struct bstatusval_t {
 	ErrorCode status;
 	bval_t value;
-} bstatusval_t;
+};
 
 #define INVALID ((bkey_t) -1)
 

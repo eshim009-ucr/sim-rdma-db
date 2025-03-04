@@ -54,6 +54,8 @@ struct Tracer {
 		void reset(bkey_t key);
 		//! @brief Get the result of the most recent operation.
 		bstatusval_t get_result() const;
+		//! @brief Get a copy of the last node read from memory.
+		AddrNode get_node() const;
 };
 
 
