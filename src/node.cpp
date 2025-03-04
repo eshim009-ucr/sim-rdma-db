@@ -49,6 +49,21 @@ bstatusval_t Node::find_value(bkey_t key) const {
 }
 
 
+bool Node::is_valid() const {
+	return keys[0] != INVALID;
+}
+
+bool Node::is_full() const {
+	return keys[TREE_ORDER-1] != INVALID;
+}
+
+void Node::clear() {
+	for (li_t i = 0; i < TREE_ORDER; ++i) {
+		keys[i] = INVALID;
+		values[i].data = INVALID;
+	}
+}
+
 bool AddrNode::is_leaf() const {
 	return addr < MAX_LEAVES;
 }

@@ -11,17 +11,43 @@
 //! @brief Pair of address and data streams to use for memory lookups
 //!
 //! Can be used for reads or writes
-typedef struct {
+struct FifoPair {
 	//! @brief Stream of addresses to read/write from
 	hls::stream<bptr_t> addrFifo;
-	//! @brief Stream of вфеф to read/write to
+	//! @brief Stream of nodes to read/write to
 	hls::stream<Node> nodeFifo;
-} FifoPair;
+};
 
 typedef std::list<std::reference_wrapper<FifoPair>> FifoPairRefList;
 
 
-void sm_memory(FifoPairRefList& rwFifos, Node *hbm);
+void sm_memory(
+	//! List of FIFOs used when reading from memory
+	FifoPairRefList& readFifos,
+	//! List of FIFOs used when writing to memory
+	FifoPairRefList& writeFifos,
+	//! Pointer to high bandwidth memory
+	Node *hbm
+);
+
+
+//! @brief Allocate a new sibling node in an empty slot in main mameory
+//!
+//! Acquires a lock on the sibling node
+ErrorCode alloc_sibling(
+	//! [in] Node to create a sibling to
+	//!
+	//! Not used in all allocation algorithms
+	AddrNode& old_node,
+	//! [out] Newly allocated sibling
+	//!
+	//! Not used in all allocation algorithms
+	AddrNode& sibling,
+	//! Pair of FIFOs used when reading from memory
+	FifoPair& readFifos,
+	//! Pair of FIFOs used when writing to memory
+	FifoPair& writeFifos
+);
 
 
 #endif

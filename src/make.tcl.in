@@ -18,6 +18,7 @@ config_interface -m_axi_max_widen_bitwidth=512
 config_rtl -register_reset_num=3
 
 add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/insert.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/memory.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/node.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"

@@ -27,6 +27,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
 
 set(EXAMPLE_HLS_DEPENDS
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/insert.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/memory.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/node.cpp

@@ -68,3 +68,7 @@ void Tracer::reset(bkey_t key) {
 bstatusval_t Tracer::get_result() const {
 	return result;
 }
+
+AddrNode Tracer::get_node() const {
+	return node;
+}
