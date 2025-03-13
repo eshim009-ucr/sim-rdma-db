@@ -69,5 +69,7 @@ void krnl(
 	int RDMA_TYPE,
 	int exec,
 	//! Pointer to on-chip high-bandwidth memory
-	Node *hbm
+	Node *hbm,
+	hls::stream<bkey_t>& searchInput,
+	hls::stream<bstatusval_t>& searchOutput
 );

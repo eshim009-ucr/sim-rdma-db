@@ -1,11 +1,10 @@
-#include "krnl.hpp"
-#include "search.hpp"
+#include "tests/tests.hpp"
 #include <iostream>
 
 
 int main() {
 	int myBoardNum = 1, RDMA_TYPE = 4, exec = 1000000;
-	Node network_ptr[MEM_SIZE];
+	Node hbm[MEM_SIZE];
 	hls::stream<pkt256> s_axis_tx_meta;
 	hls::stream<pkt64> s_axis_tx_data;
 	hls::stream<pkt64> m_axis_tx_status;
@@ -15,12 +14,9 @@ int main() {
 	hls::stream<pkt512> m_axis_bram_read_data;
 	hls::stream<pkt64> m_axis_update;
 
-	//TODO: Set up inital state
-
-	std::cout << "Starting kernel..." << std::endl;
-
-	//Run kernel
-	krnl(
+	std::cout << "\n\n=== Search Tests ===" << std::endl;
+	std::cout << "--- Root is Leaf ---" << std::endl;
+	if (root_is_leaf(
 		s_axis_tx_meta,
 		s_axis_tx_data,
 		m_axis_tx_status,
@@ -32,8 +28,10 @@ int main() {
 		myBoardNum,
 		RDMA_TYPE,
 		exec,
-		network_ptr
-	);
-
-	//TODO: Check results
+		hbm
+	)) {
+		std::cout << "\nPassed!\n" << std::endl;
+	} else  {
+		std::cerr << "\nFailed!\n" << std::endl;
+	}
 }

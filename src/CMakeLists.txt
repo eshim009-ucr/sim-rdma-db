@@ -33,7 +33,8 @@ set(EXAMPLE_HLS_DEPENDS
 	${CMAKE_CURRENT_SOURCE_DIR}/node.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/rdma.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/search.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/trace.cpp)
+	${CMAKE_CURRENT_SOURCE_DIR}/trace.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/tests/search/root-is-leaf.cpp)
 
 
 #Setup HLS custom targets
