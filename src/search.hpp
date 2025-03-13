@@ -1,6 +1,7 @@
 #ifndef SEARCH_HPP
 #define SEARCH_HPP
 
+#include "memory.hpp"
 #include "node.hpp"
 #include <hls_stream.h>
 
@@ -13,7 +14,7 @@ void sm_search(
 	//! [out] Results from searches
 	hls::stream<bstatusval_t> &output,
 	//! [out] Addresses to read
-	hls::stream<bptr_t> &addrFifo,
+	hls::stream<RwOp> &addrFifo,
 	//! [in]  Results of address reads
 	hls::stream<Node> &nodeFifo
 );

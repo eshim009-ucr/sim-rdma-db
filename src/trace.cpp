@@ -3,7 +3,7 @@
 
 Tracer::Tracer(
 		bptr_t root,
-		hls::stream<bptr_t> &addrFifo,
+		hls::stream<RwOp> &addrFifo,
 		hls::stream<Node> &nodeFifo
 	) : addrFifo(addrFifo),
 		nodeFifo(nodeFifo) {
@@ -25,7 +25,7 @@ bool Tracer::sm_step() {
 			break;
 		case READ_NODE:
 			if (!addrFifo.full()) {
-				addrFifo.write(node.addr);
+				addrFifo.write({.addr=node.addr, .lock=0});
 				state = CHECK_NODE;
 			}
 			break;

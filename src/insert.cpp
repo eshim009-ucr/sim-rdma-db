@@ -104,8 +104,7 @@ void sm_insert(
 				}
 			}
 			parent.addr = root;
-			lock_p(&parent.lock);
-			writeFifos.addrFifo.write(parent.addr);
+			writeFifos.addrFifo.write({parent.addr, .lock=1});
 			writeFifos.nodeFifo.write(parent);
 			parent.clear();
 			parent.keys[0] = node.keys[DIV2CEIL(TREE_ORDER)-1];

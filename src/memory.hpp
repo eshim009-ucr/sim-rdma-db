@@ -8,12 +8,22 @@
 #include <functional>
 
 
+//! @brief Contains an address and whether or not to change the lock status in
+//! main memory before returning a result
+struct RwOp {
+	//! Address to read/write from/to
+	bptr_t addr;
+	//! For reads, will grab the lock before returning.
+	//! For write, will release the lock before returning.
+	bool lock;
+};
+
 //! @brief Pair of address and data streams to use for memory lookups
 //!
 //! Can be used for reads or writes
 struct FifoPair {
 	//! @brief Stream of addresses to read/write from
-	hls::stream<bptr_t> addrFifo;
+	hls::stream<RwOp> addrFifo;
 	//! @brief Stream of nodes to read/write to
 	hls::stream<Node> nodeFifo;
 };

@@ -4,6 +4,7 @@
 
 #include "types.hpp"
 #include "node.hpp"
+#include "memory.hpp"
 #include <hls_stream.h>
 
 
@@ -38,13 +39,13 @@ struct Tracer {
 		AddrNode node;
 	public:
 		//! Addresses to read
-		hls::stream<bptr_t> &addrFifo;
+		hls::stream<RwOp> &addrFifo;
 		//! Results of address reads
 		hls::stream<Node> &nodeFifo;
 		//! Initialize the root for the history buffer
 		Tracer(
 			bptr_t root,
-			hls::stream<bptr_t> &addrFifo,
+			hls::stream<RwOp> &addrFifo,
 			hls::stream<Node> &nodeFifo
 		);
 		//! @brief Step the state machine once

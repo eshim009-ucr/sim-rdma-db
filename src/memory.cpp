@@ -6,23 +6,34 @@ void sm_memory(
 	FifoPairRefList& writeFifos,
 	Node *hbm
 ) {
-	AddrNode read_tmp, write_tmp;
+	#pragma HLS dataflow
+	RwOp read_op, write_op;
+	Node write_node;
 	for(FifoPair& readPair : readFifos) {
 		if (!readPair.addrFifo.empty()) {
 			// Pop the address to read
-			readPair.addrFifo.read(read_tmp.addr);
+			readPair.addrFifo.read(read_op);
+			// Try to grab lock if requested
+			//! @todo Prevent this from blocking other reads in the FIFO.
+			//! Or at least ensure parallel for loop execution so it only backs
+			//! up one FIFO.
+			if (read_op.lock) {
+				lock_p(&hbm[read_op.addr].lock);
+			}
 			// Read HBM value and push to the stack
-			readPair.nodeFifo.write_nb(hbm[read_tmp.addr]);
+			readPair.nodeFifo.write_nb(hbm[read_op.addr]);
 		}
 	}
 	for(FifoPair& writePair : writeFifos) {
 		if (!writePair.addrFifo.empty() && !writePair.nodeFifo.empty()) {
 			// Pop the address to write to
-			writePair.addrFifo.read(write_tmp.addr);
+			writePair.addrFifo.read(write_op);
 			// Pop the data to write
-			writePair.nodeFifo.read(write_tmp);
+			writePair.nodeFifo.read(write_node);
+			//! Unlock if requested
+			lock_v(&hbm[write_op.addr].lock);
 			// Perform HBM write
-			hbm[write_tmp.addr] = write_tmp;
+			hbm[write_op.addr] = write_node;
 		}
 	}
 }
@@ -43,7 +54,7 @@ ErrorCode alloc_sibling(
 		if (sibling.addr > MEM_SIZE) {
 			return OUT_OF_MEMORY;
 		}
-		readFifos.addrFifo.write(sibling.addr);
+		readFifos.addrFifo.write({.addr=sibling.addr, .lock=0});
 		//! @todo Do this better
 		// Wait for read to complete
 		while (readFifos.nodeFifo.empty());
@@ -51,8 +62,7 @@ ErrorCode alloc_sibling(
 	} while(sibling.is_valid());
 
 	// Lock node
-	lock_p(&sibling.lock);
-	writeFifos.addrFifo.write(sibling.addr);
+	writeFifos.addrFifo.write({.addr=sibling.addr, .lock=1});
 	writeFifos.nodeFifo.write(sibling);
 
 	// Adjust next node pointers
