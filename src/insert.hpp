@@ -11,6 +11,8 @@ void sm_insert(
 	bptr_t& root,
 	//! [in]    Key/value pairs to insert
 	hls::stream<KvPair> &input,
+	//! [out]   Status codes from inserts
+	hls::stream<ErrorCode> &output,
 	//! [inout] Memory reads
 	FifoPair &readFifos,
 	//! [inout] Memory writes
