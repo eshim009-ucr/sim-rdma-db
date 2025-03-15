@@ -2,11 +2,11 @@
 
 
 void sm_memory(
-	FifoPairRefList& readFifos,
-	FifoPairRefList& writeFifos,
+	std::array<FifoPair, 2>& readFifos,
+	std::array<FifoPair, 1>& writeFifos,
 	Node *hbm
 ) {
-	#pragma HLS dataflow
+	// #pragma HLS dataflow
 	RwOp read_op, write_op;
 	Node write_node;
 	for(FifoPair& readPair : readFifos) {

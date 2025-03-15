@@ -15,7 +15,7 @@ void sm_insert(
 	FifoPair &readFifos,
 	FifoPair &writeFifos
 ) {
-	static Tracer t(root, readFifos.addrFifo, readFifos.nodeFifo);
+	static Tracer t(root);
 	static enum {
 		IDLE,
 		TRAVERSE,
@@ -41,7 +41,7 @@ void sm_insert(
 			break;
 		case TRAVERSE:
 			//! If reached a leaf
-			if (t.sm_step()) {
+			if (t.sm_step(readFifos.addrFifo, readFifos.nodeFifo)) {
 				state = INSERT;
 			} else {
 				parent = t.get_node();

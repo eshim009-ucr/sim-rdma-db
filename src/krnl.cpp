@@ -43,23 +43,30 @@ void krnl(
 	if (!s_axis_tx_status.empty()) {
 		s_axis_tx_status.read(status);
 	}
+	// Dummies to prevent [HLS 214-313] from inputs not being used
+	if (!m_axis_tx_meta.empty()) {
+	}
+	if (!m_axis_tx_data.empty()) {
+	}
+	if (!m_axis_bram_write_cmd.empty()) {
+	}
+	if (!m_axis_bram_read_cmd.empty()) {
+	}
+	if (!m_axis_bram_write_data.empty()) {
+	}
+	if (!s_axis_bram_read_data.empty()) {
+	}
 
-	#pragma HLS DATAFLOW
+	// #pragma HLS DATAFLOW
 
 	static hls::stream<bkey_t> searchInput;
 	static hls::stream<bstatusval_t> searchOutput;
 	static hls::stream<KvPair> insertInput;
 	static hls::stream<ErrorCode> insertOutput;
-	static FifoPair searchFifos;
-	static FifoPair insertReadFifos;
-	static FifoPair insertWriteFifos;
-	static FifoPairRefList readFifoList = {
-		searchFifos, insertReadFifos
-	};
-	static FifoPairRefList writeFifoList = {
-		insertWriteFifos
-	};
+	static std::array<FifoPair,2> readFifoList;
+	static std::array<FifoPair,1> writeFifoList;
 	bstatusval_t searchResult;
+	ErrorCode insertResult;
 
 	static bptr_t root;
 
@@ -78,9 +85,10 @@ void krnl(
 	searchInput.write(2);
 	searchInput.write(4);
 	searchInput.write(5);
+	insertInput.write({.key=1, .value=11});
 
 
-	uint_fast32_t opsCount = searchInput.size();
+	uint_fast32_t opsCount = searchInput.size() + insertInput.size();
 	uint_fast32_t opsIn = 0;
 	uint_fast32_t opsOut = 0;
 
@@ -89,15 +97,15 @@ void krnl(
 			root,
 			searchInput,
 			searchOutput,
-			searchFifos.addrFifo,
-			searchFifos.nodeFifo
+			readFifoList[1].addrFifo,
+			readFifoList[1].nodeFifo
 		);
 		sm_insert(
 			root,
 			insertInput,
 			insertOutput,
-			insertReadFifos,
-			insertWriteFifos
+			readFifoList[0],
+			writeFifoList[0]
 		);
 		sm_memory(
 			readFifoList,
@@ -117,6 +125,10 @@ void krnl(
 						  << searchResult.value.data << std::dec << std::endl;
 			}
 			opsOut++;
+		}
+		while (!insertOutput.empty()) {
+			insertOutput.read(insertResult);
+			std::cout << "Insert Result: " << ERROR_CODE_NAMES[insertResult] << std::endl;
 		}
 	}
 

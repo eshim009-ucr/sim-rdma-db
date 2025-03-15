@@ -38,19 +38,16 @@ struct Tracer {
 		//! Current node in traversal
 		AddrNode node;
 	public:
-		//! Addresses to read
-		hls::stream<RwOp> &addrFifo;
-		//! Results of address reads
-		hls::stream<Node> &nodeFifo;
 		//! Initialize the root for the history buffer
-		Tracer(
-			bptr_t root,
-			hls::stream<RwOp> &addrFifo,
-			hls::stream<Node> &nodeFifo
-		);
+		Tracer(bptr_t root);
 		//! @brief Step the state machine once
 		//! @return true if reached a leaf, false otherwise
-		bool sm_step();
+		bool sm_step(
+			//! Addresses to read
+			hls::stream<RwOp> &addrFifo,
+			//! Results of address reads
+			hls::stream<Node> &nodeFifo
+		);
 		//! @brief Set a new key and reset internal state
 		void reset(bkey_t key);
 		//! @brief Get the result of the most recent operation.

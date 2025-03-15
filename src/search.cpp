@@ -14,7 +14,7 @@ void sm_search(
 	//! [in]  Results of address reads
 	hls::stream<Node> &nodeFifo
 ) {
-	static Tracer t(root, addrFifo, nodeFifo);
+	static Tracer t(root);
 	static enum {
 		IDLE,
 		TRAVERSE
@@ -32,7 +32,7 @@ void sm_search(
 			break;
 		case TRAVERSE:
 			//! If reached a leaf
-			if (t.sm_step()) {
+			if (t.sm_step(addrFifo, nodeFifo)) {
 				result = t.get_result();
 				output.write(result);
 				state = IDLE;

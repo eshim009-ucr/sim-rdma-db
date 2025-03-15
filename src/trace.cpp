@@ -1,18 +1,16 @@
 #include "trace.hpp"
 
 
-Tracer::Tracer(
-		bptr_t root,
-		hls::stream<RwOp> &addrFifo,
-		hls::stream<Node> &nodeFifo
-	) : addrFifo(addrFifo),
-		nodeFifo(nodeFifo) {
+Tracer::Tracer(bptr_t root) {
 	// Traversals always start from the root
 	history[0] = root;
 }
 
 
-bool Tracer::sm_step() {
+bool Tracer::sm_step(
+	hls::stream<RwOp> &addrFifo,
+	hls::stream<Node> &nodeFifo
+) {
 	switch(state) {
 		case RESET:
 			i = 0;

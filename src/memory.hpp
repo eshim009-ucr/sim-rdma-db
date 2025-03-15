@@ -28,14 +28,12 @@ struct FifoPair {
 	hls::stream<Node> nodeFifo;
 };
 
-typedef std::list<std::reference_wrapper<FifoPair>> FifoPairRefList;
-
 
 void sm_memory(
 	//! List of FIFOs used when reading from memory
-	FifoPairRefList& readFifos,
+	std::array<FifoPair, 2>& readFifos,
 	//! List of FIFOs used when writing to memory
-	FifoPairRefList& writeFifos,
+	std::array<FifoPair, 1>& writeFifos,
 	//! Pointer to high bandwidth memory
 	Node *hbm
 );
