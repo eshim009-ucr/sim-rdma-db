@@ -10,8 +10,7 @@
 
 void sm_insert(
 	bptr_t& root,
-	hls::stream<KvPair> &input,
-	hls::stream<ErrorCode> &output,
+	InsertIO& ops,
 	FifoPair &readFifos,
 	FifoPair &writeFifos
 ) {
@@ -33,15 +32,15 @@ void sm_insert(
 
 	switch(state) {
 		case IDLE:
-			if (!input.empty()) {
-				input.read(pair);
+			if (!ops.input.empty()) {
+				ops.input.read(pair);
 				t.reset(root, pair.key);
 				state = TRAVERSE;
 			}
 			break;
 		case TRAVERSE:
 			//! If reached a leaf
-			if (t.sm_step(readFifos.addrFifo, readFifos.nodeFifo)) {
+			if (t.sm_step(readFifos)) {
 				state = INSERT;
 			} else {
 				parent = t.get_node();
@@ -63,11 +62,11 @@ void sm_insert(
 					node.keys[i_insert] = pair.key;
 					node.values[i_insert] = pair.value;
 					// Done
-					output.write_nb(SUCCESS);
+					ops.output.write_nb(SUCCESS);
 					state = IDLE;
 					return; // Need to double-break
 				} else if (node.keys[i] == pair.key) {
-					output.write_nb(KEY_EXISTS);
+					ops.output.write_nb(KEY_EXISTS);
 					state = IDLE;
 					return; // Need to double-break
 				} else if (node.keys[i] < pair.key) {

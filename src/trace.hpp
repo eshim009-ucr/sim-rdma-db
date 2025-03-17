@@ -41,10 +41,8 @@ struct Tracer {
 		//! @brief Step the state machine once
 		//! @return true if reached a leaf, false otherwise
 		bool sm_step(
-			//! Addresses to read
-			hls::stream<RwOp> &addrFifo,
-			//! Results of address reads
-			hls::stream<Node> &nodeFifo
+			//! [inout] Pairs of FIFOs for reading from main memory
+			FifoPair& readFifos
 		);
 		//! @brief Set a new key and reset internal state
 		void reset(bptr_t root, bkey_t key);

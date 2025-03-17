@@ -1,5 +1,6 @@
 #include "root-is-leaf.hpp"
 #include "../../krnl.hpp"
+#include "../../operations.hpp"
 #include "../test-helpers.hpp"
 #include <iostream>
 #include <cstdint>
@@ -30,9 +31,8 @@ bool root_is_leaf(
 ) {
 	bool pass = true;
 	bptr_t root = 0;
-	hls::stream<bkey_t> input;
+	IoPairs opstream;
 	hls::stream<bkey_t> input_log;
-	hls::stream<bstatusval_t> output;
 	uint_fast8_t ops_in, ops_out;
 	bkey_t last_in;
 	bstatusval_t last_out;
@@ -44,14 +44,14 @@ bool root_is_leaf(
 	SET_IKV(root, 2, 4, 40);
 	SET_IKV(root, 3, 5, 50);
 	// Should fail
-	INPUT(0);
-	INPUT(3);
-	INPUT(6);
+	INPUT(search, 0);
+	INPUT(search, 3);
+	INPUT(search, 6);
 	// Should succeed
-	INPUT(1);
-	INPUT(2);
-	INPUT(4);
-	INPUT(5);
+	INPUT(search, 1);
+	INPUT(search, 2);
+	INPUT(search, 4);
+	INPUT(search, 5);
 
 	// Perform Operations
 	krnl(
@@ -60,13 +60,13 @@ bool root_is_leaf(
 		s_axis_update,
 		myBoardNum, RDMA_TYPE, exec,
 		hbm, root,
-		input, output
+		opstream
 	);
 
 	// Evalue Results
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		output.read(last_out);
+		opstream.search.output.read(last_out);
 		#ifdef VERBOSE
 		std::cout << "Search(" << last_in << "): ";
 		if (last_out.status != SUCCESS) {

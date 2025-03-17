@@ -1,22 +1,31 @@
 #ifndef INSERT_HPP
 #define INSERT_HPP
 
+
 #include "memory.hpp"
 #include "node.hpp"
 #include <hls_stream.h>
+
+
+struct InsertIO {
+	//! Key/value pairs to insert
+	hls::stream<KvPair> input;
+	//! Status codes from inserts
+	hls::stream<ErrorCode> output;
+};
+
 
 //! @brief State machine to execute insert operations
 void sm_insert(
 	//! [in]    Root node of the tree to insert into
 	bptr_t& root,
-	//! [in]    Key/value pairs to insert
-	hls::stream<KvPair> &input,
-	//! [out]   Status codes from inserts
-	hls::stream<ErrorCode> &output,
-	//! [inout] Memory reads
+	//! [inout] Input and output for search operations
+	InsertIO& ops,
+	//! [inout] Pairs of FIFOs for reading from main memory
 	FifoPair &readFifos,
-	//! [inout] Memory writes
+	//! [inout] Pairs of FIFOs for writing to main memory
 	FifoPair &writeFifos
 );
+
 
 #endif

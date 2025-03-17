@@ -1,10 +1,7 @@
 #include "trace.hpp"
 
 
-bool Tracer::sm_step(
-	hls::stream<RwOp> &addrFifo,
-	hls::stream<Node> &nodeFifo
-) {
+bool Tracer::sm_step(FifoPair& readFifos) {
 	switch(state) {
 		case RESET:
 			i = 0;
@@ -16,14 +13,14 @@ bool Tracer::sm_step(
 			state = READ_NODE;
 			break;
 		case READ_NODE:
-			if (!addrFifo.full()) {
-				addrFifo.write({.addr=node.addr, .lock=0});
+			if (!readFifos.addrFifo.full()) {
+				readFifos.addrFifo.write({.addr=node.addr, .lock=0});
 				state = CHECK_NODE;
 			}
 			break;
 		case CHECK_NODE:
-			if (!nodeFifo.empty()) {
-				nodeFifo.read(node);
+			if (!readFifos.nodeFifo.empty()) {
+				readFifos.nodeFifo.read(node);
 				if (node.is_leaf()) {
 					// Search for the exact key within the node
 					result = node.find_value(key);

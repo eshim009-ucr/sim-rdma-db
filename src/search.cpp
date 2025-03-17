@@ -3,16 +3,9 @@
 
 
 void sm_search(
-	//! [in] Root node of the tree to search
 	bptr_t const& root,
-	//! [in]  Keys to search for
-	hls::stream<bkey_t> &input,
-	//! [out] Results from searches
-	hls::stream<bstatusval_t> &output,
-	//! [out] Addresses to read
-	hls::stream<RwOp> &addrFifo,
-	//! [in]  Results of address reads
-	hls::stream<Node> &nodeFifo
+	SearchIO& ops,
+	FifoPair& readFifos
 ) {
 	static Tracer t;
 	static enum {
@@ -24,17 +17,17 @@ void sm_search(
 
 	switch(state) {
 		case IDLE:
-			if (!input.empty()) {
-				input.read(key);
+			if (!ops.input.empty()) {
+				ops.input.read(key);
 				t.reset(root, key);
 				state = TRAVERSE;
 			}
 			break;
 		case TRAVERSE:
 			//! If reached a leaf
-			if (t.sm_step(addrFifo, nodeFifo)) {
+			if (t.sm_step(readFifos)) {
 				result = t.get_result();
-				output.write(result);
+				ops.output.write(result);
 				state = IDLE;
 			}
 			break;

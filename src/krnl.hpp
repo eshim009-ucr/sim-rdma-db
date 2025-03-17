@@ -1,13 +1,13 @@
 #pragma once
 
 
+#include "operations.hpp"
+#include "node.hpp"
 #include <hls_stream.h>
 #include <iostream>
 #include <stdlib.h>
 #include <ap_int.h>
 #include <ap_fixed.h>
-
-#include "node.hpp"
 
 
 template <int K>
@@ -68,9 +68,12 @@ void krnl(
 	int myBoardNum,
 	int RDMA_TYPE,
 	int exec,
-	//! Pointer to on-chip high-bandwidth memory
+	//! [inout] Pointer to on-chip high-bandwidth memory
 	Node *hbm,
+	//! [inout] Address within HBM that holds the root of the tree
+	//!
+	//! Can be modified by operation kernels
 	bptr_t& root,
-	hls::stream<bkey_t>& searchInput,
-	hls::stream<bstatusval_t>& searchOutput
+	//! [inout] Bundle of all incoming operations and their outgoing results
+	IoPairs& opstream
 );

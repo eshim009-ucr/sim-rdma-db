@@ -1,7 +1,5 @@
+#include "operations.hpp"
 #include "krnl.hpp"
-#include "search.hpp"
-#include "insert.hpp"
-#include "memory.hpp"
 
 
 void krnl(
@@ -28,8 +26,7 @@ void krnl(
 	Node *hbm,
 	bptr_t& root,
 
-	hls::stream<bkey_t>& searchInput,
-	hls::stream<bstatusval_t>& searchOutput
+	IoPairs& opstream
 ) {
 
 	#pragma HLS INTERFACE axis port = m_axis_tx_meta
@@ -63,27 +60,22 @@ void krnl(
 
 	// #pragma HLS DATAFLOW
 
-	static hls::stream<KvPair> insertInput;
-	static hls::stream<ErrorCode> insertOutput;
 	static std::array<FifoPair,2> readFifoList;
 	static std::array<FifoPair,1> writeFifoList;
 
 	Node *n = &hbm[0];
 
-	uint_fast32_t opsCount = searchInput.size() + insertInput.size();
+	uint_fast32_t opsCount = opstream.search.input.size() + opstream.insert.input.size();
 
-	while (searchOutput.size() + insertOutput.size() < opsCount) {
+	while (opstream.search.output.size() + opstream.insert.output.size() < opsCount) {
 		sm_search(
 			root,
-			searchInput,
-			searchOutput,
-			readFifoList[1].addrFifo,
-			readFifoList[1].nodeFifo
+			opstream.search,
+			readFifoList[1]
 		);
 		sm_insert(
 			root,
-			insertInput,
-			insertOutput,
+			opstream.insert,
 			readFifoList[0],
 			writeFifoList[0]
 		);

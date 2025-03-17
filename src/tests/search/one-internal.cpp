@@ -1,5 +1,6 @@
 #include "one-internal.hpp"
 #include "../../krnl.hpp"
+#include "../../operations.hpp"
 #include "../test-helpers.hpp"
 #include <iostream>
 #include <cstdint>
@@ -30,9 +31,8 @@ bool one_internal(
 ) {
 	bool pass = true;
 	bptr_t root = MAX_LEAVES;
-	hls::stream<bkey_t> input;
+	IoPairs opstream;
 	hls::stream<bkey_t> input_log;
-	hls::stream<bstatusval_t> output;
 	uint_fast8_t ops_in, ops_out;
 	bkey_t last_in;
 	bstatusval_t last_out;
@@ -53,20 +53,20 @@ bool one_internal(
 	SET_IKV(2, 2, 10, -10);
 	SET_IKV(2, 3, 11, -11);
 	// Should fail
-	INPUT(0);
-	INPUT(3);
-	INPUT(6);
-	INPUT(9);
-	INPUT(12);
+	INPUT(search, 0);
+	INPUT(search, 3);
+	INPUT(search, 6);
+	INPUT(search, 9);
+	INPUT(search, 12);
 	// Should succeed
-	INPUT(1);
-	INPUT(2);
-	INPUT(4);
-	INPUT(5);
-	INPUT(7);
-	INPUT(8);
-	INPUT(10);
-	INPUT(11);
+	INPUT(search, 1);
+	INPUT(search, 2);
+	INPUT(search, 4);
+	INPUT(search, 5);
+	INPUT(search, 7);
+	INPUT(search, 8);
+	INPUT(search, 10);
+	INPUT(search, 11);
 
 	// Perform Operations
 	krnl(
@@ -75,13 +75,13 @@ bool one_internal(
 		s_axis_update,
 		myBoardNum, RDMA_TYPE, exec,
 		hbm, root,
-		input, output
+		opstream
 	);
 
 	// Evalue Results
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		output.read(last_out);
+		opstream.search.output.read(last_out);
 		#ifdef VERBOSE
 		std::cout << "Search(" << last_in << "): ";
 		if (last_out.status != SUCCESS) {
