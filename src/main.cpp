@@ -57,6 +57,14 @@ int main() {
 		std::cerr << "\nFailed!\n" << std::endl;
 		failed++;
 	}
+	std::cout << "--- Split Root ---" << std::endl;
+	if (split_root(PARAM_LIST)) {
+		std::cout << "\nPassed!\n" << std::endl;
+		passed++;
+	} else {
+		std::cerr << "\nFailed!\n" << std::endl;
+		failed++;
+	}
 
 	std::cout << "\n" << passed << " tests passed, "
 		<< failed << " tests failed." << std::endl;

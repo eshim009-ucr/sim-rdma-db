@@ -39,19 +39,19 @@ bool root_is_leaf(
 
 	// Set up initial state
 	reset_mem(hbm);
-	SET_IKV(root, 0, 1, 10);
-	SET_IKV(root, 1, 2, 20);
-	SET_IKV(root, 2, 4, 40);
-	SET_IKV(root, 3, 5, 50);
+	SET_IKV(root, 0, 1, 10)
+	SET_IKV(root, 1, 2, 20)
+	SET_IKV(root, 2, 4, 40)
+	SET_IKV(root, 3, 5, 50)
 	// Should fail
-	INPUT(search, 0);
-	INPUT(search, 3);
-	INPUT(search, 6);
+	INPUT_SEARCH(0)
+	INPUT_SEARCH(3)
+	INPUT_SEARCH(6)
 	// Should succeed
-	INPUT(search, 1);
-	INPUT(search, 2);
-	INPUT(search, 4);
-	INPUT(search, 5);
+	INPUT_SEARCH(1)
+	INPUT_SEARCH(2)
+	INPUT_SEARCH(4)
+	INPUT_SEARCH(5)
 
 	// Perform Operations
 	krnl(

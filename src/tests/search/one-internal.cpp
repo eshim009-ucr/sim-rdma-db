@@ -40,33 +40,33 @@ bool one_internal(
 	// Set up initial state
 	reset_mem(hbm);
 	// Root
-	SET_IKV(root, 0, 5, 1);
-	SET_IKV(root, 1, 11, 2);
+	SET_IKV(root, 0, 5, 1)
+	SET_IKV(root, 1, 11, 2)
 	// Left Child
-	SET_IKV(1, 0, 1, -1);
-	SET_IKV(1, 1, 2, -2);
-	SET_IKV(1, 2, 4, -4);
-	SET_IKV(1, 3, 5, -5);
+	SET_IKV(1, 0, 1, -1)
+	SET_IKV(1, 1, 2, -2)
+	SET_IKV(1, 2, 4, -4)
+	SET_IKV(1, 3, 5, -5)
 	// Right Child
-	SET_IKV(2, 0, 7, -7);
-	SET_IKV(2, 1, 8, -8);
-	SET_IKV(2, 2, 10, -10);
-	SET_IKV(2, 3, 11, -11);
+	SET_IKV(2, 0, 7, -7)
+	SET_IKV(2, 1, 8, -8)
+	SET_IKV(2, 2, 10, -10)
+	SET_IKV(2, 3, 11, -11)
 	// Should fail
-	INPUT(search, 0);
-	INPUT(search, 3);
-	INPUT(search, 6);
-	INPUT(search, 9);
-	INPUT(search, 12);
+	INPUT_SEARCH(0)
+	INPUT_SEARCH(3)
+	INPUT_SEARCH(6)
+	INPUT_SEARCH(9)
+	INPUT_SEARCH(12)
 	// Should succeed
-	INPUT(search, 1);
-	INPUT(search, 2);
-	INPUT(search, 4);
-	INPUT(search, 5);
-	INPUT(search, 7);
-	INPUT(search, 8);
-	INPUT(search, 10);
-	INPUT(search, 11);
+	INPUT_SEARCH(1)
+	INPUT_SEARCH(2)
+	INPUT_SEARCH(4)
+	INPUT_SEARCH(5)
+	INPUT_SEARCH(7)
+	INPUT_SEARCH(8)
+	INPUT_SEARCH(10)
+	INPUT_SEARCH(11)
 
 	// Perform Operations
 	krnl(

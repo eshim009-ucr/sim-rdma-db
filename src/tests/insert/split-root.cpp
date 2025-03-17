@@ -1,4 +1,4 @@
-#include "leaf-node.hpp"
+#include "split-root.hpp"
 #include "../../krnl.hpp"
 #include "../../operations.hpp"
 #include "../test-helpers.hpp"
@@ -6,7 +6,7 @@
 #include <cstdint>
 
 
-bool leaf_node(
+bool split_root(
 	//Outgoing RDMA
 	hls::stream<pkt256>& m_axis_tx_meta,
 	hls::stream<pkt64>& m_axis_tx_data,
@@ -40,9 +40,11 @@ bool leaf_node(
 	// Set up initial state
 	reset_mem(hbm);
 	// Should succeed
-	INPUT_INSERT(0, 2)
-	INPUT_INSERT(5, 3)
-	INPUT_INSERT(3, 1)
+	INPUT_INSERT(0, 0)
+	INPUT_INSERT(5, -5)
+	INPUT_INSERT(3, -3)
+	INPUT_INSERT(1, -1)
+	INPUT_INSERT(4, -4)
 
 	// Perform Operations
 	krnl(
