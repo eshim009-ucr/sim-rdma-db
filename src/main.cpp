@@ -2,9 +2,25 @@
 #include <iostream>
 
 
+#define PARAM_LIST \
+	s_axis_tx_meta, \
+	s_axis_tx_data, \
+	m_axis_tx_status, \
+	s_axis_bram_write_cmd, \
+	s_axis_bram_read_cmd, \
+	s_axis_bram_write_data, \
+	m_axis_bram_read_data, \
+	m_axis_update, \
+	myBoardNum, \
+	RDMA_TYPE, \
+	exec, \
+	hbm
+
+
 int main() {
 	int myBoardNum = 1, RDMA_TYPE = 4, exec = 1000000;
 	Node hbm[MEM_SIZE];
+	uint passed = 0, failed = 0;
 	hls::stream<pkt256> s_axis_tx_meta;
 	hls::stream<pkt64> s_axis_tx_data;
 	hls::stream<pkt64> m_axis_tx_status;
@@ -16,41 +32,32 @@ int main() {
 
 	std::cout << "\n\n=== Search Tests ===" << std::endl;
 	std::cout << "--- Root is Leaf ---" << std::endl;
-	if (root_is_leaf(
-		s_axis_tx_meta,
-		s_axis_tx_data,
-		m_axis_tx_status,
-		s_axis_bram_write_cmd,
-		s_axis_bram_read_cmd,
-		s_axis_bram_write_data,
-		m_axis_bram_read_data,
-		m_axis_update,
-		myBoardNum,
-		RDMA_TYPE,
-		exec,
-		hbm
-	)) {
+	if (root_is_leaf(PARAM_LIST)) {
 		std::cout << "\nPassed!\n" << std::endl;
-	} else  {
+		passed++;
+	} else {
 		std::cerr << "\nFailed!\n" << std::endl;
+		failed++;
 	}
 	std::cout << "--- One Internal ---" << std::endl;
-	if (one_internal(
-		s_axis_tx_meta,
-		s_axis_tx_data,
-		m_axis_tx_status,
-		s_axis_bram_write_cmd,
-		s_axis_bram_read_cmd,
-		s_axis_bram_write_data,
-		m_axis_bram_read_data,
-		m_axis_update,
-		myBoardNum,
-		RDMA_TYPE,
-		exec,
-		hbm
-	)) {
+	if (one_internal(PARAM_LIST)) {
 		std::cout << "\nPassed!\n" << std::endl;
-	} else  {
+		passed++;
+	} else {
 		std::cerr << "\nFailed!\n" << std::endl;
+		failed++;
 	}
+
+	std::cout << "\n\n=== Insert Tests ===" << std::endl;
+	std::cout << "--- Leaf Node ---" << std::endl;
+	if (leaf_node(PARAM_LIST)) {
+		std::cout << "\nPassed!\n" << std::endl;
+		passed++;
+	} else {
+		std::cerr << "\nFailed!\n" << std::endl;
+		failed++;
+	}
+
+	std::cout << "\n" << passed << " tests passed, "
+		<< failed << " tests failed." << std::endl;
 }

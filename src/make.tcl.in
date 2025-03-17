@@ -29,6 +29,7 @@ add_files ${CMAKE_CURRENT_SOURCE_DIR}/search.cpp -cflags "-I${CMAKE_CURRENT_BINA
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/trace.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 # Tests
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/tests/test-helpers.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/tests/insert/leaf-node.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/tests/search/one-internal.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/tests/search/root-is-leaf.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 
