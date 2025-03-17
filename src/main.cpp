@@ -65,6 +65,14 @@ int main() {
 		std::cerr << "\nFailed!\n" << std::endl;
 		failed++;
 	}
+	std::cout << "--- Insert Until It Breaks ---" << std::endl;
+	if (until_it_breaks(PARAM_LIST)) {
+		std::cout << "\nPassed!\n" << std::endl;
+		passed++;
+	} else {
+		std::cerr << "\nFailed!\n" << std::endl;
+		failed++;
+	}
 
 	std::cout << "\n" << passed << " tests passed, "
 		<< failed << " tests failed." << std::endl;
