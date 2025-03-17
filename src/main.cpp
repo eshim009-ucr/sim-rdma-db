@@ -34,4 +34,23 @@ int main() {
 	} else  {
 		std::cerr << "\nFailed!\n" << std::endl;
 	}
+	std::cout << "--- One Internal ---" << std::endl;
+	if (one_internal(
+		s_axis_tx_meta,
+		s_axis_tx_data,
+		m_axis_tx_status,
+		s_axis_bram_write_cmd,
+		s_axis_bram_read_cmd,
+		s_axis_bram_write_data,
+		m_axis_bram_read_data,
+		m_axis_update,
+		myBoardNum,
+		RDMA_TYPE,
+		exec,
+		hbm
+	)) {
+		std::cout << "\nPassed!\n" << std::endl;
+	} else  {
+		std::cerr << "\nFailed!\n" << std::endl;
+	}
 }

@@ -1,11 +1,11 @@
-#include "root-is-leaf.hpp"
+#include "one-internal.hpp"
 #include "../../krnl.hpp"
 #include "../test-helpers.hpp"
 #include <iostream>
 #include <cstdint>
 
 
-bool root_is_leaf(
+bool one_internal(
 	//Outgoing RDMA
 	hls::stream<pkt256>& m_axis_tx_meta,
 	hls::stream<pkt64>& m_axis_tx_data,
@@ -37,19 +37,34 @@ bool root_is_leaf(
 	bstatusval_t last_out;
 
 	// Set up initial state
-	SET_IKV(0, 0, 1, 10);
-	SET_IKV(0, 1, 2, 20);
-	SET_IKV(0, 2, 4, 40);
-	SET_IKV(0, 3, 5, 50);
+	// Root
+	SET_IKV(0, 0, 1, 1);
+	SET_IKV(0, 1, 2, 2);
+	// Left Child
+	SET_IKV(1, 0, 1, -1);
+	SET_IKV(1, 1, 2, -2);
+	SET_IKV(1, 2, 4, -4);
+	SET_IKV(1, 3, 5, -5);
+	// Right Child
+	SET_IKV(2, 0, 7, -7);
+	SET_IKV(2, 1, 8, -8);
+	SET_IKV(2, 2, 10, -10);
+	SET_IKV(2, 3, 11, -11);
 	// Should fail
 	INPUT(0);
 	INPUT(3);
 	INPUT(6);
+	INPUT(9);
+	INPUT(12);
 	// Should succeed
 	INPUT(1);
 	INPUT(2);
 	INPUT(4);
 	INPUT(5);
+	INPUT(7);
+	INPUT(8);
+	INPUT(10);
+	INPUT(11);
 
 	// Perform Operations
 	krnl(
@@ -80,23 +95,23 @@ bool root_is_leaf(
 		#endif
 		if (last_in % 3 == 0) {
 			if (last_out.status != NOT_FOUND) {
-				std::cerr << "For search input " << last_in
-					<< ": Expected NOT_FOUND, got"
+				std::cerr << "\tFor search input " << last_in
+					<< ": Expected NOT_FOUND, got "
 					<< ERROR_CODE_NAMES[last_out.status]
 					<< '(' << (int) last_out.status << ')' << std::endl;
 				pass = false;
 			}
 		} else {
 			if (last_out.status != SUCCESS) {
-				std::cerr << "For search input " << last_in
-					<< ": Expected SUCCESS, got"
+				std::cerr << "\tFor search input " << last_in
+					<< ": Expected SUCCESS, got "
 					<< ERROR_CODE_NAMES[last_out.status]
 					<< '(' << (int) last_out.status << ')' << std::endl;
 				pass = false;
 			}
-			if (last_out.value.data != 10*last_in) {
-				std::cerr << "For search input " << last_in
-					<< ": Expected " << 10*last_in << ", got"
+			if (last_out.value.data != -last_in) {
+				std::cerr << "\tFor search input " << last_in
+					<< ": Expected " << (bdata_t) -last_in << ", got "
 					<< last_out.value.data << std::endl;
 				pass = false;
 			}
