@@ -29,6 +29,7 @@ bool one_internal(
 	Node *hbm
 ) {
 	bool pass = true;
+	bptr_t root = MAX_LEAVES;
 	hls::stream<bkey_t> input;
 	hls::stream<bkey_t> input_log;
 	hls::stream<bstatusval_t> output;
@@ -37,9 +38,10 @@ bool one_internal(
 	bstatusval_t last_out;
 
 	// Set up initial state
+	reset_mem(hbm);
 	// Root
-	SET_IKV(0, 0, 1, 1);
-	SET_IKV(0, 1, 2, 2);
+	SET_IKV(root, 0, 5, 1);
+	SET_IKV(root, 1, 11, 2);
 	// Left Child
 	SET_IKV(1, 0, 1, -1);
 	SET_IKV(1, 1, 2, -2);
@@ -72,7 +74,7 @@ bool one_internal(
 		m_axis_bram_write_cmd, m_axis_bram_read_cmd, m_axis_bram_write_data, s_axis_bram_read_data,
 		s_axis_update,
 		myBoardNum, RDMA_TYPE, exec,
-		hbm,
+		hbm, root,
 		input, output
 	);
 
@@ -86,8 +88,6 @@ bool one_internal(
 			std::cout << "Error: "
 				<< ERROR_CODE_NAMES[last_out.status]
 				<< '(' << (int) last_out.status << ')' << std::endl;
-		} else if (last_out.value.data == INVALID) {
-			std::cout << "Invalid Data" << std::endl;
 		} else {
 			std::cout << last_out.value.data<< "\t0x" << std::hex
 				<< last_out.value.data << std::dec << std::endl;

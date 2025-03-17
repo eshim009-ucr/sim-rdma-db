@@ -20,7 +20,7 @@ bstatusval_t Node::find_next(bkey_t key) const {
 		}
 		// If this key is the first key greater than what we're looking for
 		// then continue down this subtree
-		else if (key < keys[i]) {
+		else if (key <= keys[i]) {
 			result.value = values[i];
 			return result;
 		}

@@ -29,6 +29,7 @@ bool root_is_leaf(
 	Node *hbm
 ) {
 	bool pass = true;
+	bptr_t root = 0;
 	hls::stream<bkey_t> input;
 	hls::stream<bkey_t> input_log;
 	hls::stream<bstatusval_t> output;
@@ -37,10 +38,11 @@ bool root_is_leaf(
 	bstatusval_t last_out;
 
 	// Set up initial state
-	SET_IKV(0, 0, 1, 10);
-	SET_IKV(0, 1, 2, 20);
-	SET_IKV(0, 2, 4, 40);
-	SET_IKV(0, 3, 5, 50);
+	reset_mem(hbm);
+	SET_IKV(root, 0, 1, 10);
+	SET_IKV(root, 1, 2, 20);
+	SET_IKV(root, 2, 4, 40);
+	SET_IKV(root, 3, 5, 50);
 	// Should fail
 	INPUT(0);
 	INPUT(3);
@@ -57,7 +59,7 @@ bool root_is_leaf(
 		m_axis_bram_write_cmd, m_axis_bram_read_cmd, m_axis_bram_write_data, s_axis_bram_read_data,
 		s_axis_update,
 		myBoardNum, RDMA_TYPE, exec,
-		hbm,
+		hbm, root,
 		input, output
 	);
 
@@ -71,8 +73,6 @@ bool root_is_leaf(
 			std::cout << "Error: "
 				<< ERROR_CODE_NAMES[last_out.status]
 				<< '(' << (int) last_out.status << ')' << std::endl;
-		} else if (last_out.value.data == INVALID) {
-			std::cout << "Invalid Data" << std::endl;
 		} else {
 			std::cout << last_out.value.data<< "\t0x" << std::hex
 				<< last_out.value.data << std::dec << std::endl;

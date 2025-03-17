@@ -38,8 +38,6 @@ struct Tracer {
 		//! Current node in traversal
 		AddrNode node;
 	public:
-		//! Initialize the root for the history buffer
-		Tracer(bptr_t root);
 		//! @brief Step the state machine once
 		//! @return true if reached a leaf, false otherwise
 		bool sm_step(
@@ -49,7 +47,7 @@ struct Tracer {
 			hls::stream<Node> &nodeFifo
 		);
 		//! @brief Set a new key and reset internal state
-		void reset(bkey_t key);
+		void reset(bptr_t root, bkey_t key);
 		//! @brief Get the result of the most recent operation.
 		bstatusval_t get_result() const;
 		//! @brief Get a copy of the last node read from memory.

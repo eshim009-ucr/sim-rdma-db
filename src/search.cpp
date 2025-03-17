@@ -14,7 +14,7 @@ void sm_search(
 	//! [in]  Results of address reads
 	hls::stream<Node> &nodeFifo
 ) {
-	static Tracer t(root);
+	static Tracer t;
 	static enum {
 		IDLE,
 		TRAVERSE
@@ -26,7 +26,7 @@ void sm_search(
 		case IDLE:
 			if (!input.empty()) {
 				input.read(key);
-				t.reset(key);
+				t.reset(root, key);
 				state = TRAVERSE;
 			}
 			break;

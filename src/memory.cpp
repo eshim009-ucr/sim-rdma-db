@@ -13,6 +13,7 @@ void sm_memory(
 		if (!readPair.addrFifo.empty()) {
 			// Pop the address to read
 			readPair.addrFifo.read(read_op);
+			assert(read_op.addr != INVALID);
 			// Try to grab lock if requested
 			//! @todo Prevent this from blocking other reads in the FIFO.
 			//! Or at least ensure parallel for loop execution so it only backs
@@ -28,6 +29,7 @@ void sm_memory(
 		if (!writePair.addrFifo.empty() && !writePair.nodeFifo.empty()) {
 			// Pop the address to write to
 			writePair.addrFifo.read(write_op);
+			assert(write_op.addr != INVALID);
 			// Pop the data to write
 			writePair.nodeFifo.read(write_node);
 			//! Unlock if requested

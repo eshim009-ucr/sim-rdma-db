@@ -26,6 +26,7 @@ void krnl(
 	int exec,
 
 	Node *hbm,
+	bptr_t& root,
 
 	hls::stream<bkey_t>& searchInput,
 	hls::stream<bstatusval_t>& searchOutput
@@ -66,8 +67,6 @@ void krnl(
 	static hls::stream<ErrorCode> insertOutput;
 	static std::array<FifoPair,2> readFifoList;
 	static std::array<FifoPair,1> writeFifoList;
-
-	static bptr_t root;
 
 	Node *n = &hbm[0];
 

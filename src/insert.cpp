@@ -15,7 +15,7 @@ void sm_insert(
 	FifoPair &readFifos,
 	FifoPair &writeFifos
 ) {
-	static Tracer t(root);
+	static Tracer t;
 	static enum {
 		IDLE,
 		TRAVERSE,
@@ -35,7 +35,7 @@ void sm_insert(
 		case IDLE:
 			if (!input.empty()) {
 				input.read(pair);
-				t.reset(pair.key);
+				t.reset(root, pair.key);
 				state = TRAVERSE;
 			}
 			break;

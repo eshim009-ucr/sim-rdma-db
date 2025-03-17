@@ -70,6 +70,7 @@ void krnl(
 	int exec,
 	//! Pointer to on-chip high-bandwidth memory
 	Node *hbm,
+	bptr_t& root,
 	hls::stream<bkey_t>& searchInput,
 	hls::stream<bstatusval_t>& searchOutput
 );

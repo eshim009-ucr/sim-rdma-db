@@ -1,12 +1,6 @@
 #include "trace.hpp"
 
 
-Tracer::Tracer(bptr_t root) {
-	// Traversals always start from the root
-	history[0] = root;
-}
-
-
 bool Tracer::sm_step(
 	hls::stream<RwOp> &addrFifo,
 	hls::stream<Node> &nodeFifo
@@ -58,7 +52,8 @@ bool Tracer::sm_step(
 }
 
 
-void Tracer::reset(bkey_t key) {
+void Tracer::reset(bptr_t root, bkey_t key) {
+	history[0] = root;
 	this->key = key;
 	state = RESET;
 }
