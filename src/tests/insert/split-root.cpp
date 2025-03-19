@@ -31,8 +31,8 @@ bool split_root(
 ) {
 	bool pass = true;
 	bptr_t root = 0;
-	hls::stream<Request> requests;
-	hls::stream<Response> responses;
+	hls::stream<req_bits_t> requests;
+	hls::stream<resp_bits_t> responses;
 	hls::stream<insert_in_t> input_log;
 	uint_fast8_t ops_in, ops_out;
 	insert_in_t last_in;
@@ -54,8 +54,8 @@ bool split_root(
 	// Evalue Results
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		responses.read(last_resp);
-		last_out = last_resp.insert;
+		responses.read(last_resp.bits);
+		last_out = last_resp.fields.insert;
 		#ifdef VERBOSE
 		std::cout << "Insert(k=" << last_in.key
 			<< ", v=" << last_in.value.data << "): ";

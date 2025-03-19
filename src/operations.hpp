@@ -17,20 +17,27 @@ enum Opcode {
 	INSERT = 2
 };
 
-struct Request {
-	Opcode opcode;
-	union {
-		search_in_t search;
-		insert_in_t insert;
-	};
+typedef uint64_t req_bits_t;
+typedef uint64_t resp_bits_t;
+union Request {
+	struct RequestFields {
+		Opcode opcode;
+		union {
+			search_in_t search;
+			insert_in_t insert;
+		};
+	} fields;
+	req_bits_t bits;
 };
-
-struct Response {
-	Opcode opcode;
-	union {
-		search_out_t search;
-		insert_out_t insert;
-	};
+union Response {
+	struct {
+		Opcode opcode;
+		union {
+			search_out_t search;
+			insert_out_t insert;
+		};
+	} fields;
+	resp_bits_t bits;
 };
 
 
@@ -42,7 +49,7 @@ Response encode_insert_resp(insert_out_t out);
 //! @brief State machine to decode and redirect incoming instructions
 void sm_decode(
 	//! [in]  Incoming instructions
-	hls::stream<Request>& requests,
+	hls::stream<req_bits_t>& requests,
 	//! [out] Bundle of FIFOs for decoded instructions
 	IoPairs& opstream
 );
@@ -50,7 +57,7 @@ void sm_decode(
 //! @brief State machine to encode and queue responses for send
 void sm_encode(
 	//! [out]  Incoming instructions
-	hls::stream<Response>& responses,
+	hls::stream<resp_bits_t>& responses,
 	//! [in] Bundle of FIFOs for decoded instructions
 	IoPairs& opstream
 );

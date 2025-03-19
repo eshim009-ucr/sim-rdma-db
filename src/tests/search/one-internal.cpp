@@ -31,8 +31,8 @@ bool one_internal(
 ) {
 	bool pass = true;
 	bptr_t root = MAX_LEAVES;
-	hls::stream<Request> requests;
-	hls::stream<Response> responses;
+	hls::stream<req_bits_t> requests;
+	hls::stream<resp_bits_t> responses;
 	hls::stream<search_in_t> input_log;
 	uint_fast8_t ops_in, ops_out;
 	search_in_t last_in;
@@ -76,8 +76,8 @@ bool one_internal(
 	// Evalue Results
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		responses.read(last_resp);
-		last_out = last_resp.search;
+		responses.read(last_resp.bits);
+		last_out = last_resp.fields.search;
 		#ifdef VERBOSE
 		std::cout << "Search(" << last_in << "): ";
 		if (last_out.status != SUCCESS) {

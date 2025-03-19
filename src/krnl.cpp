@@ -25,8 +25,8 @@ void krnl(
 
 	Node *hbm,
 	bptr_t root,
-	hls::stream<Request>& requests,
-	hls::stream<Response>& responses
+	hls::stream<req_bits_t>& requests,
+	hls::stream<resp_bits_t>& responses
 ) {
 
 	#pragma HLS INTERFACE axis port = m_axis_tx_meta

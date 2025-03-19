@@ -74,6 +74,6 @@ void krnl(
 	//!
 	//! Can be modified by operation kernels
 	bptr_t root,
-	hls::stream<Request>& requests,
-	hls::stream<Response>& responses
+	hls::stream<req_bits_t>& requests,
+	hls::stream<resp_bits_t>& responses
 );
