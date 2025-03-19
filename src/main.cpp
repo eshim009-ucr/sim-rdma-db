@@ -19,7 +19,7 @@
 
 int main() {
 	int myBoardNum = 1, RDMA_TYPE = 4, exec = 1000000;
-	Node hbm[MEM_SIZE];
+	uint8_t hbm[MEM_SIZE*sizeof(Node)];
 	uint passed = 0, failed = 0;
 	hls::stream<pkt256> s_axis_tx_meta;
 	hls::stream<pkt64> s_axis_tx_data;

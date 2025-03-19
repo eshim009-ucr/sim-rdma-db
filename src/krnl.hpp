@@ -69,7 +69,7 @@ void krnl(
 	int RDMA_TYPE,
 	int exec,
 	//! [inout] Pointer to on-chip high-bandwidth memory
-	Node *hbm,
+	uint8_t *hbm,
 	//! [inout] Address within HBM that holds the root of the tree
 	//!
 	//! Can be modified by operation kernels

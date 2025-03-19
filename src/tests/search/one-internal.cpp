@@ -27,7 +27,7 @@ bool one_internal(
 	int RDMA_TYPE,
 	int exec,
 
-	Node *hbm
+	uint8_t *hbm
 ) {
 	bool pass = true;
 	bptr_t root = MAX_LEAVES;

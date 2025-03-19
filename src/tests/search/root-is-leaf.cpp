@@ -27,7 +27,7 @@ bool root_is_leaf(
 	int RDMA_TYPE,
 	int exec,
 
-	Node *hbm
+	uint8_t *hbm
 ) {
 	bool pass = true;
 	bptr_t root = 0;

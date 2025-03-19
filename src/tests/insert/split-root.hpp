@@ -18,7 +18,7 @@ bool split_root(
 	int myBoardNum,
 	int RDMA_TYPE,
 	int exec,
-	Node *hbm
+	uint8_t *hbm
 );
 
 

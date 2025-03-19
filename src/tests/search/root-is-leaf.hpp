@@ -18,7 +18,7 @@ bool root_is_leaf(
 	int myBoardNum,
 	int RDMA_TYPE,
 	int exec,
-	Node *hbm
+	uint8_t *hbm
 );
 
 

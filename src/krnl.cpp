@@ -23,7 +23,7 @@ void krnl(
 	int RDMA_TYPE,
 	int exec,
 
-	Node *hbm,
+	uint8_t *hbm,
 	bptr_t root,
 	hls::stream<Request>& requests,
 	hls::stream<Response>& responses
@@ -72,8 +72,6 @@ void krnl(
 	static std::array<FifoPair,2> readFifoList;
 	static std::array<FifoPair,1> writeFifoList;
 
-	Node *n = &hbm[0];
-
 	uint_fast32_t opsCount = requests.size();
 
 	while (responses.size() < opsCount) {
@@ -91,7 +89,7 @@ void krnl(
 		sm_memory(
 			readFifoList,
 			writeFifoList,
-			hbm
+			(Node*) hbm
 		);
 		sm_decode(requests, opstream);
 		sm_encode(responses, opstream);

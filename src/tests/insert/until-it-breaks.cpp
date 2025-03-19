@@ -27,7 +27,7 @@ bool until_it_breaks(
 	int RDMA_TYPE,
 	int exec,
 
-	Node *hbm
+	uint8_t *hbm
 ) {
 	bool pass = true;
 	bptr_t root = 0;

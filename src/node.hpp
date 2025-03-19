@@ -43,12 +43,12 @@ struct Node {
 	bool is_full() const;
 	//! @brief Empty this node's contents and restore its default state
 	void clear();
-};
+} __attribute__((packed));
 
 //! @brief A node that knows the address where it resides in the tree
 struct AddrNode : public Node {
 	bptr_t addr;
 	bool is_leaf() const;
-};
+} __attribute__((packed));
 
 #endif

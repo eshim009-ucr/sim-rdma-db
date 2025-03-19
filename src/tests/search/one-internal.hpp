@@ -18,7 +18,7 @@ bool one_internal(
 	int myBoardNum,
 	int RDMA_TYPE,
 	int exec,
-	Node *hbm
+	uint8_t *hbm
 );
 
 

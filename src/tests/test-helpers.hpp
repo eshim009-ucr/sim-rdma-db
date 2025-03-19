@@ -11,7 +11,7 @@
 	last_in.key = key_; last_in.value.data = value_; \
 	requests.write(encode_insert_req(last_in)); input_log.write(last_in);
 #define SET_IKV(addr, i, key_, value_) \
-	hbm[addr].keys[i] = key_; hbm[addr].values[i].data = value_;
+	((Node*) hbm)[addr].keys[i] = key_; ((Node*) hbm)[addr].values[i].data = value_;
 #define RUN_KERNEL \
 	krnl( \
 		m_axis_tx_meta, m_axis_tx_data, s_axis_tx_status, \
@@ -23,7 +23,7 @@
 	);
 
 
-void reset_mem(Node *hbm);
+void reset_mem(uint8_t *hbm);
 
 
 #endif
