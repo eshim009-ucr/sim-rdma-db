@@ -24,9 +24,9 @@ void krnl(
 	int exec,
 
 	Node *hbm,
-	bptr_t& root,
-
-	IoPairs& opstream
+	bptr_t root,
+	hls::stream<Request>& requests,
+	hls::stream<Response>& responses
 ) {
 
 	#pragma HLS INTERFACE axis port = m_axis_tx_meta
@@ -39,6 +39,15 @@ void krnl(
 	#pragma HLS INTERFACE axis port = s_axis_bram_read_data
 
 	#pragma HLS INTERFACE axis port = s_axis_update
+
+	#pragma HLS INTERFACE s_axilite port = myBoardNum
+	#pragma HLS INTERFACE s_axilite port = RDMA_TYPE
+	#pragma HLS INTERFACE s_axilite port = exec
+	#pragma HLS INTERFACE s_axilite port = root
+
+	#pragma HLS INTERFACE m_axi port = hbm
+	#pragma HLS INTERFACE axis port = requests
+	#pragma HLS INTERFACE axis port = responses
 
 	pkt64 status;
 	if (!s_axis_tx_status.empty()) {
@@ -59,15 +68,15 @@ void krnl(
 	}
 
 	// #pragma HLS DATAFLOW
-
+	static IoPairs opstream;
 	static std::array<FifoPair,2> readFifoList;
 	static std::array<FifoPair,1> writeFifoList;
 
 	Node *n = &hbm[0];
 
-	uint_fast32_t opsCount = opstream.search.input.size() + opstream.insert.input.size();
+	uint_fast32_t opsCount = requests.size();
 
-	while (opstream.search.output.size() + opstream.insert.output.size() < opsCount) {
+	while (responses.size() < opsCount) {
 		sm_search(
 			root,
 			opstream.search,
@@ -84,6 +93,8 @@ void krnl(
 			writeFifoList,
 			hbm
 		);
+		sm_decode(requests, opstream);
+		sm_encode(responses, opstream);
 	}
 
 	return;

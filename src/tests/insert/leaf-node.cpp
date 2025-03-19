@@ -31,11 +31,13 @@ bool leaf_node(
 ) {
 	bool pass = true;
 	bptr_t root = 0;
-	IoPairs opstream;
-	hls::stream<KvPair> input_log;
+	hls::stream<Request> requests;
+	hls::stream<Response> responses;
+	hls::stream<insert_in_t> input_log;
 	uint_fast8_t ops_in, ops_out;
-	KvPair last_in;
-	ErrorCode last_out;
+	insert_in_t last_in;
+	insert_out_t last_out;
+	Response last_resp;
 
 	// Set up initial state
 	reset_mem(hbm);
@@ -45,19 +47,13 @@ bool leaf_node(
 	INPUT_INSERT(3, 1)
 
 	// Perform Operations
-	krnl(
-		m_axis_tx_meta, m_axis_tx_data, s_axis_tx_status,
-		m_axis_bram_write_cmd, m_axis_bram_read_cmd, m_axis_bram_write_data, s_axis_bram_read_data,
-		s_axis_update,
-		myBoardNum, RDMA_TYPE, exec,
-		hbm, root,
-		opstream
-	);
+	RUN_KERNEL
 
 	// Evalue Results
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		opstream.insert.output.read(last_out);
+		responses.read(last_resp);
+		last_out = last_resp.insert;
 		#ifdef VERBOSE
 		std::cout << "Insert(k=" << last_in.key
 			<< ", v=" << last_in.value.data << "): ";

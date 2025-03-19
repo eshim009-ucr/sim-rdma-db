@@ -7,11 +7,15 @@
 #include <hls_stream.h>
 
 
+typedef KvPair insert_in_t;
+typedef ErrorCode insert_out_t;
+
+
 struct InsertIO {
 	//! Key/value pairs to insert
-	hls::stream<KvPair> input;
+	hls::stream<insert_in_t> input;
 	//! Status codes from inserts
-	hls::stream<ErrorCode> output;
+	hls::stream<insert_out_t> output;
 };
 
 

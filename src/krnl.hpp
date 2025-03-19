@@ -73,7 +73,7 @@ void krnl(
 	//! [inout] Address within HBM that holds the root of the tree
 	//!
 	//! Can be modified by operation kernels
-	bptr_t& root,
-	//! [inout] Bundle of all incoming operations and their outgoing results
-	IoPairs& opstream
+	bptr_t root,
+	hls::stream<Request>& requests,
+	hls::stream<Response>& responses
 );

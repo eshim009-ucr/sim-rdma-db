@@ -7,11 +7,15 @@
 #include <hls_stream.h>
 
 
+typedef bkey_t search_in_t;
+typedef bstatusval_t search_out_t;
+
+
 struct SearchIO {
 	//! Keys to search for
-	hls::stream<bkey_t> input;
+	hls::stream<search_in_t> input;
 	//! Results from searches
-	hls::stream<bstatusval_t> output;
+	hls::stream<search_out_t> output;
 };
 
 
