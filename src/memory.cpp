@@ -2,17 +2,17 @@
 
 
 void sm_memory(
-	std::array<FifoPair, 2>& readFifos,
-	std::array<FifoPair, 1>& writeFifos,
+	FifoPair* readFifos,
+	FifoPair* writeFifos,
 	Node *hbm
 ) {
 	// #pragma HLS dataflow
 	RwOp read_op, write_op;
 	Node write_node;
-	for(FifoPair& readPair : readFifos) {
-		if (!readPair.addrFifo.empty()) {
+	for(uint_fast8_t i = 0; i < 2; ++i) {
+		if (!readFifos[i].addrFifo.empty()) {
 			// Pop the address to read
-			readPair.addrFifo.read(read_op);
+			readFifos[i].addrFifo.read(read_op);
 			assert(read_op.addr != INVALID);
 			// Try to grab lock if requested
 			//! @todo Prevent this from blocking other reads in the FIFO.
@@ -22,16 +22,16 @@ void sm_memory(
 				lock_p(&hbm[read_op.addr].lock);
 			}
 			// Read HBM value and push to the stack
-			readPair.nodeFifo.write_nb(hbm[read_op.addr]);
+			readFifos[i].nodeFifo.write_nb(hbm[read_op.addr]);
 		}
 	}
-	for(FifoPair& writePair : writeFifos) {
-		if (!writePair.addrFifo.empty() && !writePair.nodeFifo.empty()) {
+	for(uint_fast8_t i = 0; i < 1; ++i) {
+		if (!writeFifos[i].addrFifo.empty() && !writeFifos[i].nodeFifo.empty()) {
 			// Pop the address to write to
-			writePair.addrFifo.read(write_op);
+			writeFifos[i].addrFifo.read(write_op);
 			assert(write_op.addr != INVALID);
 			// Pop the data to write
-			writePair.nodeFifo.read(write_node);
+			writeFifos[i].nodeFifo.read(write_node);
 			//! Unlock if requested
 			lock_v(&hbm[write_op.addr].lock);
 			// Perform HBM write

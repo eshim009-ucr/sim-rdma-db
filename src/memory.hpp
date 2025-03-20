@@ -31,9 +31,9 @@ struct FifoPair {
 
 void sm_memory(
 	//! List of FIFOs used when reading from memory
-	std::array<FifoPair, 2>& readFifos,
+	FifoPair* readFifos,
 	//! List of FIFOs used when writing to memory
-	std::array<FifoPair, 1>& writeFifos,
+	FifoPair* writeFifos,
 	//! Pointer to high bandwidth memory
 	Node *hbm
 );

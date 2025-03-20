@@ -69,8 +69,8 @@ void krnl(
 
 	// #pragma HLS DATAFLOW
 	static IoPairs opstream;
-	static std::array<FifoPair,2> readFifoList;
-	static std::array<FifoPair,1> writeFifoList;
+	static FifoPair readFifoList[2];
+	static FifoPair writeFifoList[1];
 
 	uint_fast32_t opsCount = requests.size();
 
