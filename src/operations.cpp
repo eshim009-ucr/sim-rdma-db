@@ -36,7 +36,10 @@ Response encode_insert_resp(insert_out_t out) {
 
 void sm_decode(
 	hls::stream<Request>& requests,
-	IoPairs& opstream
+	//! [out] Decoded search instructions
+	hls::stream<search_in_t>& searchInput,
+	//! [out] Decoded insert instructions
+	hls::stream<insert_in_t>& insertInput
 ) {
 	Request req;
 	KvPair pair;
@@ -44,10 +47,10 @@ void sm_decode(
 		requests.read(req);
 		switch (req.opcode) {
 			case SEARCH:
-				opstream.search.input.write(req.search);
+				searchInput.write(req.search);
 				break;
 			case INSERT:
-				opstream.insert.input.write(req.insert);
+				insertInput.write(req.insert);
 				break;
 		}
 	}
@@ -55,17 +58,18 @@ void sm_decode(
 
 void sm_encode(
 	hls::stream<Response>& responses,
-	IoPairs& opstream
+	hls::stream<search_out_t>& searchOutput,
+	hls::stream<insert_out_t>& insertOutput
 ) {
 	search_out_t searchResultRaw;
 	insert_out_t insertResultRaw;
 	Response searchResultEnc, insertResultEnc;
-	if (!opstream.search.output.empty()) {
-		opstream.search.output.read(searchResultRaw);
+	if (!searchOutput.empty()) {
+		searchOutput.read(searchResultRaw);
 		responses.write_nb(encode_search_resp(searchResultRaw));
 	}
-	if (!opstream.insert.output.empty()) {
-		opstream.insert.output.read(insertResultRaw);
+	if (!insertOutput.empty()) {
+		insertOutput.read(insertResultRaw);
 		responses.write_nb(encode_insert_resp(insertResultRaw));
 	}
 }

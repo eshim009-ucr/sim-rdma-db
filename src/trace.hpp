@@ -41,8 +41,10 @@ struct Tracer {
 		//! @brief Step the state machine once
 		//! @return true if reached a leaf, false otherwise
 		bool sm_step(
-			//! [inout] Pairs of FIFOs for reading from main memory
-			FifoPair& readFifos
+			//! [out] Stream of addresses to read from main memory
+			MemReadReqStream& readReqFifo,
+			//! [in]  Stream of read results from main memory
+			MemReadRespStream& readRespFifo
 		);
 		//! @brief Set a new key and reset internal state
 		void reset(bptr_t root, bkey_t key);

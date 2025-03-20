@@ -18,22 +18,21 @@ struct RwOp {
 	bool lock;
 };
 
-//! @brief Pair of address and data streams to use for memory lookups
-//!
-//! Can be used for reads or writes
-struct FifoPair {
-	//! @brief Stream of addresses to read/write from
-	hls::stream<RwOp> addrFifo;
-	//! @brief Stream of nodes to read/write to
-	hls::stream<Node> nodeFifo;
-};
+
+typedef hls::stream<RwOp> MemReadReqStream;
+typedef hls::stream<Node> MemReadRespStream;
+typedef hls::stream<AddrNode> MemWriteStream;
 
 
+//! Yes, it is correct per the docs to not mark array primitives as references
+//! because they're already pointerse
 void sm_memory(
-	//! List of FIFOs used when reading from memory
-	std::array<FifoPair, 2>& readFifos,
-	//! List of FIFOs used when writing to memory
-	std::array<FifoPair, 1>& writeFifos,
+	//! [out] Streams of addresses to read from main memory
+	MemReadReqStream readReqFifos[2],
+	//! [in]  Streams of read results from main memory
+	MemReadRespStream readRespFifos[2],
+	//! [out] Streams of writes to main memory
+	MemWriteStream writeFifos[1],
 	//! Pointer to high bandwidth memory
 	Node *hbm
 );
@@ -51,10 +50,12 @@ ErrorCode alloc_sibling(
 	//!
 	//! Not used in all allocation algorithms
 	AddrNode& sibling,
-	//! Pair of FIFOs used when reading from memory
-	FifoPair& readFifos,
-	//! Pair of FIFOs used when writing to memory
-	FifoPair& writeFifos
+	//! [out] Stream of addresses to read from main memory
+	MemReadReqStream& readReqFifo,
+	//! [in]  Stream of read results from main memory
+	MemReadRespStream& readRespFifo,
+	//! [out] Stream of writes to main memory
+	MemWriteStream& writeFifo
 );
 
 

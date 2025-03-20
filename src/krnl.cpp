@@ -68,9 +68,13 @@ void krnl(
 	}
 
 	// #pragma HLS DATAFLOW
-	static IoPairs opstream;
-	static std::array<FifoPair,2> readFifoList;
-	static std::array<FifoPair,1> writeFifoList;
+	static hls::stream<search_in_t> searchInput;
+	static hls::stream<insert_in_t> insertInput;
+	static hls::stream<search_out_t> searchOutput;
+	static hls::stream<insert_out_t> insertOutput;
+	static MemReadReqStream readReqFifos[2];
+	static MemReadRespStream readRespFifos[2];
+	static MemWriteStream writeFifos[1];
 
 	Node *n = &hbm[0];
 
@@ -79,22 +83,22 @@ void krnl(
 	while (responses.size() < opsCount) {
 		sm_search(
 			root,
-			opstream.search,
-			readFifoList[1]
+			searchInput, searchOutput,
+			readReqFifos[1], readRespFifos[1]
 		);
 		sm_insert(
 			root,
-			opstream.insert,
-			readFifoList[0],
-			writeFifoList[0]
+			insertInput, insertOutput,
+			readReqFifos[1], readRespFifos[1],
+			writeFifos[0]
 		);
 		sm_memory(
-			readFifoList,
-			writeFifoList,
+			readReqFifos, readRespFifos,
+			writeFifos,
 			hbm
 		);
-		sm_decode(requests, opstream);
-		sm_encode(responses, opstream);
+		sm_decode(requests, searchInput, insertInput);
+		sm_encode(responses, searchOutput, insertOutput);
 	}
 
 	return;
