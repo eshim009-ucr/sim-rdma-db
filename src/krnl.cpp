@@ -76,6 +76,9 @@ void krnl(
 	static MemReadRespStream readRespFifos[2];
 	static MemWriteStream writeFifos[1];
 
+	RwOp tmpAddr;
+	AddrNode tmpNode;
+
 	uint_fast32_t opsCount = requests.size();
 
 	while (responses.size() < opsCount) {
@@ -90,11 +93,17 @@ void krnl(
 			readReqFifos[1], readRespFifos[1],
 			writeFifos[0]
 		);
-		sm_memory(
-			readReqFifos, readRespFifos,
-			writeFifos,
-			(Node*) hbm
-		);
+		if (!readReqFifos[0].empty()) {
+			readReqFifos[0].read(tmpAddr);
+			readRespFifos[0].write(tmpNode);
+		}
+		if (!readReqFifos[1].empty()) {
+			readReqFifos[1].read(tmpAddr);
+			readRespFifos[1].write(tmpNode);
+		}
+		if (!writeFifos[0].empty()) {
+			writeFifos[0].read(tmpNode);
+		}
 		sm_decode(requests, searchInput, insertInput);
 		sm_encode(responses, searchOutput, insertOutput);
 	}
