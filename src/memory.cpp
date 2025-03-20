@@ -10,6 +10,7 @@ static void mem_read(
 	if (!addrFifo.empty()) {
 		// Pop the address to read
 		addrFifo.read(read_op);
+		assert(read_op.addr != INVALID);
 		// Read HBM value and push to the stack
 		nodeFifo.write_nb(hbm[read_op.addr]);
 	}
