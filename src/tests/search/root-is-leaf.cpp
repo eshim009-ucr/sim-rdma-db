@@ -77,7 +77,7 @@ bool root_is_leaf(
 		if (last_in % 3 == 0) {
 			if (last_out.status != NOT_FOUND) {
 				std::cerr << "For search input " << last_in
-					<< ": Expected NOT_FOUND, got"
+					<< ": Expected NOT_FOUND, got "
 					<< ERROR_CODE_NAMES[last_out.status]
 					<< '(' << (int) last_out.status << ')' << std::endl;
 				pass = false;
@@ -85,14 +85,14 @@ bool root_is_leaf(
 		} else {
 			if (last_out.status != SUCCESS) {
 				std::cerr << "For search input " << last_in
-					<< ": Expected SUCCESS, got"
+					<< ": Expected SUCCESS, got "
 					<< ERROR_CODE_NAMES[last_out.status]
 					<< '(' << (int) last_out.status << ')' << std::endl;
 				pass = false;
 			}
 			if (last_out.value.data != 10*last_in) {
 				std::cerr << "For search input " << last_in
-					<< ": Expected " << 10*last_in << ", got"
+					<< ": Expected " << 10*last_in << ", got "
 					<< last_out.value.data << std::endl;
 				pass = false;
 			}

@@ -70,7 +70,7 @@ bool split_root(
 		if (last_out != SUCCESS) {
 			std::cerr << "For insert input k=" << last_in.key
 				<< ", v=" << last_in.value.data
-				<< ": Expected SUCCESS, got"
+				<< ": Expected SUCCESS, got "
 				<< ERROR_CODE_NAMES[last_out]
 				<< '(' << (int) last_out << ')' << std::endl;
 			pass = false;

@@ -87,7 +87,7 @@ void krnl(
 		sm_insert(
 			root,
 			insertInput, insertOutput,
-			readReqFifos[1], readRespFifos[1],
+			readReqFifos[0], readRespFifos[0],
 			writeFifos[0]
 		);
 		sm_memory(
