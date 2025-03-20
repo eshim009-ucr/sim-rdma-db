@@ -79,7 +79,7 @@ void sm_insert(
 			state = SPLIT;
 			break;
 		case SPLIT:
-			status = SUCCESS;//alloc_sibling(node, sibling, readReqFifo, readRespFifo, writeFifo);
+			status = alloc_sibling(node, sibling, readReqFifo, readRespFifo, writeFifo);
 			if (status != SUCCESS) {
 				state = IDLE;
 				break;
