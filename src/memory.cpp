@@ -1,12 +1,29 @@
 #include "memory.hpp"
 
 
+static void mem_read(
+	MemReadReqStream& addrFifo,
+	MemReadRespStream& nodeFifo,
+	Node *hbm
+) {
+	RwOp read_op;
+	if (!addrFifo.empty()) {
+		// Pop the address to read
+		addrFifo.read(read_op);
+		// Read HBM value and push to the stack
+		nodeFifo.write_nb(hbm[read_op.addr]);
+	}
+}
+
+
 void sm_memory(
 	MemReadReqStream readReqFifos[2],
 	MemReadRespStream readRespFifos[2],
 	MemWriteStream writeFifos[1],
 	Node *hbm
 ) {
+	mem_read(readReqFifos[0], readRespFifos[0], hbm);
+	mem_read(readReqFifos[1], readRespFifos[1], hbm);
 }
 
 
