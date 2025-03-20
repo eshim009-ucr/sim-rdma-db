@@ -28,27 +28,31 @@ struct Node {
 	bptr_t next;
 	//! @brief Used to restrict concurrent modifications to this node
 	lock_t lock;
-	//! @brief Traverse the tree structure in search of the given key
-	//! @param[in] key The key to search for
-	//! @return A result containing a status code for success/failure of the
-	//!         operation along with the address of the next node to check on
-	//!         success. If this is a leaf node, its data will be returned.
-	bstatusval_t find_next(bkey_t key) const;
-	//! @brief Find the value corresponding to a given key
-	bstatusval_t find_value(bkey_t key) const;
-	//! @brief "Is empty", returns true for unallocated memory
-	bool is_valid() const;
-	//! @brief Returns true if this node has no more space for new entries,
-	//!        false otherwise
-	bool is_full() const;
-	//! @brief Empty this node's contents and restore its default state
-	void clear();
 } __attribute__((packed));
+
+//! @brief Traverse the tree structure in search of the given key
+//! @param[in] key The key to search for
+//! @return A result containing a status code for success/failure of the
+//!         operation along with the address of the next node to check on
+//!         success. If this is a leaf node, its data will be returned.
+bstatusval_t find_next(Node const& n, bkey_t key);
+//! @brief Find the value corresponding to a given key
+bstatusval_t find_value(Node const& n, bkey_t key);
+//! @brief "Is empty", returns true for unallocated memory
+bool is_valid(Node const& n);
+//! @brief Returns true if this node has no more space for new entries,
+//!        false otherwise
+bool is_full(Node const& n);
+//! @brief Empty this node's contents and restore its default state
+void clear(Node& n);
+
 
 //! @brief A node that knows the address where it resides in the tree
 struct AddrNode : public Node {
 	bptr_t addr;
-	bool is_leaf() const;
 } __attribute__((packed));
+
+bool is_leaf(AddrNode const& n);
+
 
 #endif

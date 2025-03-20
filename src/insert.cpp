@@ -93,7 +93,7 @@ void sm_insert(
 		case SPLIT_ROOT:
 			// If this is the only node
 			// We need to create the first inner node
-			if (node.is_leaf()) {
+			if (is_leaf(node)) {
 				// Make a new root node
 				root = MAX_LEAVES;
 			} else {
@@ -107,7 +107,7 @@ void sm_insert(
 			parent.addr = root;
 			lock_p(&parent.lock);
 			writeFifo.write(parent);
-			parent.clear();
+			clear(parent);
 			parent.keys[0] = node.keys[DIV2CEIL(TREE_ORDER)-1];
 			parent.values[0].ptr = node.addr;
 			parent.keys[1] = sibling.keys[(TREE_ORDER/2)-1];
@@ -116,7 +116,7 @@ void sm_insert(
 			state = IDLE;
 			break;
 		case SPLIT_NON_ROOT:
-			if (parent.is_full()) {
+			if (is_full(parent)) {
 				status = NOT_IMPLEMENTED;
 				state = IDLE;
 				break;

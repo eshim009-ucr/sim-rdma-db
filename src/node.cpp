@@ -1,12 +1,12 @@
 #include "node.hpp"
 
 
-bstatusval_t Node::find_next(bkey_t key) const {
+bstatusval_t find_next(Node const& n, bkey_t key) {
 	bstatusval_t result = {SUCCESS, INVALID};
 	for (li_t i = 0; i < TREE_ORDER; ++i) {
 		// We overshot the node we were looking for
 		// and got an uninitialized key
-		if (keys[i] == INVALID) {
+		if (n.keys[i] == INVALID) {
 			// Empty node, error
 			if (i == 0) {
 				result.status = NOT_FOUND;
@@ -14,33 +14,33 @@ bstatusval_t Node::find_next(bkey_t key) const {
 			}
 			// Save the last node we looked at
 			else {
-				result.value = values[i-1];
+				result.value = n.values[i-1];
 				return result;
 			}
 		}
 		// If this key is the first key greater than what we're looking for
 		// then continue down this subtree
-		else if (key <= keys[i]) {
-			result.value = values[i];
+		else if (key <= n.keys[i]) {
+			result.value = n.values[i];
 			return result;
 		}
 	}
 	// Wasn't in this node, check sibling
-	if (next == INVALID) {
-		// No siblingg
+	if (n.next == INVALID) {
+		// No sibling
 		result.status = NOT_FOUND;
 	} else {
-		result.value.ptr = next;
+		result.value.ptr = n.next;
 	}
 	return result;
 }
 
 
-bstatusval_t Node::find_value(bkey_t key) const {
+bstatusval_t find_value(Node const& n, bkey_t key) {
 	bstatusval_t result = {SUCCESS, INVALID};
 	for (li_t i = 0; i < TREE_ORDER; ++i) {
-		if (keys[i] == key) {
-			result.value = values[i];
+		if (n.keys[i] == key) {
+			result.value = n.values[i];
 			return result;
 		}
 	}
@@ -49,21 +49,21 @@ bstatusval_t Node::find_value(bkey_t key) const {
 }
 
 
-bool Node::is_valid() const {
-	return keys[0] != INVALID;
+bool is_valid(Node const& n) {
+	return n.keys[0] != INVALID;
 }
 
-bool Node::is_full() const {
-	return keys[TREE_ORDER-1] != INVALID;
+bool is_full(Node const& n) {
+	return n.keys[TREE_ORDER-1] != INVALID;
 }
 
-void Node::clear() {
+void clear(Node& n) {
 	for (li_t i = 0; i < TREE_ORDER; ++i) {
-		keys[i] = INVALID;
-		values[i].data = INVALID;
+		n.keys[i] = INVALID;
+		n.values[i].data = INVALID;
 	}
 }
 
-bool AddrNode::is_leaf() const {
-	return addr < MAX_LEAVES;
+bool is_leaf(AddrNode const& n) {
+	return n.addr < MAX_LEAVES;
 }

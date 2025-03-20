@@ -75,7 +75,7 @@ ErrorCode alloc_sibling(
 		// Wait for read to complete
 		while (readRespFifo.empty());
 		readRespFifo.read(sibling);
-	} while(sibling.is_valid());
+	} while(is_valid(sibling));
 
 	// Lock node
 	lock_p(&sibling.lock);
