@@ -93,6 +93,11 @@ void krnl(
 			readReqFifos[0], readRespFifos[0],
 			writeFifos[0]
 		);
+		sm_memory(
+			readReqFifos, readRespFifos,
+			writeFifos,
+			(Node*) hbm
+		);
 		if (!readReqFifos[0].empty()) {
 			readReqFifos[0].read(tmpAddr);
 			readRespFifos[0].write(tmpNode);

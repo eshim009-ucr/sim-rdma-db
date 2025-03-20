@@ -1,6 +1,15 @@
 #include "memory.hpp"
 
 
+void sm_memory(
+	MemReadReqStream readReqFifos[2],
+	MemReadRespStream readRespFifos[2],
+	MemWriteStream writeFifos[1],
+	Node *hbm
+) {
+}
+
+
 ErrorCode alloc_sibling(
 	AddrNode& old_node,
 	AddrNode& sibling,
