@@ -98,9 +98,6 @@ void krnl(
 			writeFifos,
 			(Node*) hbm
 		);
-		if (!writeFifos[0].empty()) {
-			writeFifos[0].read(tmpNode);
-		}
 		sm_decode(requests, searchInput, insertInput);
 		sm_encode(responses, searchOutput, insertOutput);
 	}
