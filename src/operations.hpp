@@ -6,12 +6,6 @@
 #include "insert.hpp"
 
 
-//! @brief Pairs of all I/O Fifos for all operations
-struct IoPairs {
-	SearchIO search;
-	InsertIO insert;
-};
-
 enum Opcode {
 	SEARCH = 1,
 	INSERT = 2
@@ -43,16 +37,20 @@ Response encode_insert_resp(insert_out_t out);
 void sm_decode(
 	//! [in]  Incoming instructions
 	hls::stream<Request>& requests,
-	//! [out] Bundle of FIFOs for decoded instructions
-	IoPairs& opstream
+	//! [out] Decoded search instructions
+	hls::stream<search_in_t>& searchInput,
+	//! [out] Decoded insert instructions
+	hls::stream<insert_in_t>& insertInput
 );
 
 //! @brief State machine to encode and queue responses for send
 void sm_encode(
 	//! [out]  Incoming instructions
 	hls::stream<Response>& responses,
-	//! [in] Bundle of FIFOs for decoded instructions
-	IoPairs& opstream
+	//! [in] Search results
+	hls::stream<search_out_t>& searchOutput,
+	//! [in] Insert results
+	hls::stream<insert_out_t>& insertOutput
 );
 
 

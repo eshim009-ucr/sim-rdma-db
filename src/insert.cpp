@@ -10,9 +10,11 @@
 
 void sm_insert(
 	bptr_t& root,
-	InsertIO& ops,
-	FifoPair &readFifos,
-	FifoPair &writeFifos
+	hls::stream<insert_in_t>& input,
+	hls::stream<insert_out_t>& output,
+	MemReadReqStream& readReqFifo,
+	MemReadRespStream& readRespFifo,
+	MemWriteStream& writeFifo
 ) {
 	static Tracer t;
 	static enum {
@@ -32,15 +34,15 @@ void sm_insert(
 
 	switch(state) {
 		case IDLE:
-			if (!ops.input.empty()) {
-				ops.input.read(pair);
+			if (!input.empty()) {
+				input.read(pair);
 				t.reset(root, pair.key);
 				state = TRAVERSE;
 			}
 			break;
 		case TRAVERSE:
 			//! If reached a leaf
-			if (t.sm_step(readFifos)) {
+			if (t.sm_step(readReqFifo, readRespFifo)) {
 				state = INSERT;
 			} else {
 				parent = t.get_node();
@@ -62,11 +64,11 @@ void sm_insert(
 					node.keys[i_insert] = pair.key;
 					node.values[i_insert] = pair.value;
 					// Done
-					ops.output.write_nb(SUCCESS);
+					output.write_nb(SUCCESS);
 					state = IDLE;
 					return; // Need to double-break
 				} else if (node.keys[i] == pair.key) {
-					ops.output.write_nb(KEY_EXISTS);
+					output.write_nb(KEY_EXISTS);
 					state = IDLE;
 					return; // Need to double-break
 				} else if (node.keys[i] < pair.key) {
@@ -77,7 +79,7 @@ void sm_insert(
 			state = SPLIT;
 			break;
 		case SPLIT:
-			status = alloc_sibling(node, sibling, readFifos, writeFifos);
+			status = alloc_sibling(node, sibling, readReqFifo, readRespFifo, writeFifo);
 			if (status != SUCCESS) {
 				state = IDLE;
 				break;
@@ -103,8 +105,8 @@ void sm_insert(
 				}
 			}
 			parent.addr = root;
-			writeFifos.addrFifo.write({parent.addr, .lock=1});
-			writeFifos.nodeFifo.write(parent);
+			lock_p(&parent.lock);
+			writeFifo.write(parent);
 			parent.clear();
 			parent.keys[0] = node.keys[DIV2CEIL(TREE_ORDER)-1];
 			parent.values[0].ptr = node.addr;

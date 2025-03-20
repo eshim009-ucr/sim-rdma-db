@@ -4,8 +4,10 @@
 
 void sm_search(
 	bptr_t const& root,
-	SearchIO& ops,
-	FifoPair& readFifos
+	hls::stream<search_in_t>& input,
+	hls::stream<search_out_t>& output,
+	MemReadReqStream& readReqFifo,
+	MemReadRespStream& readRespFifo
 ) {
 	static Tracer t;
 	static enum {
@@ -17,17 +19,17 @@ void sm_search(
 
 	switch(state) {
 		case IDLE:
-			if (!ops.input.empty()) {
-				ops.input.read(key);
+			if (!input.empty()) {
+				input.read(key);
 				t.reset(root, key);
 				state = TRAVERSE;
 			}
 			break;
 		case TRAVERSE:
 			//! If reached a leaf
-			if (t.sm_step(readFifos)) {
+			if (t.sm_step(readReqFifo, readRespFifo)) {
 				result = t.get_result();
-				ops.output.write(result);
+				output.write(result);
 				state = IDLE;
 			}
 			break;
