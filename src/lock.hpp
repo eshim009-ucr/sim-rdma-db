@@ -51,7 +51,9 @@ static inline void lock_p(lock_t *lock) {
 
 //! @brief Release the given lock
 static inline void lock_v(lock_t *lock) {
+#ifndef __SYNTHESIS__
 	assert(lock_test(lock));
+#endif
 #if defined(CSIM) || defined(__SYNTHESIS__)
 	*lock = 0;
 #elif defined(__cplusplus)
