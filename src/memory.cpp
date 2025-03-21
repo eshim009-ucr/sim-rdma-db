@@ -7,6 +7,7 @@ static void mem_read(
 	Node *hbm
 ) {
 	RwOp read_op;
+	Node tmp;
 	if (!addrFifo.empty()) {
 		// Pop the address to read
 		addrFifo.read(read_op);
@@ -16,9 +17,15 @@ static void mem_read(
 		//! Or at least ensure parallel for loop execution so it only backs
 		//! up one FIFO.
 		if (read_op.lock) {
+			//! @todo Prevent race conditions due to non-atomic of test-and-set
+			do {
+				tmp = hbm[read_op.addr];
+			} while(lock_test(&tmp.lock));
+			lock_p(&tmp.lock);
+			hbm[read_op.addr] = tmp;
 		}
 		// Read HBM value and push to the stack
-		nodeFifo.write_nb(hbm[read_op.addr]);
+		nodeFifo.write_nb(tmp);
 	}
 }
 
