@@ -66,10 +66,10 @@ void sm_encode(
 	Response searchResultEnc, insertResultEnc;
 	if (!searchOutput.empty()) {
 		searchOutput.read(searchResultRaw);
-		responses.write_nb(encode_search_resp(searchResultRaw));
+		responses.write(encode_search_resp(searchResultRaw));
 	}
 	if (!insertOutput.empty()) {
 		insertOutput.read(insertResultRaw);
-		responses.write_nb(encode_insert_resp(insertResultRaw));
+		responses.write(encode_insert_resp(insertResultRaw));
 	}
 }
