@@ -76,9 +76,6 @@ void krnl(
 	static MemReadRespStream readRespFifos[2];
 	static MemWriteStream writeFifos[1];
 
-	RwOp tmpAddr;
-	AddrNode tmpNode;
-
 	uint_fast32_t opsCount = requests.size();
 
 	while (responses.size() < opsCount) {
