@@ -1,4 +1,5 @@
 #include "trace.hpp"
+#include <iostream>
 
 
 bool Tracer::sm_step(

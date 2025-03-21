@@ -1,4 +1,5 @@
 #include "memory.hpp"
+#include <iostream>
 
 
 //! The HLS interface to HBM does not support atomic test-and-set operations.
@@ -11,14 +12,20 @@
 static Node hbm_read_lock(Node* hbm, bptr_t addr) {
 	static lock_t local_readlock = 0;
 	Node tmp;
+	std::cout << "\t\t[memory.cpp] About to grab lock for HBM..." << std::endl;
 	lock_p(&local_readlock);
+	std::cout << "\t\t[memory.cpp] Got HBM lock!" << std::endl;
 	// Read the given address from main memory until its lock is released
 	do {
 		tmp = hbm[addr];
 	} while(lock_test(&tmp.lock));
 	// After the lock is released, we can safely acquire it because no other
 	// modules concurrently hold this function's lock
+	std::cout << "\t\t[memory.cpp] About to grab lock for hbm[0x"
+	<< std::hex << addr << std::dec << "]..." << std::endl;
 	lock_p(&tmp.lock);
+	std::cout << "\t\t[memory.cpp] Got hbm[0x"
+		<< std::hex << addr << std::dec << "]'s lock!" << std::endl;
 	// Write back the locked value to main memory
 	hbm[addr] = tmp;
 	// Release the local lock for future writers
@@ -47,6 +54,22 @@ static void mem_read(
 		} else {
 			tmp = hbm[read_op.addr];
 		}
+		std::cout << "\t\t[memory.cpp] hbm[0x"
+			<< std::hex << read_op.addr << std::dec << "] has " << std::flush;
+		for (li_t i = 0; i < TREE_ORDER; ++i) {
+			if (tmp.keys[i] == INVALID) {
+				std:: cout << "EMPTY" << std::flush;
+			} else {
+				std::cout << "{"
+					<< "k=" << tmp.keys[i] << "}"
+					<< ", v=" << tmp.values[i].data << "}"
+					<< std::flush;
+			}
+			if (i < TREE_ORDER-1) {
+				std::cout << ", " << std::flush;
+			}
+		}
+		std::cout << std::endl;
 		// Read HBM value and push to the stack
 		nodeFifo.write_nb(tmp);
 	}

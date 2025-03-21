@@ -1,4 +1,5 @@
 #include "node.hpp"
+#include <iostream>
 
 
 bstatusval_t find_next(Node const& n, bkey_t key) {
@@ -44,11 +45,16 @@ bstatusval_t find_next(Node const& n, bkey_t key) {
 bstatusval_t find_value(Node const& n, bkey_t key) {
 	bstatusval_t result = {SUCCESS, INVALID};
 	for (li_t i = 0; i < TREE_ORDER; ++i) {
+		std::cout << "\t\t[node.cpp] "
+			<< "key[" << i << "]=" << n.keys[i]
+			<< ", value[" << i << "]=" << n.values[i].data << std::endl;
 		if (n.keys[i] == key) {
+			std::cout << "\t\t[node.cpp] Found " << key << std::endl;
 			result.value = n.values[i];
 			return result;
 		}
 	}
+	std::cout << "\t\t[node.cpp] Failed to find " << key << std::endl;
 	result.status = NOT_FOUND;
 	return result;
 }
