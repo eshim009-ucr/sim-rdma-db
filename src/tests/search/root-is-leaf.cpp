@@ -45,6 +45,7 @@ bool root_is_leaf(
 	SET_IKV(root, 1, 2, 20)
 	SET_IKV(root, 2, 4, 40)
 	SET_IKV(root, 3, 5, 50)
+	hbm_dump(hbm, 2);
 	// Should fail
 	INPUT_SEARCH(0)
 	INPUT_SEARCH(3)

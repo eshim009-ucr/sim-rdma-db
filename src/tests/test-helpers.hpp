@@ -25,5 +25,8 @@
 
 void reset_mem(uint8_t *hbm);
 
+//!@brief Print a hex dump of the first few nodes of HBM
+void hbm_dump(uint8_t* hbm, uint8_t length);
+
 
 #endif
