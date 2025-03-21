@@ -45,7 +45,7 @@ void krnl(
 	#pragma HLS INTERFACE s_axilite port = exec
 	#pragma HLS INTERFACE s_axilite port = root
 
-	#pragma HLS INTERFACE m_axi port = hbm
+	#pragma HLS INTERFACE m_axi port = hbm offset = slave bundle = gmem depth = 0x1000
 	#pragma HLS INTERFACE axis port = requests
 	#pragma HLS INTERFACE axis port = responses
 
