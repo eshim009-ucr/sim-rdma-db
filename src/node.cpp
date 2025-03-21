@@ -15,6 +15,8 @@ bstatusval_t find_next(Node const& n, bkey_t key) {
 			// Save the last node we looked at
 			else {
 				result.value = n.values[i-1];
+				std::cout << "\t\t[node.cpp] Reached last entry at values["
+					<< i-1 << "] = 0x" << std::hex << n.values[i-1].ptr << std::dec << std::endl;
 				return result;
 			}
 		}
@@ -22,6 +24,9 @@ bstatusval_t find_next(Node const& n, bkey_t key) {
 		// then continue down this subtree
 		else if (key <= n.keys[i]) {
 			result.value = n.values[i];
+			std::cout << "\t\t[node.cpp] Continuing down subtree with k/v pair "
+				<< n.keys[i] << ", 0x" << std::hex << n.values[i].ptr << std::dec
+				<< " at entry " << i << " in search of " << key << std::endl;
 			return result;
 		}
 	}
