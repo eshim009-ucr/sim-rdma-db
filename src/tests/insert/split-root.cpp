@@ -52,7 +52,7 @@ bool split_root(
 	RUN_KERNEL
 
 	// Evalue Results
-	while (!input_log.empty()) {
+	while (!input_log.empty() && !responses.empty()) {
 		input_log.read(last_in);
 		responses.read(last_resp);
 		last_out = last_resp.insert;
@@ -75,6 +75,27 @@ bool split_root(
 				<< '(' << (int) last_out << ')' << std::endl;
 			pass = false;
 		}
+	}
+	// Check for non-empty streams
+	if (!input_log.empty()) {
+		std::cerr << "Error: Response stream empty before input log stream" << std::endl;
+		std::cerr << "Contains the data:";
+		do {
+			input_log.read(last_in);
+			std::cerr << "\n\t k=" << last_in.key << " v=" << last_in.value.data;
+		} while (!responses.empty());
+		std::cerr << std::endl;
+		pass = false;
+	}
+	if (!responses.empty()) {
+		std::cerr << "Error: Input log stream empty before response stream" << std::endl;
+		std::cerr << "Contains the data:";
+		do {
+			responses.read(last_resp);
+			std::cerr << "\n\t" << static_cast<std::string>(last_resp);
+		} while (!responses.empty());
+		std::cerr << std::endl;
+		pass = false;
 	}
 
 	return pass;

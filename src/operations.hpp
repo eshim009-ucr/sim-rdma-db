@@ -4,7 +4,7 @@
 
 #include "search.hpp"
 #include "insert.hpp"
-
+#include <sstream>
 
 enum Opcode {
 	SEARCH = 1,
@@ -25,6 +25,16 @@ struct Response {
 		search_out_t search;
 		insert_out_t insert;
 	};
+	operator std::string() const {
+		std::stringstream ss;
+		switch (opcode) {
+			case SEARCH:
+				ss << "Search Response " << ERROR_CODE_NAMES[-search.status] << ", " << search.value.data;
+			case INSERT:
+				ss << "Insert Response " << ERROR_CODE_NAMES[-insert];
+		}
+		return ss.str();
+	}
 } __attribute__((packed));
 
 
