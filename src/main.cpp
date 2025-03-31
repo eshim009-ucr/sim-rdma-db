@@ -76,4 +76,6 @@ int main() {
 
 	std::cout << "\n" << passed << " tests passed, "
 		<< failed << " tests failed." << std::endl;
+
+	return 0;
 }

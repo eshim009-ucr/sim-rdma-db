@@ -54,27 +54,29 @@ void krnl(
 		s_axis_tx_status.read(status);
 	}
 	// Dummies to prevent [HLS 214-313] from inputs not being used
-	if (!m_axis_tx_meta.empty()) {
-	}
-	if (!m_axis_tx_data.empty()) {
-	}
-	if (!m_axis_bram_write_cmd.empty()) {
-	}
-	if (!m_axis_bram_read_cmd.empty()) {
-	}
-	if (!m_axis_bram_write_data.empty()) {
-	}
-	if (!s_axis_bram_read_data.empty()) {
-	}
+	(void) m_axis_tx_meta.empty();
+	(void) m_axis_tx_data.empty();
+	// (void) m_axis_tx_status.empty();
+	(void) m_axis_bram_write_cmd.empty();
+	(void) m_axis_bram_read_cmd.empty();
+	(void) m_axis_bram_write_data.empty();
+	(void) s_axis_bram_read_data.empty();
 
 	// #pragma HLS DATAFLOW
 	static hls::stream<search_in_t> searchInput;
 	static hls::stream<insert_in_t> insertInput;
 	static hls::stream<search_out_t> searchOutput;
 	static hls::stream<insert_out_t> insertOutput;
-	static MemReadReqStream readReqFifos[2];
-	static MemReadRespStream readRespFifos[2];
-	static MemWriteStream writeFifos[1];
+	static hls::stream<mread_req_t> readReqFifos[2];
+	static hls::stream<mread_resp_t> readRespFifos[2];
+	static hls::stream<mwrite_t> writeFifos[1];
+	#pragma HLS stream variable=searchInput type=fifo depth=0x100
+	#pragma HLS stream variable=insertInput type=fifo depth=0x100
+	#pragma HLS stream variable=searchOutput type=fifo depth=0x100
+	#pragma HLS stream variable=insertOutput type=fifo depth=0x100
+	#pragma HLS stream variable=readReqFifos type=fifo depth=0x100
+	#pragma HLS stream variable=readRespFifos type=fifo depth=0x100
+	#pragma HLS stream variable=writeFifos type=fifo depth=0x100
 
 	uint_fast32_t opsCount = requests.size();
 

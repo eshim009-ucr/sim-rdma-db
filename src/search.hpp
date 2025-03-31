@@ -20,9 +20,9 @@ void sm_search(
 	//! [out] Results from searches
 	hls::stream<search_out_t>& output,
 	//! [out] Stream of addresses to read from main memory
-	MemReadReqStream& readReqFifo,
+	hls::stream<mread_req_t>& readReqFifo,
 	//! [in]  Stream of read results from main memory
-	MemReadRespStream& readRespFifo
+	hls::stream<mread_resp_t>& readRespFifo
 );
 
 

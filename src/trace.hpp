@@ -42,9 +42,9 @@ struct Tracer {
 		//! @return true if reached a leaf, false otherwise
 		bool sm_step(
 			//! [out] Stream of addresses to read from main memory
-			MemReadReqStream& readReqFifo,
+			hls::stream<mread_req_t>& readReqFifo,
 			//! [in]  Stream of read results from main memory
-			MemReadRespStream& readRespFifo
+			hls::stream<mread_resp_t>& readRespFifo
 		);
 		//! @brief Set a new key and reset internal state
 		void reset(bptr_t root, bkey_t key);

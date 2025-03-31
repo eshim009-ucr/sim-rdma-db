@@ -2,8 +2,8 @@
 
 
 bool Tracer::sm_step(
-	MemReadReqStream& readReqFifo,
-	MemReadRespStream& readRespFifo
+	hls::stream<mread_req_t>& readReqFifo,
+	hls::stream<mread_resp_t>& readRespFifo
 ) {
 	switch(state) {
 		case RESET:

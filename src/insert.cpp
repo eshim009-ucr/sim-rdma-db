@@ -12,9 +12,9 @@ void sm_insert(
 	bptr_t& root,
 	hls::stream<insert_in_t>& input,
 	hls::stream<insert_out_t>& output,
-	MemReadReqStream& readReqFifo,
-	MemReadRespStream& readRespFifo,
-	MemWriteStream& writeFifo
+	hls::stream<mread_req_t>& readReqFifo,
+	hls::stream<mread_resp_t>& readRespFifo,
+	hls::stream<mwrite_t>& writeFifo
 ) {
 	static Tracer t;
 	static enum {

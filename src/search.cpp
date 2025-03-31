@@ -6,8 +6,8 @@ void sm_search(
 	bptr_t const& root,
 	hls::stream<search_in_t>& input,
 	hls::stream<search_out_t>& output,
-	MemReadReqStream& readReqFifo,
-	MemReadRespStream& readRespFifo
+	hls::stream<mread_req_t>& readReqFifo,
+	hls::stream<mread_resp_t>& readRespFifo
 ) {
 	static Tracer t;
 	static enum {

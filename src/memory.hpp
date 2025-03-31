@@ -19,20 +19,20 @@ struct RwOp {
 };
 
 
-typedef hls::stream<RwOp> MemReadReqStream;
-typedef hls::stream<Node> MemReadRespStream;
-typedef hls::stream<AddrNode> MemWriteStream;
+typedef RwOp mread_req_t;
+typedef Node mread_resp_t;
+typedef AddrNode mwrite_t;
 
 
 //! Yes, it is correct per the docs to not mark array primitives as references
 //! because they're already pointerse
 void sm_memory(
 	//! [out] Streams of addresses to read from main memory
-	MemReadReqStream readReqFifos[2],
+	hls::stream<mread_req_t> readReqFifos[2],
 	//! [in]  Streams of read results from main memory
-	MemReadRespStream readRespFifos[2],
+	hls::stream<mread_resp_t> readRespFifos[2],
 	//! [out] Streams of writes to main memory
-	MemWriteStream writeFifos[1],
+	hls::stream<mwrite_t> writeFifos[1],
 	//! Pointer to high bandwidth memory
 	Node *hbm
 );
@@ -51,11 +51,11 @@ ErrorCode alloc_sibling(
 	//! Not used in all allocation algorithms
 	AddrNode& sibling,
 	//! [out] Stream of addresses to read from main memory
-	MemReadReqStream& readReqFifo,
+	hls::stream<mread_req_t>& readReqFifo,
 	//! [in]  Stream of read results from main memory
-	MemReadRespStream& readRespFifo,
+	hls::stream<mread_resp_t>& readRespFifo,
 	//! [out] Stream of writes to main memory
-	MemWriteStream& writeFifo
+	hls::stream<mwrite_t>& writeFifo
 );
 
 

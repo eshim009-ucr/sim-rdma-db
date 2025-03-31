@@ -20,11 +20,11 @@ void sm_insert(
 	//! [out] Status codes from inserts
 	hls::stream<insert_out_t>& output,
 	//! [out] Stream of addresses to read from main memory
-	MemReadReqStream& readReqFifo,
+	hls::stream<mread_req_t>& readReqFifo,
 	//! [in]  Stream of read results from main memory
-	MemReadRespStream& readRespFifo,
+	hls::stream<mread_resp_t>& readRespFifo,
 	//! [out] Stream of writes to main memory
-	MemWriteStream& writeFifo
+	hls::stream<mwrite_t>& writeFifo
 );
 
 

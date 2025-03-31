@@ -28,8 +28,8 @@ static Node hbm_read_lock(Node* hbm, bptr_t addr) {
 
 
 static void mem_read(
-	MemReadReqStream& addrFifo,
-	MemReadRespStream& nodeFifo,
+	hls::stream<mread_req_t>& addrFifo,
+	hls::stream<mread_resp_t>& nodeFifo,
 	Node *hbm
 ) {
 	RwOp read_op;
@@ -54,7 +54,7 @@ static void mem_read(
 
 
 static void mem_write(
-	MemWriteStream& writeFifo,
+	hls::stream<mwrite_t>& writeFifo,
 	Node *hbm
 ) {
 	AddrNode node;
@@ -71,9 +71,9 @@ static void mem_write(
 
 
 void sm_memory(
-	MemReadReqStream readReqFifos[2],
-	MemReadRespStream readRespFifos[2],
-	MemWriteStream writeFifos[1],
+	hls::stream<mread_req_t> readReqFifos[2],
+	hls::stream<mread_resp_t> readRespFifos[2],
+	hls::stream<mwrite_t> writeFifos[1],
 	Node *hbm
 ) {
 	mem_read(readReqFifos[0], readRespFifos[0], hbm);
@@ -85,9 +85,9 @@ void sm_memory(
 ErrorCode alloc_sibling(
 	AddrNode& old_node,
 	AddrNode& sibling,
-	MemReadReqStream& readReqFifo,
-	MemReadRespStream& readRespFifo,
-	MemWriteStream& writeFifo
+	hls::stream<mread_req_t>& readReqFifo,
+	hls::stream<mread_resp_t>& readRespFifo,
+	hls::stream<mwrite_t>& writeFifo
 ) {
 	static bptr_t stack_ptr = 0;
 	sibling.addr = stack_ptr - sizeof(Node);
