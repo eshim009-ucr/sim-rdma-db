@@ -8,8 +8,8 @@ void krnl(
 	int exec,
 	uint8_t *hbm,
 	bptr_t root,
-	hls::stream<Request>& requests,
-	hls::stream<Response>& responses
+	hls::stream<pkt_req>& requests,
+	hls::stream<pkt_resp>& responses
 ) {
 
 	#pragma HLS INTERFACE s_axilite port = myBoardNum

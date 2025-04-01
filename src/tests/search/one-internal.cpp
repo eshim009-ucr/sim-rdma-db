@@ -31,13 +31,14 @@ bool one_internal(
 ) {
 	bool pass = true;
 	bptr_t root = MAX_LEAVES;
-	hls::stream<Request> requests;
-	hls::stream<Response> responses;
+	hls::stream<pkt_req> requests;
+	hls::stream<pkt_resp> responses;
 	hls::stream<search_in_t> input_log;
 	uint_fast8_t ops_in, ops_out;
 	search_in_t last_in;
 	search_out_t last_out;
-	Response last_resp;
+	pkt_resp last_resp_pkt;
+	resp_union last_resp;
 
 	// Set up initial state
 	reset_mem(hbm);
@@ -77,8 +78,9 @@ bool one_internal(
 	// Evalue Results
 	while (!input_log.empty() && !responses.empty()) {
 		input_log.read(last_in);
-		responses.read(last_resp);
-		last_out = last_resp.search;
+		responses.read(last_resp_pkt);
+		last_resp.bytes = last_resp_pkt.data;
+		last_out = last_resp.data.search;
 		#ifdef VERBOSE
 		std::cout << "Search(" << last_in << "): ";
 		if (last_out.status != SUCCESS) {
@@ -129,8 +131,9 @@ bool one_internal(
 		std::cerr << "Error: Input log stream empty before response stream" << std::endl;
 		std::cerr << "Contains the data:";
 		do {
-			responses.read(last_resp);
-			std::cerr << "\n\t" << static_cast<std::string>(last_resp);
+			responses.read(last_resp_pkt);
+			last_resp.bytes = last_resp_pkt.data;
+			std::cerr << "\n\t" << static_cast<std::string>(last_resp.data);
 		} while (!responses.empty());
 		std::cerr << std::endl;
 		pass = false;

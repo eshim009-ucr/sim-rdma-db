@@ -31,13 +31,14 @@ bool until_it_breaks(
 ) {
 	bool pass = true;
 	bptr_t root = 0;
-	hls::stream<Request> requests;
-	hls::stream<Response> responses;
+	hls::stream<pkt_req> requests;
+	hls::stream<pkt_resp> responses;
 	hls::stream<insert_in_t> input_log;
 	uint_fast8_t ops_in, ops_out;
 	insert_in_t last_in;
 	insert_out_t last_out;
-	Response last_resp;
+	pkt_resp last_resp_pkt;
+	resp_union last_resp;
 
 	// Set up initial state
 	reset_mem(hbm);
@@ -52,8 +53,9 @@ bool until_it_breaks(
 	// Evalue Results
 	while (!input_log.empty() && !responses.empty()) {
 		input_log.read(last_in);
-		responses.read(last_resp);
-		last_out = last_resp.insert;
+		responses.read(last_resp_pkt);
+		last_resp.bytes = last_resp_pkt.data;
+		last_out = last_resp.data.insert;
 		#ifdef VERBOSE
 		std::cout << "Insert(k=" << last_in.key
 			<< ", v=" << last_in.value.data << "): ";
@@ -89,8 +91,9 @@ bool until_it_breaks(
 		std::cerr << "Error: Input log stream empty before response stream" << std::endl;
 		std::cerr << "Contains the data:";
 		do {
-			responses.read(last_resp);
-			std::cerr << "\n\t" << static_cast<std::string>(last_resp);
+			responses.read(last_resp_pkt);
+			last_resp.bytes = last_resp_pkt.data;
+			std::cerr << "\n\t" << static_cast<std::string>(last_resp.data);
 		} while (!responses.empty());
 		std::cerr << std::endl;
 		pass = false;
