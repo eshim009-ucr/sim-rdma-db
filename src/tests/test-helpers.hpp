@@ -14,9 +14,6 @@
 	((Node*) hbm)[addr].keys[i] = key_; ((Node*) hbm)[addr].values[i].data = value_;
 #define RUN_KERNEL \
 	krnl( \
-		m_axis_tx_meta, m_axis_tx_data, s_axis_tx_status, \
-		m_axis_bram_write_cmd, m_axis_bram_read_cmd, m_axis_bram_write_data, s_axis_bram_read_data, \
-		s_axis_update, \
 		myBoardNum, RDMA_TYPE, exec, \
 		hbm, root, \
 		requests, responses \
