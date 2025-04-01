@@ -36,9 +36,9 @@ void krnl(
 	#pragma HLS stream variable=readRespFifos type=fifo depth=0x100
 	#pragma HLS stream variable=writeFifos type=fifo depth=0x100
 
-	uint_fast32_t opsCount = requests.size();
+	uint_fast32_t stepCount = 0;
 
-	while (responses.size() < opsCount) {
+	while (stepCount++ < exec) {
 		sm_search(
 			root,
 			searchInput, searchOutput,
