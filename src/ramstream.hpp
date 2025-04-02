@@ -24,17 +24,21 @@
 void sm_ramstream_req(
 	//! [out] Streams of requests decoded from memory
 	hls::stream<Request>& requests,
-	//! [in] Pointer to high bandwidth memory
+	//! [in]  Pointer to high bandwidth memory
 	uint8_t *hbm
 );
 
 //! @brief Write an HLS stream of responses to a DRAM buffer
 void sm_ramstream_resp(
-	//! [in] Streams of responses to be encoded in memory
+	//! [in]  Streams of responses to be encoded in memory
 	hls::stream<Response>& responses,
 	//! [out] Pointer to high bandwidth memory
 	uint8_t *hbm
 );
+
+//! @brief Reset the offsets used to read/write requests/responses
+//!        to their starting position
+void reset_ramstream_offsets();
 
 
 #endif

@@ -56,11 +56,11 @@ XF_PROJ_ROOT = $(shell readlink -f $(COMMON_REPO))
 
 TARGET := hw
 HOST_ARCH := x86
-SYSROOT := 
+SYSROOT :=
 
 include ./utils.mk
 
-XSA := 
+XSA :=
 ifneq ($(PLATFORM), )
 XSA := $(call device2xsa, $(PLATFORM))
 endif
@@ -75,7 +75,7 @@ LAUNCH_EMULATOR = $(PACKAGE_OUT)/launch_$(TARGET).sh
 RESULT_STRING = TEST PASSED
 
 VPP := v++
-VPP_PFLAGS := 
+VPP_PFLAGS :=
 CMD_ARGS = $(BUILD_DIR)/krnl.xclbin
 SDCARD := sd_card
 
@@ -86,13 +86,13 @@ LDFLAGS += $(opencl_LDFLAGS)
 INCLUDES = ./include
 
 ########################## Checking if PLATFORM in whitelist #######################
-PLATFORM_BLOCKLIST += nodma 
+PLATFORM_BLOCKLIST += nodma
 ############################## Setting up Host Variables ##############################
 #Include Required Host Source Files
 HOST_SRCS += ./host.cpp
 # Host compiler global settings
 CXXFLAGS += -fmessage-length=0 -I$(INCLUDES)
-LDFLAGS += -lrt -lstdc++ 
+LDFLAGS += -lrt -lstdc++
 
 ifneq ($(HOST_ARCH), x86)
 	LDFLAGS += --sysroot=$(SYSROOT)
@@ -104,7 +104,8 @@ VPP_FLAGS += -t $(TARGET) --platform $(PLATFORM) --save-temps -I$(INCLUDES) --co
 ifneq ($(TARGET), hw)
 	VPP_FLAGS += -g
 endif
-
+# Name of kernel function
+KRNL := krnl
 
 
 EXECUTABLE = ./host
@@ -131,7 +132,11 @@ build: check-vitis check-device $(BINARY_CONTAINERS)
 xclbin: build
 
 ############################## Setting Rules for Binary Containers (Building Kernels) ##############################
-BINARY_CONTAINER_krnl_OBJS += $(IP_REPO)/krnl.xo
+$(TEMP_DIR)/krnl.xo: ./src/krnl.cpp ./src/insert.cpp ./src/memory.cpp ./src/node.cpp ./src/operations.cpp ./src/rdma.cpp ./src/search.cpp ./src/trace.cpp
+	mkdir -p $(TEMP_DIR)
+	$(VPP) $(VPP_FLAGS) -c -k $(KRNL) --temp_dir $(TEMP_DIR)  -I'$(<D)' -o'$@' $^
+BINARY_CONTAINER_krnl_OBJS += $(TEMP_DIR)/krnl.xo
+# BINARY_CONTAINER_krnl_OBJS += $(IP_REPO)/krnl.xo
 
 $(BUILD_DIR)/krnl.xclbin: $(BINARY_CONTAINER_krnl_OBJS)
 	mkdir -p $(BUILD_DIR)
@@ -192,8 +197,8 @@ endif
 ############################## Cleaning Rules ##############################
 # Cleaning stuff
 clean:
-	-$(RMDIR) $(EXECUTABLE) $(XCLBIN)/{*sw_emu*,*hw_emu*} 
-	-$(RMDIR) profile_* TempConfig system_estimate.xtxt *.rpt *.csv 
+	-$(RMDIR) $(EXECUTABLE) $(XCLBIN)/{*sw_emu*,*hw_emu*}
+	-$(RMDIR) profile_* TempConfig system_estimate.xtxt *.rpt *.csv
 	-$(RMDIR) src/*.ll *v++* .Xil emconfig.json dltmp* xmltmp* *.log *.jou *.wcfg *.wdb
 
 cleanall: clean

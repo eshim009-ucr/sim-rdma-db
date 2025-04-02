@@ -18,6 +18,18 @@ struct Request {
 		search_in_t search;
 		insert_in_t insert;
 	};
+	operator std::string() const {
+		std::stringstream ss;
+		switch (opcode) {
+			case SEARCH:
+				ss << "Search Request " << search;
+				break;
+			case INSERT:
+				ss << "Insert Request k=" << insert.key << ", v=" << insert.value.data;
+				break;
+		}
+		return ss.str();
+	}
 } __attribute__((packed));
 
 struct Response {
@@ -31,8 +43,10 @@ struct Response {
 		switch (opcode) {
 			case SEARCH:
 				ss << "Search Response " << ERROR_CODE_NAMES[-search.status] << ", " << search.value.data;
+				break;
 			case INSERT:
 				ss << "Insert Response " << ERROR_CODE_NAMES[-insert];
+				break;
 		}
 		return ss.str();
 	}

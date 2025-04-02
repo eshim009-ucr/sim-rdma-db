@@ -41,11 +41,12 @@ bool root_is_leaf(
 
 	// Set up initial state
 	reset_mem(hbm);
+	reset_ramstream_offsets();
 	SET_IKV(root, 0, 1, 10)
 	SET_IKV(root, 1, 2, 20)
 	SET_IKV(root, 2, 4, 40)
 	SET_IKV(root, 3, 5, 50)
-	hbm_dump(hbm, 2);
+	hbm_dump(hbm, 0, sizeof(Node), 2);
 	// Should fail
 	INPUT_SEARCH(0)
 	INPUT_SEARCH(3)
@@ -55,6 +56,8 @@ bool root_is_leaf(
 	INPUT_SEARCH(2)
 	INPUT_SEARCH(4)
 	INPUT_SEARCH(5)
+	hbm_dump(hbm, REQUEST_OFFSET, sizeof(Request), 15);
+	hbm_dump(hbm, RESPONSE_OFFSET, sizeof(Response), 15);
 
 	// Perform Operations
 	RUN_KERNEL
@@ -64,6 +67,7 @@ bool root_is_leaf(
 	while (!input_log.empty()) {
 		input_log.read(last_in);
 		last_resp = *((Response*) &hbm[offset]);
+		offset += sizeof(Response);
 		last_out = last_resp.search;
 		#ifdef VERBOSE
 		std::cout << "Search(" << last_in << "): ";

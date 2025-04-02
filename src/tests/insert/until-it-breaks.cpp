@@ -41,6 +41,7 @@ bool until_it_breaks(
 
 	// Set up initial state
 	reset_mem(hbm);
+	reset_ramstream_offsets();
 	// Should succeed
 	for (uint_fast8_t i = 1; i <= 17; ++i) {
 		INPUT_INSERT(i, -i)
@@ -54,6 +55,7 @@ bool until_it_breaks(
 	while (!input_log.empty()) {
 		input_log.read(last_in);
 		last_resp = *((Response*) &hbm[offset]);
+		offset += sizeof(Response);
 		last_out = last_resp.insert;
 		#ifdef VERBOSE
 		std::cout << "Insert(k=" << last_in.key

@@ -48,7 +48,7 @@ static void mem_read(
 			tmp = hbm[read_op.addr];
 		}
 		// Read HBM value and push to the stack
-		nodeFifo.write_nb(tmp);
+		nodeFifo.write(tmp);
 	}
 }
 

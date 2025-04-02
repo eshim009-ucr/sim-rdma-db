@@ -63,12 +63,13 @@ void sm_insert(
 					// Do the actual insertion
 					node.keys[i_insert] = pair.key;
 					node.values[i_insert] = pair.value;
+					writeFifo.write(node);
 					// Done
-					output.write_nb(SUCCESS);
+					output.write(SUCCESS);
 					state = IDLE;
 					return; // Need to double-break
 				} else if (node.keys[i] == pair.key) {
-					output.write_nb(KEY_EXISTS);
+					output.write(KEY_EXISTS);
 					state = IDLE;
 					return; // Need to double-break
 				} else if (node.keys[i] < pair.key) {

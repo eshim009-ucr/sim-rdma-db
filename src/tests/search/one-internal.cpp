@@ -41,6 +41,7 @@ bool one_internal(
 
 	// Set up initial state
 	reset_mem(hbm);
+	reset_ramstream_offsets();
 	// Root
 	SET_IKV(root, 0, 5, 1)
 	SET_IKV(root, 1, 11, 2)
@@ -54,7 +55,7 @@ bool one_internal(
 	SET_IKV(2, 1, 8, -8)
 	SET_IKV(2, 2, 10, -10)
 	SET_IKV(2, 3, 11, -11)
-	hbm_dump(hbm, 4);
+	hbm_dump(hbm, 0, sizeof(Node), 4);
 	// Should fail
 	INPUT_SEARCH(0)
 	INPUT_SEARCH(3)
@@ -70,6 +71,8 @@ bool one_internal(
 	INPUT_SEARCH(8)
 	INPUT_SEARCH(10)
 	INPUT_SEARCH(11)
+	hbm_dump(hbm, REQUEST_OFFSET, sizeof(Request), 15);
+	hbm_dump(hbm, RESPONSE_OFFSET, sizeof(Response), 15);
 
 	// Perform Operations
 	RUN_KERNEL
@@ -79,6 +82,7 @@ bool one_internal(
 	while (!input_log.empty()) {
 		input_log.read(last_in);
 		last_resp = *((Response*) &hbm[offset]);
+		offset += sizeof(Response);
 		last_out = last_resp.search;
 		#ifdef VERBOSE
 		std::cout << "Search(" << last_in << "): ";
@@ -126,6 +130,8 @@ bool one_internal(
 		std::cerr << std::endl;
 		pass = false;
 	}
+	hbm_dump(hbm, REQUEST_OFFSET, sizeof(Request), 15);
+	hbm_dump(hbm, RESPONSE_OFFSET, sizeof(Response), 15);
 
 	return pass;
 }

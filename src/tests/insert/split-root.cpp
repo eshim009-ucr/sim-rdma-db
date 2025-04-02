@@ -41,6 +41,9 @@ bool split_root(
 
 	// Set up initial state
 	reset_mem(hbm);
+	reset_ramstream_offsets();
+	hbm_dump(hbm, REQUEST_OFFSET, sizeof(Request), 15);
+	hbm_dump(hbm, RESPONSE_OFFSET, sizeof(Response), 15);
 	// Should succeed
 	INPUT_INSERT(0, 0)
 	INPUT_INSERT(5, -5)
@@ -50,12 +53,14 @@ bool split_root(
 
 	// Perform Operations
 	RUN_KERNEL
+	hbm_dump(hbm, 0, sizeof(Node), 5);
 
 	// Evalue Results
 	offset = RESPONSE_OFFSET;
 	while (!input_log.empty()) {
 		input_log.read(last_in);
 		last_resp = *((Response*) &hbm[offset]);
+		offset += sizeof(Response);
 		last_out = last_resp.insert;
 		#ifdef VERBOSE
 		std::cout << "Insert(k=" << last_in.key
@@ -88,6 +93,8 @@ bool split_root(
 		std::cerr << std::endl;
 		pass = false;
 	}
+	hbm_dump(hbm, REQUEST_OFFSET, sizeof(Request), 15);
+	hbm_dump(hbm, RESPONSE_OFFSET, sizeof(Response), 15);
 
 	return pass;
 }
