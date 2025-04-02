@@ -7,6 +7,7 @@
 #include <sstream>
 
 enum Opcode {
+	NOP = 0,
 	SEARCH = 1,
 	INSERT = 2
 };

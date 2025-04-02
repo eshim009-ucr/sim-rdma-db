@@ -1,4 +1,5 @@
 #include "operations.hpp"
+#include "ramstream.hpp"
 #include "krnl.hpp"
 
 
@@ -7,9 +8,7 @@ void krnl(
 	int RDMA_TYPE,
 	int exec,
 	uint8_t *hbm,
-	bptr_t root,
-	hls::stream<Request>& requests,
-	hls::stream<Response>& responses
+	bptr_t root
 ) {
 
 	#pragma HLS INTERFACE s_axilite port = myBoardNum
@@ -18,9 +17,9 @@ void krnl(
 	#pragma HLS INTERFACE s_axilite port = root
 
 	#pragma HLS INTERFACE m_axi port = hbm offset = slave bundle = gmem depth = 0x1000
-	#pragma HLS INTERFACE axis port = requests
-	#pragma HLS INTERFACE axis port = responses
 
+	static hls::stream<Request> requests;
+	static hls::stream<Response> responses;
 	static hls::stream<search_in_t> searchInput;
 	static hls::stream<insert_in_t> insertInput;
 	static hls::stream<search_out_t> searchOutput;
@@ -28,6 +27,8 @@ void krnl(
 	static hls::stream<mread_req_t> readReqFifos[2];
 	static hls::stream<mread_resp_t> readRespFifos[2];
 	static hls::stream<mwrite_t> writeFifos[1];
+	#pragma HLS stream variable=requests type=fifo depth=0x100
+	#pragma HLS stream variable=responses type=fifo depth=0x100
 	#pragma HLS stream variable=searchInput type=fifo depth=0x100
 	#pragma HLS stream variable=insertInput type=fifo depth=0x100
 	#pragma HLS stream variable=searchOutput type=fifo depth=0x100

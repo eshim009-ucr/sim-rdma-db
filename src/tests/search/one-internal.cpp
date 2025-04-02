@@ -1,5 +1,6 @@
 #include "one-internal.hpp"
 #include "../../krnl.hpp"
+#include "../../ramstream.hpp"
 #include "../../operations.hpp"
 #include "../test-helpers.hpp"
 #include <iostream>
@@ -31,13 +32,12 @@ bool one_internal(
 ) {
 	bool pass = true;
 	bptr_t root = MAX_LEAVES;
-	hls::stream<Request> requests;
-	hls::stream<Response> responses;
 	hls::stream<search_in_t> input_log;
 	uint_fast8_t ops_in, ops_out;
 	search_in_t last_in;
 	search_out_t last_out;
 	Response last_resp;
+	uint_fast64_t offset = REQUEST_OFFSET;
 
 	// Set up initial state
 	reset_mem(hbm);
@@ -75,9 +75,10 @@ bool one_internal(
 	RUN_KERNEL
 
 	// Evalue Results
-	while (!input_log.empty() && !responses.empty()) {
+	offset = RESPONSE_OFFSET;
+	while (!input_log.empty()) {
 		input_log.read(last_in);
-		responses.read(last_resp);
+		last_resp = *((Response*) &hbm[offset]);
 		last_out = last_resp.search;
 		#ifdef VERBOSE
 		std::cout << "Search(" << last_in << "): ";
@@ -121,17 +122,7 @@ bool one_internal(
 		do {
 			input_log.read(last_in);
 			std::cerr << "\n\t" << last_in;
-		} while (!responses.empty());
-		std::cerr << std::endl;
-		pass = false;
-	}
-	if (!responses.empty()) {
-		std::cerr << "Error: Input log stream empty before response stream" << std::endl;
-		std::cerr << "Contains the data:";
-		do {
-			responses.read(last_resp);
-			std::cerr << "\n\t" << static_cast<std::string>(last_resp);
-		} while (!responses.empty());
+		} while (!input_log.empty());
 		std::cerr << std::endl;
 		pass = false;
 	}

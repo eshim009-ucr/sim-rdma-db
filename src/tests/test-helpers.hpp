@@ -6,17 +6,21 @@
 
 
 #define VERBOSE
-#define INPUT_SEARCH(x) requests.write(encode_search_req(x)); input_log.write(x);
+#define INPUT_SEARCH(x) \
+	*((Request*) &hbm[offset]) = encode_search_req(x); \
+	offset += sizeof(Request); \
+	input_log.write(x);
 #define INPUT_INSERT(key_, value_) \
 	last_in.key = key_; last_in.value.data = value_; \
-	requests.write(encode_insert_req(last_in)); input_log.write(last_in);
+	*((Request*) &hbm[offset]) = encode_insert_req(last_in); \
+	offset += sizeof(Request); \
+	input_log.write(last_in);
 #define SET_IKV(addr, i, key_, value_) \
 	((Node*) hbm)[addr].keys[i] = key_; ((Node*) hbm)[addr].values[i].data = value_;
 #define RUN_KERNEL \
 	krnl( \
 		myBoardNum, RDMA_TYPE, exec, \
-		hbm, root, \
-		requests, responses \
+		hbm, root \
 	);
 
 

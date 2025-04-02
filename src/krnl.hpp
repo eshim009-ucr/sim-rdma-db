@@ -63,7 +63,5 @@ void krnl(
 	//! [inout] Address within HBM that holds the root of the tree
 	//!
 	//! Can be modified by operation kernels
-	bptr_t root,
-	hls::stream<Request>& requests,
-	hls::stream<Response>& responses
+	bptr_t root
 );

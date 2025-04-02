@@ -1,5 +1,6 @@
 #include "leaf-node.hpp"
 #include "../../krnl.hpp"
+#include "../../ramstream.hpp"
 #include "../../operations.hpp"
 #include "../test-helpers.hpp"
 #include <iostream>
@@ -31,13 +32,12 @@ bool leaf_node(
 ) {
 	bool pass = true;
 	bptr_t root = 0;
-	hls::stream<Request> requests;
-	hls::stream<Response> responses;
 	hls::stream<insert_in_t> input_log;
 	uint_fast8_t ops_in, ops_out;
 	insert_in_t last_in;
 	insert_out_t last_out;
 	Response last_resp;
+	uint_fast64_t offset = REQUEST_OFFSET;
 
 	// Set up initial state
 	reset_mem(hbm);
@@ -50,9 +50,10 @@ bool leaf_node(
 	RUN_KERNEL
 
 	// Evalue Results
-	while (!input_log.empty() && !responses.empty()) {
+	offset = RESPONSE_OFFSET;
+	while (!input_log.empty()) {
 		input_log.read(last_in);
-		responses.read(last_resp);
+		last_resp = *((Response*) &hbm[offset]);
 		last_out = last_resp.insert;
 		#ifdef VERBOSE
 		std::cout << "Insert(k=" << last_in.key
@@ -81,17 +82,7 @@ bool leaf_node(
 		do {
 			input_log.read(last_in);
 			std::cerr << "\n\t k=" << last_in.key << " v=" << last_in.value.data;
-		} while (!responses.empty());
-		std::cerr << std::endl;
-		pass = false;
-	}
-	if (!responses.empty()) {
-		std::cerr << "Error: Input log stream empty before response stream" << std::endl;
-		std::cerr << "Contains the data:";
-		do {
-			responses.read(last_resp);
-			std::cerr << "\n\t" << static_cast<std::string>(last_resp);
-		} while (!responses.empty());
+		} while (!input_log.empty());
 		std::cerr << std::endl;
 		pass = false;
 	}
