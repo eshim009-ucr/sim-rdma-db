@@ -6,7 +6,7 @@
 extern "C" {
 #include "core/node.h"
 };
-#include "memory.hpp"
+#include "memgr.hpp"
 #include <hls_stream.h>
 
 

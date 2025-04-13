@@ -23,6 +23,7 @@ add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp -cflags "-I${CMAKE_CURRENT_BI
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/insert.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/memory.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/memgr.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/node.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/operations.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/rdma.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"

@@ -2,7 +2,7 @@
 #define SEARCH_HPP
 
 
-#include "memory.hpp"
+#include "memgr.hpp"
 extern "C" {
 #include "core/node.h"
 };

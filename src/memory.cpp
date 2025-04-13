@@ -1,124 +1,36 @@
-#include "memory.hpp"
+#include "core/memory.h"
 
 
-//! The HLS interface to HBM does not support atomic test-and-set operations.
-//! Atomic test-and-set operations within the FPGA fabric are allowed.
-//! Serializing test-and-set operations in memory with mutual exclusion ensures
-//! that race conditions do not lead to unexpected concurrent modification.
-//!
-//! @todo Set up multiple locks for specific regions of memory, such as by
-//! address ranges or hashes to allow higher write bandwidth.
-static Node hbm_read_lock(Node* hbm, bptr_t addr) {
-	static lock_t local_readlock = 0;
-	Node tmp;
-	lock_p(&local_readlock);
-	// Read the given address from main memory until its lock is released
-	do {
-		tmp = hbm[addr];
-	} while(lock_test(&tmp.lock));
-	// After the lock is released, we can safely acquire it because no other
-	// modules concurrently hold this function's lock
-	lock_p(&tmp.lock);
-	// Write back the locked value to main memory
-	hbm[addr] = tmp;
-	// Release the local lock for future writers
-	lock_v(&local_readlock);
-	return tmp;
+Node mem_read(bptr_t address, mread_req_stream_t *req_stream, mread_resp_stream_t *resp_stream) {
+	Node node;
+	RwOp read_op = {.addr = address, .lock = false};
+	hls::stream<mread_req_t>& addrFifo = *req_stream;
+	hls::stream<mread_resp_t>& nodeFifo = *resp_stream;
+
+	addrFifo.write(read_op);
+	while (nodeFifo.empty());
+	nodeFifo.read(node);
+
+	return node;
 }
 
 
-static void mem_read(
-	hls::stream<mread_req_t>& addrFifo,
-	hls::stream<mread_resp_t>& nodeFifo,
-	Node *hbm
-) {
-	RwOp read_op;
-	Node tmp;
-	if (!addrFifo.empty()) {
-		// Pop the address to read
-		addrFifo.read(read_op);
-		assert(read_op.addr != INVALID);
-		// Try to grab lock if requested
-		//! @todo Prevent this from blocking other reads in the FIFO.
-		//! Or at least ensure parallel for loop execution so it only backs
-		//! up one FIFO.
-		if (read_op.lock) {
-			tmp = hbm_read_lock(hbm, read_op.addr);
-		} else {
-			tmp = hbm[read_op.addr];
-		}
-		// Read HBM value and push to the stack
-		nodeFifo.write_nb(tmp);
-	}
+Node mem_read_lock(bptr_t address, mread_req_stream_t *req_stream, mread_resp_stream_t *resp_stream) {
+	Node node;
+	RwOp read_op = {.addr = address, .lock = true};
+	hls::stream<mread_req_t>& addrFifo = *req_stream;
+	hls::stream<mread_resp_t>& nodeFifo = *resp_stream;
+
+	addrFifo.write(read_op);
+	while (nodeFifo.empty());
+	nodeFifo.read(node);
+
+	return node;
 }
 
 
-static void mem_write(
-	hls::stream<mwrite_t>& writeFifo,
-	Node *hbm
-) {
-	AddrNode node;
-	if (!writeFifo.empty()) {
-		// Pop the address & data to write to
-		writeFifo.read(node);
-		// Check address validity
-		assert(node.addr < MEM_SIZE);
-		assert(node.addr != INVALID);
-		// Perform write
-		hbm[node.addr] = node.node;
-	}
-}
-
-
-void sm_memory(
-	hls::stream<mread_req_t> readReqFifos[2],
-	hls::stream<mread_resp_t> readRespFifos[2],
-	hls::stream<mwrite_t> writeFifos[1],
-	Node *hbm
-) {
-	mem_read(readReqFifos[0], readRespFifos[0], hbm);
-	mem_write(writeFifos[0], hbm);
-	mem_read(readReqFifos[1], readRespFifos[1], hbm);
-}
-
-
-ErrorCode alloc_sibling(
-	AddrNode& old_node,
-	AddrNode& sibling,
-	hls::stream<mread_req_t>& readReqFifo,
-	hls::stream<mread_resp_t>& readRespFifo,
-	hls::stream<mwrite_t>& writeFifo
-) {
-	static bptr_t stack_ptr = 0;
-	sibling.addr = stack_ptr - sizeof(Node);
-	// Ensure stack top is actually empty
-	// Can eliminate outside of tests
-	do {
-		sibling.addr += sizeof(Node);
-		if (sibling.addr > MEM_SIZE) {
-			return OUT_OF_MEMORY;
-		}
-		readReqFifo.write({.addr=sibling.addr, .lock=0});
-		//! @todo Do this better
-		// Wait for read to complete
-		while (readRespFifo.empty());
-		readRespFifo.read(sibling.node);
-	} while(is_valid(&sibling.node));
-
-	// Lock node
-	lock_p(&sibling.node.lock);
-	writeFifo.write(sibling);
-
-	// Adjust next node pointers
-	sibling.node.next = old_node.node.next;
-	old_node.node.next = sibling.addr;
-
-	// Move half of old node's contents to new node
-	for (li_t i = 0; i < TREE_ORDER/2; ++i) {
-		sibling.node.keys[i] = old_node.node.keys[i + (TREE_ORDER/2)];
-		sibling.node.values[i] = old_node.node.values[i + (TREE_ORDER/2)];
-		old_node.node.keys[i + (TREE_ORDER/2)] = INVALID;
-	}
-
-	return SUCCESS;
+//! @brief Write a node to memory and unlock it
+void mem_write_unlock(AddrNode *node, mwrite_stream_t *req_stream) {
+	hls::stream<mwrite_t>& writeFifo = *req_stream;
+	writeFifo.write(*node);
 }
