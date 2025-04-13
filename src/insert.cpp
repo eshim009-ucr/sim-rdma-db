@@ -1,10 +1,9 @@
 #include "trace.hpp"
 #include "insert.hpp"
 extern "C" {
-#include "core/split.h"
 #include "core/insert-helpers.h"
+#include "core/split.h"
 };
-
 
 //! @brief Divide by 2 and take the ceiling using only integer arithmetic
 //! @param[in] x  The value to operate on
@@ -25,15 +24,14 @@ void sm_insert(
 		IDLE,
 		TRAVERSE,
 		INSERT,
-		SPLIT,
-		SPLIT_ROOT,
-		SPLIT_NON_ROOT
+		NON_FULL,
+		SPLIT
 	} state = IDLE;
 	static KvPair pair;
-	static AddrNode node, sibling, parent;
+	static AddrNode leaf, sibling, parent;
 	static ErrorCode status;
-	// Iterators
-	li_t i, i_insert;
+	static bool keep_splitting = false;
+	static li_t i_leaf;
 
 
 	switch(state) {
@@ -47,104 +45,51 @@ void sm_insert(
 		case TRAVERSE:
 			//! If reached a leaf
 			if (t.sm_step(readReqFifo, readRespFifo)) {
-				state = INSERT;
+				state = NON_FULL;
 			} else {
 				parent = t.get_node();
 			}
 			break;
-		case INSERT:
-			node = t.get_node();
-			for (i = 0; i < TREE_ORDER; ++i) {
-				// Found an empty slot
-				// Will be the last slot
-				if (node.node.keys[i] == INVALID) {
-					// Scoot nodes if necessary to maintain ordering
-					// Iterate right to left from the last node to the insertion point
-					for (; i_insert < i; i--) {
-						node.node.keys[i] = node.node.keys[i-1];
-						node.node.values[i] = node.node.values[i-1];
-					}
-					// Do the actual insertion
-					node.node.keys[i_insert] = pair.key;
-					node.node.values[i_insert] = pair.value;
-					// Done
-					output.write_nb(SUCCESS);
-					state = IDLE;
-					return; // Need to double-break
-				} else if (node.node.keys[i] == pair.key) {
-					output.write_nb(KEY_EXISTS);
-					state = IDLE;
-					return; // Need to double-break
-				} else if (node.node.keys[i] < pair.key) {
-					i_insert++;
-				}
+		case LOAD_PARENT;
+		case NON_FULL:
+			leaf = t.get_node();
+			if (!is_full(&leaf.node)) {
+				status = insert_nonfull(&leaf.node, pair.key, pair.value);
+				lock_v(&leaf.node.lock);
+				writeFifo.write(leaf);
+				output.write(status);
+				state = IDLE;
+			} else {
+				state = SPLIT;
 			}
-			// Didn't find a slot, need to split
-			state = SPLIT;
 			break;
 		case SPLIT:
-			status = alloc_sibling(node, sibling, readReqFifo, readRespFifo, writeFifo);
-			if (status != SUCCESS) {
+			// Try to split this node
+			status = split_node(&root, &leaf, &parent, &sibling, &readReqFifo, &readRespFifo, &writeFifo);
+			keep_splitting = (status == PARENT_FULL);
+			// Unrecoverable failure
+			if (status != SUCCESS && status != PARENT_FULL) {
+				lock_v(&leaf.node.lock); writeFifo.write(leaf);
+				lock_v(&sibling.node.lock); writeFifo.write(sibling);
+				lock_v(&parent.node.lock); writeFifo.write(parent);
+				output.write(status);
 				state = IDLE;
 				break;
 			}
-			if (node.addr == root) {
-				state = SPLIT_ROOT;
-			} else {
-				state = SPLIT_NON_ROOT;
-			}
-			break;
-		case SPLIT_ROOT:
-			// If this is the only node
-			// We need to create the first inner node
-			if (is_leaf(node.addr)) {
-				// Make a new root node
-				root = MAX_LEAVES;
-			} else {
-				root = root + MAX_NODES_PER_LEVEL;
-				if (root >= MEM_SIZE) {
-					status = NOT_IMPLEMENTED;
-					state = IDLE;
-					break;
-				}
-			}
-			parent.addr = root;
-			lock_p(&parent.node.lock);
-			writeFifo.write(parent);
-			clear(&parent.node);
-			parent.node.keys[0] = node.node.keys[DIV2CEIL(TREE_ORDER)-1];
-			parent.node.values[0].ptr = node.addr;
-			parent.node.keys[1] = sibling.node.keys[(TREE_ORDER/2)-1];
-			parent.node.values[1].ptr = sibling.addr;
-			status = SUCCESS;
-			state = IDLE;
-			break;
-		case SPLIT_NON_ROOT:
-			if (is_full(&parent.node)) {
-				status = NOT_IMPLEMENTED;
+			// Insert the new content and unlock leaf and its sibling
+			status = insert_after_split(pair.key, pair.value, &leaf, &sibling, &writeFifo);
+			if (keep_splitting) {
+				// Try this again on the parent
+				pair.key = max(&sibling.node);
+				rekey(&parent.node, pair.key, max(&leaf.node));
+				pair.value.ptr = sibling.addr;
+				i_leaf--;
+				leaf = parent;
+			} else if (status != SUCCESS) {
+				lock_v(&parent.node.lock);
+				writeFifo.write(parent);
+				output.write(status);
 				state = IDLE;
-				break;
-			} else {
-				for (li_t i = 0; i < TREE_ORDER; ++i) {
-					// Update key of old node
-					if (parent.node.values[i].ptr == node.addr) {
-						parent.node.keys[i] = node.node.keys[DIV2CEIL(TREE_ORDER)-1];
-						// Scoot over other nodes to fit in new node
-						for (li_t j = TREE_ORDER-1; j > i; --j) {
-							parent.node.keys[j] = parent.node.keys[j-1];
-							parent.node.values[j] = parent.node.values[j-1];
-						}
-						// Insert new node
-						parent.node.keys[i+1] = sibling.node.keys[(TREE_ORDER/2)-1];
-						parent.node.values[i+1].ptr = sibling.addr;
-						status = SUCCESS;
-						state = IDLE;
-						break;
-					}
-				}
-				status = NOT_IMPLEMENTED;
-				state = IDLE;
-				break;
 			}
 			break;
 	}
