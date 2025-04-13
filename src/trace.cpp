@@ -23,15 +23,15 @@ bool Tracer::sm_step(
 			break;
 		case CHECK_NODE:
 			if (!readRespFifo.empty()) {
-				readRespFifo.read(node);
-				if (is_leaf(node)) {
+				readRespFifo.read(node.node);
+				if (is_leaf(node.addr)) {
 					// Search for the exact key within the node
-					result = find_value(node, key);
+					result = find_value(&node.node, key);
 					state = DONE;
 					return true;
 				} else {
 					// Try to traverse to the next node
-					result = find_next(node, key);
+					result = find_next(&node.node, key);
 					// If error, stop looking
 					if (result.status != SUCCESS) {
 						state = DONE;

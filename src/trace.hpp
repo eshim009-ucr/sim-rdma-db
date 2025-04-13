@@ -3,7 +3,9 @@
 
 
 #include "types.hpp"
-#include "node.hpp"
+extern "C" {
+#include "core/node.h"
+};
 #include "memory.hpp"
 #include <hls_stream.h>
 

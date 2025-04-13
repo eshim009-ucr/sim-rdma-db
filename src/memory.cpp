@@ -65,7 +65,7 @@ static void mem_write(
 		assert(node.addr < MEM_SIZE);
 		assert(node.addr != INVALID);
 		// Perform write
-		hbm[node.addr] = node;
+		hbm[node.addr] = node.node;
 	}
 }
 
@@ -102,22 +102,22 @@ ErrorCode alloc_sibling(
 		//! @todo Do this better
 		// Wait for read to complete
 		while (readRespFifo.empty());
-		readRespFifo.read(sibling);
-	} while(is_valid(sibling));
+		readRespFifo.read(sibling.node);
+	} while(is_valid(&sibling.node));
 
 	// Lock node
-	lock_p(&sibling.lock);
+	lock_p(&sibling.node.lock);
 	writeFifo.write(sibling);
 
 	// Adjust next node pointers
-	sibling.next = old_node.next;
-	old_node.next = sibling.addr;
+	sibling.node.next = old_node.node.next;
+	old_node.node.next = sibling.addr;
 
 	// Move half of old node's contents to new node
 	for (li_t i = 0; i < TREE_ORDER/2; ++i) {
-		sibling.keys[i] = old_node.keys[i + (TREE_ORDER/2)];
-		sibling.values[i] = old_node.values[i + (TREE_ORDER/2)];
-		old_node.keys[i + (TREE_ORDER/2)] = INVALID;
+		sibling.node.keys[i] = old_node.node.keys[i + (TREE_ORDER/2)];
+		sibling.node.values[i] = old_node.node.values[i + (TREE_ORDER/2)];
+		old_node.node.keys[i + (TREE_ORDER/2)] = INVALID;
 	}
 
 	return SUCCESS;

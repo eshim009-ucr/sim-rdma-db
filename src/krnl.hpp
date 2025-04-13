@@ -2,7 +2,10 @@
 
 
 #include "operations.hpp"
-#include "node.hpp"
+#include "types.hpp"
+extern "C" {
+#include "core/node.h"
+};
 #include <hls_stream.h>
 #include <iostream>
 #include <stdlib.h>

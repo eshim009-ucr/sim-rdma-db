@@ -1,5 +1,9 @@
 #include "trace.hpp"
 #include "insert.hpp"
+extern "C" {
+#include "core/split.h"
+#include "core/insert-helpers.h"
+};
 
 
 //! @brief Divide by 2 and take the ceiling using only integer arithmetic
@@ -53,25 +57,25 @@ void sm_insert(
 			for (i = 0; i < TREE_ORDER; ++i) {
 				// Found an empty slot
 				// Will be the last slot
-				if (node.keys[i] == INVALID) {
+				if (node.node.keys[i] == INVALID) {
 					// Scoot nodes if necessary to maintain ordering
 					// Iterate right to left from the last node to the insertion point
 					for (; i_insert < i; i--) {
-						node.keys[i] = node.keys[i-1];
-						node.values[i] = node.values[i-1];
+						node.node.keys[i] = node.node.keys[i-1];
+						node.node.values[i] = node.node.values[i-1];
 					}
 					// Do the actual insertion
-					node.keys[i_insert] = pair.key;
-					node.values[i_insert] = pair.value;
+					node.node.keys[i_insert] = pair.key;
+					node.node.values[i_insert] = pair.value;
 					// Done
 					output.write_nb(SUCCESS);
 					state = IDLE;
 					return; // Need to double-break
-				} else if (node.keys[i] == pair.key) {
+				} else if (node.node.keys[i] == pair.key) {
 					output.write_nb(KEY_EXISTS);
 					state = IDLE;
 					return; // Need to double-break
-				} else if (node.keys[i] < pair.key) {
+				} else if (node.node.keys[i] < pair.key) {
 					i_insert++;
 				}
 			}
@@ -93,7 +97,7 @@ void sm_insert(
 		case SPLIT_ROOT:
 			// If this is the only node
 			// We need to create the first inner node
-			if (is_leaf(node)) {
+			if (is_leaf(node.addr)) {
 				// Make a new root node
 				root = MAX_LEAVES;
 			} else {
@@ -105,34 +109,34 @@ void sm_insert(
 				}
 			}
 			parent.addr = root;
-			lock_p(&parent.lock);
+			lock_p(&parent.node.lock);
 			writeFifo.write(parent);
-			clear(parent);
-			parent.keys[0] = node.keys[DIV2CEIL(TREE_ORDER)-1];
-			parent.values[0].ptr = node.addr;
-			parent.keys[1] = sibling.keys[(TREE_ORDER/2)-1];
-			parent.values[1].ptr = sibling.addr;
+			clear(&parent.node);
+			parent.node.keys[0] = node.node.keys[DIV2CEIL(TREE_ORDER)-1];
+			parent.node.values[0].ptr = node.addr;
+			parent.node.keys[1] = sibling.node.keys[(TREE_ORDER/2)-1];
+			parent.node.values[1].ptr = sibling.addr;
 			status = SUCCESS;
 			state = IDLE;
 			break;
 		case SPLIT_NON_ROOT:
-			if (is_full(parent)) {
+			if (is_full(&parent.node)) {
 				status = NOT_IMPLEMENTED;
 				state = IDLE;
 				break;
 			} else {
 				for (li_t i = 0; i < TREE_ORDER; ++i) {
 					// Update key of old node
-					if (parent.values[i].ptr == node.addr) {
-						parent.keys[i] = node.keys[DIV2CEIL(TREE_ORDER)-1];
+					if (parent.node.values[i].ptr == node.addr) {
+						parent.node.keys[i] = node.node.keys[DIV2CEIL(TREE_ORDER)-1];
 						// Scoot over other nodes to fit in new node
 						for (li_t j = TREE_ORDER-1; j > i; --j) {
-							parent.keys[j] = parent.keys[j-1];
-							parent.values[j] = parent.values[j-1];
+							parent.node.keys[j] = parent.node.keys[j-1];
+							parent.node.values[j] = parent.node.values[j-1];
 						}
 						// Insert new node
-						parent.keys[i+1] = sibling.keys[(TREE_ORDER/2)-1];
-						parent.values[i+1].ptr = sibling.addr;
+						parent.node.keys[i+1] = sibling.node.keys[(TREE_ORDER/2)-1];
+						parent.node.values[i+1].ptr = sibling.addr;
 						status = SUCCESS;
 						state = IDLE;
 						break;

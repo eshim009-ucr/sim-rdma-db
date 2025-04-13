@@ -2,7 +2,10 @@
 #define TEST__ROOT_IS_LEAF_HPP
 
 
-#include "../../node.hpp"
+#include "../../types.hpp"
+extern "C" {
+#include "../../core/node.h"
+};
 #include <hls_stream.h>
 
 

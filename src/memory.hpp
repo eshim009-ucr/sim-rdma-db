@@ -2,7 +2,9 @@
 #define MEMORY_HPP
 
 
-#include "node.hpp"
+extern "C" {
+#include "core/node.h"
+};
 #include <hls_stream.h>
 #include <list>
 #include <functional>
