@@ -59,7 +59,8 @@ void sm_insert(
 			state = NON_FULL;
 			break;
 		case NON_FULL:
-			leaf = t.get_node();
+			leaf.addr = t.get_node().addr;
+			leaf.node = mem_read_lock(t.get_node().addr, &readReqFifo, &readRespFifo);
 			if (!is_full(&leaf.node)) {
 				status = insert_nonfull(&leaf.node, pair.key, pair.value);
 				lock_v(&leaf.node.lock);
