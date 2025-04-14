@@ -23,7 +23,7 @@ void sm_insert(
 	static enum {
 		IDLE,
 		TRAVERSE,
-		INSERT,
+		BACKTRACK,
 		NON_FULL,
 		SPLIT
 	} state = IDLE;
@@ -50,7 +50,14 @@ void sm_insert(
 				parent = t.get_node();
 			}
 			break;
-		case LOAD_PARENT;
+		case BACKTRACK:
+			if (t.double_step_back(readReqFifo, readRespFifo)) {
+				parent = t.get_node();
+			} else {
+				parent.addr = INVALID;
+			}
+			state = NON_FULL;
+			break;
 		case NON_FULL:
 			leaf = t.get_node();
 			if (!is_full(&leaf.node)) {
@@ -83,8 +90,8 @@ void sm_insert(
 				pair.key = max(&sibling.node);
 				rekey(&parent.node, pair.key, max(&leaf.node));
 				pair.value.ptr = sibling.addr;
-				i_leaf--;
 				leaf = parent;
+				state = BACKTRACK;
 			} else if (status != SUCCESS) {
 				lock_v(&parent.node.lock);
 				writeFifo.write(parent);

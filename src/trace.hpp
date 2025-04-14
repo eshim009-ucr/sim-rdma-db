@@ -54,6 +54,22 @@ struct Tracer {
 		bstatusval_t get_result() const;
 		//! @brief Get a copy of the last node read from memory.
 		AddrNode get_node() const;
+		//! @brief Move the history buffer back by one
+		//! @return `false` if there are insufficient entries in the history buffer, otherwise `true`
+		bool step_back(
+			//! [out] Stream of addresses to read from main memory
+			hls::stream<mread_req_t>& readReqFifo,
+			//! [in]  Stream of read results from main memory
+			hls::stream<mread_resp_t>& readRespFifo
+		);
+		//! @brief Move the history buffer back by two without loading the intermediate node
+		//! @return `false` if there are insufficient entries in the history buffer, otherwise `true`
+		bool double_step_back(
+			//! [out] Stream of addresses to read from main memory
+			hls::stream<mread_req_t>& readReqFifo,
+			//! [in]  Stream of read results from main memory
+			hls::stream<mread_resp_t>& readRespFifo
+		);
 };
 
 

@@ -32,6 +32,8 @@ set(EXAMPLE_HLS_DEPENDS
 	${CMAKE_CURRENT_SOURCE_DIR}/memory.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/memgr.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/core/node.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/insert-helpers.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/split.c
 	${CMAKE_CURRENT_SOURCE_DIR}/operations.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/rdma.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/search.cpp

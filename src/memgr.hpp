@@ -6,8 +6,6 @@ extern "C" {
 #include "core/node.h"
 };
 #include <hls_stream.h>
-#include <list>
-#include <functional>
 
 
 //! @brief Contains an address and whether or not to change the lock status in
