@@ -67,29 +67,22 @@ AddrNode Tracer::get_node() const {
 }
 
 
-bool Tracer::step_back(
-	hls::stream<mread_req_t>& readReqFifo,
-	hls::stream<mread_resp_t>& readRespFifo) {
+AddrNode Tracer::get_parent(Node *memory) const {
+	AddrNode node;
 	if (i >= 1) {
-		node.addr = history[--i];
-		readReqFifo.write({.addr=node.addr, .lock=1});
-		while (readRespFifo.empty());
-		readRespFifo.read(node.node);
-		return true;
+		node.addr = history[i-1];
+		node.node = mem_read_lock(node.addr, memory);
 	} else {
-		return false;
+		node.addr = INVALID;
 	}
+	return node;
 }
 
-bool Tracer::double_step_back(
-	hls::stream<mread_req_t>& readReqFifo,
-	hls::stream<mread_resp_t>& readRespFifo) {
+bool Tracer::double_step_back(Node *memory) {
 	if (i >= 2) {
 		i -= 2;
 		node.addr = history[i];
-		readReqFifo.write({.addr=node.addr, .lock=1});
-		while (readRespFifo.empty());
-		readRespFifo.read(node.node);
+		node.node = mem_read_lock(node.addr, memory);
 		return true;
 	} else {
 		return false;
