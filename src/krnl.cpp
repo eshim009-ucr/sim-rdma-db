@@ -90,7 +90,8 @@ void krnl(
 			root,
 			insertInput, insertOutput,
 			readReqFifos[0], readRespFifos[0],
-			writeFifos[0]
+			writeFifos[0],
+			(Node*) hbm
 		);
 		sm_memory(
 			readReqFifos, readRespFifos,

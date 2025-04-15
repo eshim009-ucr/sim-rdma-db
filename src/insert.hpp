@@ -27,7 +27,8 @@ void sm_insert(
 	//! [in]  Stream of read results from main memory
 	hls::stream<mread_resp_t>& readRespFifo,
 	//! [out] Stream of writes to main memory
-	hls::stream<mwrite_t>& writeFifo
+	hls::stream<mwrite_t>& writeFifo,
+	Node *hbm
 );
 
 

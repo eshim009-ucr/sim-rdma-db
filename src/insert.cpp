@@ -17,7 +17,8 @@ void sm_insert(
 	hls::stream<insert_out_t>& output,
 	hls::stream<mread_req_t>& readReqFifo,
 	hls::stream<mread_resp_t>& readRespFifo,
-	hls::stream<mwrite_t>& writeFifo
+	hls::stream<mwrite_t>& writeFifo,
+	Node *hbm
 ) {
 	static Tracer t;
 	static enum {
@@ -73,7 +74,7 @@ void sm_insert(
 			break;
 		case SPLIT:
 			// Try to split this node
-			status = split_node(&root, &leaf, &parent, &sibling, &readReqFifo, &readRespFifo, &writeFifo);
+			status = split_node(&root, &leaf, &parent, &sibling, hbm);
 			keep_splitting = (status == PARENT_FULL);
 			// Unrecoverable failure
 			if (status != SUCCESS && status != PARENT_FULL) {
@@ -85,7 +86,7 @@ void sm_insert(
 				break;
 			}
 			// Insert the new content and unlock leaf and its sibling
-			status = insert_after_split(pair.key, pair.value, &leaf, &sibling, &writeFifo);
+			status = insert_after_split(pair.key, pair.value, &leaf, &sibling, hbm);
 			if (keep_splitting) {
 				// Try this again on the parent
 				pair.key = max(&sibling.node);
