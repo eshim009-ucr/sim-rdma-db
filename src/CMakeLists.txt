@@ -27,10 +27,11 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
 
 set(EXAMPLE_HLS_DEPENDS
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/insert.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/sm_insert.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/memgr.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/core/node.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/insert.c
 	${CMAKE_CURRENT_SOURCE_DIR}/core/insert-helpers.c
 	${CMAKE_CURRENT_SOURCE_DIR}/core/memory.c
 	${CMAKE_CURRENT_SOURCE_DIR}/core/split.c

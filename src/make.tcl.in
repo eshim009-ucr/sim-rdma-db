@@ -20,10 +20,12 @@ config_rtl -register_reset_num=3
 # Testbench / Entry Point
 add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
 # Tree Logic
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/insert.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/sm_insert.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/memgr.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/node.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/insert.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/tree-helpers.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/insert-helpers.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/memory.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
 add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/split.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
