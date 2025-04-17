@@ -2,7 +2,6 @@
 #define INSERT_HPP
 
 
-#include "memgr.hpp"
 #include "types.hpp"
 extern "C" {
 #include "core/node.h"

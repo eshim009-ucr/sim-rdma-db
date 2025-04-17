@@ -67,14 +67,10 @@ void krnl(
 	static hls::stream<insert_in_t> insertInput;
 	static hls::stream<search_out_t> searchOutput;
 	static hls::stream<insert_out_t> insertOutput;
-	static hls::stream<mread_req_t> readReqFifos[1];
-	static hls::stream<mread_resp_t> readRespFifos[1];
 	#pragma HLS stream variable=searchInput type=fifo depth=0x100
 	#pragma HLS stream variable=insertInput type=fifo depth=0x100
 	#pragma HLS stream variable=searchOutput type=fifo depth=0x100
 	#pragma HLS stream variable=insertOutput type=fifo depth=0x100
-	#pragma HLS stream variable=readReqFifos type=fifo depth=0x100
-	#pragma HLS stream variable=readRespFifos type=fifo depth=0x100
 
 	uint_fast32_t stepCount = 0;
 
@@ -82,15 +78,11 @@ void krnl(
 		sm_search(
 			root,
 			searchInput, searchOutput,
-			readReqFifos[1], readRespFifos[1]
+			(Node*) hbm
 		);
 		sm_insert(
 			root,
 			insertInput, insertOutput,
-			(Node*) hbm
-		);
-		sm_memory(
-			readReqFifos, readRespFifos,
 			(Node*) hbm
 		);
 		sm_decode(requests, searchInput, insertInput);

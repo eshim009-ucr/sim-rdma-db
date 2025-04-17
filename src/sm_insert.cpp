@@ -1,4 +1,3 @@
-#include "trace.hpp"
 #include "insert.hpp"
 extern "C" {
 #include "core/insert.h"

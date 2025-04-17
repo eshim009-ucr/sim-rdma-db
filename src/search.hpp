@@ -2,7 +2,6 @@
 #define SEARCH_HPP
 
 
-#include "memgr.hpp"
 extern "C" {
 #include "core/node.h"
 };
@@ -21,10 +20,7 @@ void sm_search(
 	hls::stream<search_in_t>& input,
 	//! [out] Results from searches
 	hls::stream<search_out_t>& output,
-	//! [out] Stream of addresses to read from main memory
-	hls::stream<mread_req_t>& readReqFifo,
-	//! [in]  Stream of read results from main memory
-	hls::stream<mread_resp_t>& readRespFifo
+	Node const* hbm
 );
 
 

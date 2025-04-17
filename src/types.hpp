@@ -22,5 +22,14 @@ struct KvPair {
 	bval_t value;
 };
 
+//! @brief Contains an address and whether or not to change the lock status in
+//! main memory before returning a result
+struct RwOp {
+	//! Address to read/write from/to
+	bptr_t addr;
+	//! For reads, will grab the lock before returning.
+	//! For write, will release the lock before returning.
+	bool lock;
+};
 
 #endif
