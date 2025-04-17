@@ -1,4 +1,7 @@
 #include "trace.hpp"
+extern "C" {
+#include "core/memory.h"
+};
 
 
 bool Tracer::sm_step(

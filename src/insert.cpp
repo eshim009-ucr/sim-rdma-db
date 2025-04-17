@@ -2,6 +2,7 @@
 #include "insert.hpp"
 extern "C" {
 #include "core/insert-helpers.h"
+#include "core/memory.h"
 #include "core/split.h"
 };
 
@@ -97,6 +98,9 @@ void sm_insert(
 			} else if (status != SUCCESS) {
 				lock_v(&parent.node.lock);
 				writeFifo.write(parent);
+				output.write(status);
+				state = IDLE;
+			} else {
 				output.write(status);
 				state = IDLE;
 			}
