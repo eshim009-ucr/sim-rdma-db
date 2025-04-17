@@ -11,8 +11,10 @@ void sm_search(
 	Node const* hbm
 ) {
 	bkey_t key;
+	bstatusval_t dumy = {.status=SUCCESS, .value={.data=0}};
 	if (!input.empty()) {
 		input.read(key);
-		output.write(search(root, key, hbm));
+		// output.write(search(root, key, hbm));
+		output.write(dumy);
 	}
 }

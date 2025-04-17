@@ -12,9 +12,11 @@ void sm_insert(
 	Node *hbm
 ) {
 	KvPair pair;
+	ErrorCode dummy = SUCCESS;
 
 	if (!input.empty()) {
 		input.read(pair);
-		output.write(insert(&root, pair.key, pair.value, hbm));
+		// output.write(insert(&root, pair.key, pair.value, hbm));
+		output.write(dummy);
 	}
 }
