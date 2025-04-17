@@ -53,72 +53,10 @@ static void mem_read(
 }
 
 
-static void mem_write(
-	hls::stream<mwrite_t>& writeFifo,
-	Node *hbm
-) {
-	AddrNode node;
-	if (!writeFifo.empty()) {
-		// Pop the address & data to write to
-		writeFifo.read(node);
-		// Check address validity
-		assert(node.addr < MEM_SIZE);
-		assert(node.addr != INVALID);
-		// Perform write
-		hbm[node.addr] = node.node;
-	}
-}
-
-
 void sm_memory(
-	hls::stream<mread_req_t> readReqFifos[2],
-	hls::stream<mread_resp_t> readRespFifos[2],
-	hls::stream<mwrite_t> writeFifos[1],
+	hls::stream<mread_req_t> readReqFifos[1],
+	hls::stream<mread_resp_t> readRespFifos[1],
 	Node *hbm
 ) {
 	mem_read(readReqFifos[0], readRespFifos[0], hbm);
-	mem_write(writeFifos[0], hbm);
-	mem_read(readReqFifos[1], readRespFifos[1], hbm);
-}
-
-
-ErrorCode alloc_sibling(
-	AddrNode& old_node,
-	AddrNode& sibling,
-	hls::stream<mread_req_t>& readReqFifo,
-	hls::stream<mread_resp_t>& readRespFifo,
-	hls::stream<mwrite_t>& writeFifo
-) {
-	static bptr_t stack_ptr = 0;
-	sibling.addr = stack_ptr - sizeof(Node);
-	// Ensure stack top is actually empty
-	// Can eliminate outside of tests
-	do {
-		sibling.addr += sizeof(Node);
-		if (sibling.addr > MEM_SIZE) {
-			return OUT_OF_MEMORY;
-		}
-		readReqFifo.write({.addr=sibling.addr, .lock=0});
-		//! @todo Do this better
-		// Wait for read to complete
-		while (readRespFifo.empty());
-		readRespFifo.read(sibling.node);
-	} while(is_valid(&sibling.node));
-
-	// Lock node
-	lock_p(&sibling.node.lock);
-	writeFifo.write(sibling);
-
-	// Adjust next node pointers
-	sibling.node.next = old_node.node.next;
-	old_node.node.next = sibling.addr;
-
-	// Move half of old node's contents to new node
-	for (li_t i = 0; i < TREE_ORDER/2; ++i) {
-		sibling.node.keys[i] = old_node.node.keys[i + (TREE_ORDER/2)];
-		sibling.node.values[i] = old_node.node.values[i + (TREE_ORDER/2)];
-		old_node.node.keys[i + (TREE_ORDER/2)] = INVALID;
-	}
-
-	return SUCCESS;
 }
