@@ -5,16 +5,17 @@
 extern "C" {
 #include "../core/node.h"
 };
+#include <cstddef>
 
 
 #define VERBOSE
 #define INPUT_SEARCH(x) \
-	*((Request*) &hbm[offset]) = encode_search_req(x); \
+	*((Request*) &req_buffer[offset]) = encode_search_req(x); \
 	offset += sizeof(Request); \
 	input_log.write(x);
 #define INPUT_INSERT(key_, value_) \
 	last_in.key = key_; last_in.value.data = value_; \
-	*((Request*) &hbm[offset]) = encode_insert_req(last_in); \
+	*((Request*) &req_buffer[offset]) = encode_insert_req(last_in); \
 	offset += sizeof(Request); \
 	input_log.write(last_in);
 #define SET_IKV(addr, i, key_, value_) \
@@ -22,7 +23,7 @@ extern "C" {
 #define RUN_KERNEL \
 	krnl( \
 		myBoardNum, RDMA_TYPE, exec, \
-		hbm, root \
+		hbm, req_buffer, resp_buffer, root \
 	);
 
 

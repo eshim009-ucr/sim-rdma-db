@@ -28,7 +28,9 @@ bool until_it_breaks(
 	int RDMA_TYPE,
 	int exec,
 
-	uint8_t *hbm
+	uint8_t *hbm,
+	uint8_t *req_buffer,
+	uint8_t *resp_buffer
 ) {
 	bool pass = true;
 	bptr_t root = 0;
@@ -37,7 +39,7 @@ bool until_it_breaks(
 	insert_in_t last_in;
 	insert_out_t last_out;
 	Response last_resp;
-	uint_fast64_t offset = REQUEST_OFFSET;
+	uint_fast64_t offset = 0;
 
 	// Set up initial state
 	reset_mem(hbm);
@@ -51,10 +53,10 @@ bool until_it_breaks(
 	RUN_KERNEL
 
 	// Evalue Results
-	offset = RESPONSE_OFFSET;
+	offset = 0;
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		last_resp = *((Response*) &hbm[offset]);
+		last_resp = *((Response*) &resp_buffer[offset]);
 		offset += sizeof(Response);
 		last_out = last_resp.insert;
 		#ifdef VERBOSE

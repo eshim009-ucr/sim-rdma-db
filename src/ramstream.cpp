@@ -2,11 +2,8 @@
 #include <iostream>
 
 
-// For some reason Vitis ignores enum initializers in this file specificlly,
-// so that's why states are encoded as bools
-
-static uint_fast64_t req_offset = REQUEST_OFFSET;
-static uint_fast64_t resp_offset = RESPONSE_OFFSET;
+static uint_fast64_t req_offset = 0;
+static uint_fast64_t resp_offset = 0;
 
 
 void sm_ramstream_req(
@@ -29,7 +26,7 @@ void sm_ramstream_req(
 				} else {
 					requests.write(req);
 					// Buffer overrun
-					if (req_offset >= RESPONSE_OFFSET) {
+					if (req_offset >= NUM_REQUESTS*sizeof(Request)) {
 						state = DONE;
 					}
 				}
@@ -37,7 +34,7 @@ void sm_ramstream_req(
 			break;
 		case DONE:
 			// A reset has occurred
-			if (req_offset == REQUEST_OFFSET) {
+			if (req_offset == 0) {
 				state = IDLE;
 			}
 			break;
@@ -71,6 +68,6 @@ void sm_ramstream_resp(
 
 
 void reset_ramstream_offsets() {
-	req_offset = REQUEST_OFFSET;
-	resp_offset = RESPONSE_OFFSET;
+	req_offset = 0;
+	resp_offset = 0;
 }

@@ -63,6 +63,8 @@ void krnl(
 	int exec,
 	//! [inout] Pointer to on-chip high-bandwidth memory
 	uint8_t *hbm,
+	uint8_t *req_buffer,
+	uint8_t *resp_buffer,
 	//! [inout] Address within HBM that holds the root of the tree
 	//!
 	//! Can be modified by operation kernels

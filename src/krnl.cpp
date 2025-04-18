@@ -8,6 +8,8 @@ void krnl(
 	int RDMA_TYPE,
 	int exec,
 	uint8_t *hbm,
+	uint8_t *req_buffer,
+	uint8_t *resp_buffer,
 	bptr_t root
 ) {
 
@@ -42,8 +44,8 @@ void krnl(
 			insertInput, insertOutput,
 			(Node*) hbm
 		);
-		sm_ramstream_req(requests, hbm);
-		sm_ramstream_resp(responses, hbm);
+		sm_ramstream_req(requests, req_buffer);
+		sm_ramstream_resp(responses, resp_buffer);
 		sm_decode(requests, searchInput, insertInput);
 		sm_encode(responses, searchOutput, insertOutput);
 	}

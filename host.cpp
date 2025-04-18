@@ -1,9 +1,6 @@
 #include "host.h"
+#include "src/operations.hpp"
 #include <vector>
-
-typedef int data_t;
-
-const int DATA_SIZE = 1;
 
 
 int main(int argc, char** argv) {
@@ -50,36 +47,30 @@ int main(int argc, char** argv) {
 
 	/*====================================================INIT INPUT/OUTPUT VECTORS===============================================================*/
 
-	std::vector<data_t, aligned_allocator<data_t> > a(DATA_SIZE);
-	std::vector<data_t, aligned_allocator<data_t> > b(DATA_SIZE);
-	std::vector<data_t, aligned_allocator<data_t> > c_hw(DATA_SIZE);
-	std::vector<data_t> c_sw(DATA_SIZE);
+	std::vector<Request, aligned_allocator<Request> > requests;
+	std::vector<Response, aligned_allocator<Response> > responses;
+	std::vector<Node, aligned_allocator<Node> > memory;
 
-	int lb = 20, ub = 100;
-	for (int i = 0; i < DATA_SIZE; i++) {
-		a[i] = (rand() % (ub - lb + 1)) + lb;
-		b[i] = (rand() % (ub - lb + 1)) + lb;
-	}
+	mem_reset_all(memory);
 
-	/*====================================================SW VERIFICATION===============================================================*/
-
-	for (int i = 0; i < DATA_SIZE; i++) {
-		c_sw[i] = a[i] + b[i];
+	for (int i = 1; i <= 22; i++) {
+		requests.push_back({.opcode = INSERT, .insert = {.key = i, .value = -i}});
+		responses.push_back({.opcode = INSERT, .insert = SUCCESS});
 	}
 
 	/*====================================================Setting up kernel I/O===============================================================*/
 
 	/* INPUT BUFFERS */
-	OCL_CHECK(err, cl::Buffer buffer_a(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(data_t) * DATA_SIZE, a.data(), &err));
-	OCL_CHECK(err, cl::Buffer buffer_b(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(data_t) * DATA_SIZE, b.data(), &err));
+	OCL_CHECK(err, cl::Buffer buffer_requests(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Request)*requests.size(), requests.data(), &err));
 
 	/* OUTPUT BUFFERS */
-	OCL_CHECK(err, cl::Buffer buffer_c(context, CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY, sizeof(data_t) * DATA_SIZE, c_hw.data(), &err));
+	OCL_CHECK(err, cl::Buffer buffer_responses(context, CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY, sizeof(Response)*responses.size(), responses.data(), &err));
+	OCL_CHECK(err, cl::Buffer buffer_memory(context, CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY, sizeof(Node)*memory.size(), memory.data(), &err));
 
 	/* SETTING INPUT PARAMETERS */
-	OCL_CHECK(err, err = krnl1.setArg(0, buffer_a));
-	OCL_CHECK(err, err = krnl1.setArg(1, buffer_b));
-	OCL_CHECK(err, err = krnl1.setArg(2, buffer_c));
+	OCL_CHECK(err, err = krnl1.setArg(0, buffer_memory));
+	OCL_CHECK(err, err = krnl1.setArg(1, buffer_requests));
+	OCL_CHECK(err, err = krnl1.setArg(2, buffer_responses));
 
 
 	/*====================================================KERNEL===============================================================*/
