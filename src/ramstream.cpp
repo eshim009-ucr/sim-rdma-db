@@ -21,7 +21,6 @@ void sm_ramstream_req(
 			state = READ;
 			break;
 		case READ:
-			std::cout << "req_offset=" << req_offset << " ?= " << REQUEST_OFFSET << std::endl;
 			if (!requests.full()) {
 				req = *((Request*) &hbm[req_offset]);
 				req_offset += sizeof(Request);
@@ -29,7 +28,6 @@ void sm_ramstream_req(
 					state = DONE;
 				} else {
 					requests.write(req);
-					std::cout << "\tDecoded " << static_cast<std::string>(req) << std::endl;
 					// Buffer overrun
 					if (req_offset >= RESPONSE_OFFSET) {
 						state = DONE;
@@ -61,9 +59,7 @@ void sm_ramstream_resp(
 			}
 			break;
 		case WRITE:
-			std::cout << "resp_offset=" << resp_offset << std::endl;
 			responses.read(resp);
-			std::cout << "\tEncoded " << static_cast<std::string>(resp) << std::endl;
 			*((Response*) &hbm[resp_offset]) = resp;
 			resp_offset += sizeof(Response);
 			if (responses.empty()) {
