@@ -1,4 +1,3 @@
-#undef HLS
 #include "host.h"
 #include "src/operations.hpp"
 #include <vector>
@@ -18,14 +17,14 @@ int main(int argc, char** argv) {
 	std::string binaryFile = argv[1];
 	cl_int err;
 	cl::Context context;
-	cl::Kernel krnl1, krnl2;
+	cl::Kernel krnl1;
 	cl::CommandQueue q;
 
 	auto devices = get_xil_devices();
 	auto fileBuf = read_binary_file(binaryFile);
 	cl::Program::Binaries bins{{fileBuf.data(), fileBuf.size()}};
 	bool valid_device = false;
-	for (unsigned int i = 0; i < devices.size(); i++) {
+	for (size_t i = 0; i < devices.size(); i++) {
 		auto device = devices[i];
 		OCL_CHECK(err, context = cl::Context(device, nullptr, nullptr, nullptr, &err));
 		OCL_CHECK(err, q = cl::CommandQueue(context, device, 0, &err));
