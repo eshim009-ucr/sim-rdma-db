@@ -2,6 +2,12 @@
 .vscode/
 # Output Files
 build*
-_x.*
+host
 # Log files
 *.log
+# Intermediate files
+.Xil/
+.run/
+emconfig.json
+_x*
+package.hw_emu/
