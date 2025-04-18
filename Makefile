@@ -80,7 +80,7 @@ CMD_ARGS = $(BUILD_DIR)/krnl.xclbin
 SDCARD := sd_card
 
 include ./opencl.mk
-CXXFLAGS += $(opencl_CXXFLAGS) -Wall -O0 -g -std=c++1y
+CXXFLAGS += $(opencl_CXXFLAGS) -Wall -O0 -g -std=c++1y -DHLS
 LDFLAGS += $(opencl_LDFLAGS)
 
 INCLUDES = ./include
@@ -132,7 +132,7 @@ build: check-vitis check-device $(BINARY_CONTAINERS)
 xclbin: build
 
 ############################## Setting Rules for Binary Containers (Building Kernels) ##############################
-$(TEMP_DIR)/krnl.xo: ./src/krnl.cpp ./src/insert.cpp ./src/memory.cpp ./src/node.cpp ./src/operations.cpp ./src/rdma.cpp ./src/search.cpp ./src/trace.cpp
+$(TEMP_DIR)/krnl.xo: src/sm_insert.cpp src/krnl.cpp src/core/node.c src/core/insert.c src/core/search.c src/core/tree-helpers.c src/core/insert-helpers.c src/core/memory.c src/core/split.c src/operations.cpp src/ramstream.cpp src/rdma.cpp src/sm_search.cpp
 	mkdir -p $(TEMP_DIR)
 	$(VPP) $(VPP_FLAGS) -c -k $(KRNL) --temp_dir $(TEMP_DIR)  -I'$(<D)' -o'$@' $^
 BINARY_CONTAINER_krnl_OBJS += $(TEMP_DIR)/krnl.xo
