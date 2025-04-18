@@ -2,8 +2,10 @@
 #define INSERT_HPP
 
 
-#include "memory.hpp"
-#include "node.hpp"
+#include "types.hpp"
+extern "C" {
+#include "core/node.h"
+};
 #include <hls_stream.h>
 
 
@@ -19,12 +21,7 @@ void sm_insert(
 	hls::stream<insert_in_t>& input,
 	//! [out] Status codes from inserts
 	hls::stream<insert_out_t>& output,
-	//! [out] Stream of addresses to read from main memory
-	hls::stream<mread_req_t>& readReqFifo,
-	//! [in]  Stream of read results from main memory
-	hls::stream<mread_resp_t>& readRespFifo,
-	//! [out] Stream of writes to main memory
-	hls::stream<mwrite_t>& writeFifo
+	Node *hbm
 );
 
 

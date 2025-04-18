@@ -30,9 +30,9 @@ struct Response {
 		std::stringstream ss;
 		switch (opcode) {
 			case SEARCH:
-				ss << "Search Response " << ERROR_CODE_NAMES[-search.status] << ", " << search.value.data;
+				ss << "Search Response " << ERROR_CODE_NAMES[search.status] << ", " << search.value.data;
 			case INSERT:
-				ss << "Insert Response " << ERROR_CODE_NAMES[-insert];
+				ss << "Insert Response " << ERROR_CODE_NAMES[insert];
 		}
 		return ss.str();
 	}

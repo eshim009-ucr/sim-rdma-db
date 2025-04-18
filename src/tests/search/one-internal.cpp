@@ -84,7 +84,7 @@ bool one_internal(
 		std::cout << "Search(" << last_in << "): ";
 		if (last_out.status != SUCCESS) {
 			std::cout << "Error: "
-				<< ERROR_CODE_NAMES[-last_out.status]
+				<< ERROR_CODE_NAMES[last_out.status]
 				<< '(' << (int) last_out.status << ')' << std::endl;
 		} else {
 			std::cout << last_out.value.data<< "\t0x" << std::hex
@@ -95,7 +95,7 @@ bool one_internal(
 			if (last_out.status != NOT_FOUND) {
 				std::cerr << "\tFor search input " << last_in
 					<< ": Expected NOT_FOUND, got "
-					<< ERROR_CODE_NAMES[-last_out.status]
+					<< ERROR_CODE_NAMES[last_out.status]
 					<< '(' << (int) last_out.status << ')' << std::endl;
 				pass = false;
 			}
@@ -103,7 +103,7 @@ bool one_internal(
 			if (last_out.status != SUCCESS) {
 				std::cerr << "\tFor search input " << last_in
 					<< ": Expected SUCCESS, got "
-					<< ERROR_CODE_NAMES[-last_out.status]
+					<< ERROR_CODE_NAMES[last_out.status]
 					<< '(' << (int) last_out.status << ')' << std::endl;
 				pass = false;
 			}

@@ -27,15 +27,17 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
 
 set(EXAMPLE_HLS_DEPENDS
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/insert.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/sm_insert.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/memory.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/node.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/core/node.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/insert.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/insert-helpers.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/memory.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/split.c
 	${CMAKE_CURRENT_SOURCE_DIR}/operations.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ramstream.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/rdma.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/search.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/trace.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/sm_search.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tests/test-helpers.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tests/insert/leaf-node.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tests/insert/split-root.cpp

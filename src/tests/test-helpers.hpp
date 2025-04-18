@@ -2,7 +2,9 @@
 #define TEST_HELPERS_HPP
 
 
-#include "../node.hpp"
+extern "C" {
+#include "../core/node.h"
+};
 
 
 #define VERBOSE

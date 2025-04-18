@@ -60,7 +60,7 @@ bool until_it_breaks(
 			<< ", v=" << last_in.value.data << "): ";
 		if (last_out != SUCCESS) {
 			std::cout << "Error: "
-				<< ERROR_CODE_NAMES[-last_out]
+				<< ERROR_CODE_NAMES[last_out]
 				<< '(' << (int) last_out << ')' << std::endl;
 		} else {
 			std::cout << "SUCCESS" << std::endl;
@@ -70,7 +70,7 @@ bool until_it_breaks(
 			std::cerr << "For insert input k=" << last_in.key
 				<< ", v=" << last_in.value.data
 				<< ": Expected SUCCESS, got "
-				<< ERROR_CODE_NAMES[-last_out]
+				<< ERROR_CODE_NAMES[last_out]
 				<< '(' << (int) last_out << ')' << std::endl;
 			pass = false;
 		}
