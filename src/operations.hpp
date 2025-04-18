@@ -33,6 +33,7 @@ Request encode_insert_req(insert_in_t in);
 Response encode_search_resp(search_out_t out);
 Response encode_insert_resp(insert_out_t out);
 
+#ifdef HLS
 //! @brief State machine to decode and redirect incoming instructions
 void sm_decode(
 	//! [in]  Incoming instructions
@@ -52,6 +53,7 @@ void sm_encode(
 	//! [in] Insert results
 	hls::stream<insert_out_t>& insertOutput
 );
+#endif
 
 
 #endif

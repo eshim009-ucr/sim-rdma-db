@@ -6,13 +6,16 @@
 extern "C" {
 #include "core/node.h"
 };
+#ifdef HLS
 #include <hls_stream.h>
+#endif
 
 
 typedef KvPair insert_in_t;
 typedef ErrorCode insert_out_t;
 
 
+#ifdef HLS
 //! @brief State machine to execute insert operations
 void sm_insert(
 	//! [in]  Root node of the tree to insert into
@@ -23,6 +26,7 @@ void sm_insert(
 	hls::stream<insert_out_t>& output,
 	Node *hbm
 );
+#endif
 
 
 #endif

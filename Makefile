@@ -80,7 +80,7 @@ CMD_ARGS = $(BUILD_DIR)/krnl.xclbin
 SDCARD := sd_card
 
 include ./opencl.mk
-CXXFLAGS += $(opencl_CXXFLAGS) -Wall -O0 -g -std=c++1y -DHLS
+CXXFLAGS += $(opencl_CXXFLAGS) -Wall -O0 -g -std=c++1y
 LDFLAGS += $(opencl_LDFLAGS)
 
 INCLUDES = ./include
@@ -100,7 +100,7 @@ endif
 
 ############################## Setting up Kernel Variables ##############################
 # Kernel compiler global settings
-VPP_FLAGS += -t $(TARGET) --platform $(PLATFORM) --save-temps -I$(INCLUDES) --config config.cfg
+VPP_FLAGS += -t $(TARGET) --platform $(PLATFORM) --save-temps -I$(INCLUDES) --config config.cfg -DHLS
 ifneq ($(TARGET), hw)
 	VPP_FLAGS += -g
 endif

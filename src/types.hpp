@@ -5,6 +5,7 @@
 extern "C" {
 #include "core/types.h"
 };
+#ifdef HLS
 #include <ap_axi_sdata.h>
 
 
@@ -15,6 +16,7 @@ typedef ap_axiu<64, 0, 0, 0> pkt64;
 typedef ap_axiu<32, 0, 0, 0> pkt32;
 typedef ap_axiu<16, 0, 0, 0> pkt16;
 typedef ap_axiu<8, 0, 0, 0> pkt8;
+#endif
 
 //! @brief Key/value pair
 struct KvPair {
