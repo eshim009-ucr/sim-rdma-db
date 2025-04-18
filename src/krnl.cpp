@@ -42,6 +42,8 @@ void krnl(
 			insertInput, insertOutput,
 			(Node*) hbm
 		);
+		sm_ramstream_req(requests, hbm);
+		sm_ramstream_resp(responses, hbm);
 		sm_decode(requests, searchInput, insertInput);
 		sm_encode(responses, searchOutput, insertOutput);
 	}

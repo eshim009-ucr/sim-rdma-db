@@ -28,8 +28,17 @@ extern "C" {
 
 void reset_mem(uint8_t *hbm);
 
-//!@brief Print a hex dump of the first few nodes of HBM
-void hbm_dump(uint8_t* hbm, uint8_t length);
+//!@brief Print a hex dump of a section of HBM grouped by object
+void hbm_dump(
+	//! Memory buffer to read from
+	uint8_t* hbm,
+	//! Offset at which to start the dump
+	uint_fast64_t offset,
+	//! Size in bytes of object to group by
+	size_t size,
+	//! Number of objects to print
+	uint_fast64_t length
+);
 
 
 #endif

@@ -1,4 +1,7 @@
 # User Preferences
 .vscode/
 # Output Files
-build/
+build*
+_x.*
+# Log files
+*.log

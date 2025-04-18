@@ -41,6 +41,7 @@ bool leaf_node(
 
 	// Set up initial state
 	reset_mem(hbm);
+	reset_ramstream_offsets();
 	// Should succeed
 	INPUT_INSERT(0, 2)
 	INPUT_INSERT(5, 3)
@@ -48,12 +49,14 @@ bool leaf_node(
 
 	// Perform Operations
 	RUN_KERNEL
+	hbm_dump(hbm, 0, sizeof(Node), 4);
 
 	// Evalue Results
 	offset = RESPONSE_OFFSET;
 	while (!input_log.empty()) {
 		input_log.read(last_in);
 		last_resp = *((Response*) &hbm[offset]);
+		offset += sizeof(Response);
 		last_out = last_resp.insert;
 		#ifdef VERBOSE
 		std::cout << "Insert(k=" << last_in.key
