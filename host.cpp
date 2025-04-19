@@ -70,10 +70,13 @@ int main(int argc, char** argv) {
 	OCL_CHECK(err, cl::Buffer buffer_memory(context, CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY, sizeof(Node)*memory.size(), memory.data(), &err));
 
 	/* SETTING INPUT PARAMETERS */
-	OCL_CHECK(err, err = krnl1.setArg(0, buffer_memory));
-	OCL_CHECK(err, err = krnl1.setArg(1, buffer_requests));
-	OCL_CHECK(err, err = krnl1.setArg(2, buffer_responses));
-
+	OCL_CHECK(err, err = krnl1.setArg(0, 0));
+	OCL_CHECK(err, err = krnl1.setArg(1, 0));
+	OCL_CHECK(err, err = krnl1.setArg(2, 0));
+	OCL_CHECK(err, err = krnl1.setArg(3, buffer_memory));
+	OCL_CHECK(err, err = krnl1.setArg(4, buffer_requests));
+	OCL_CHECK(err, err = krnl1.setArg(5, buffer_responses));
+	OCL_CHECK(err, err = krnl1.setArg(6, 0));
 
 	/*====================================================KERNEL===============================================================*/
 	/* HOST -> DEVICE DATA TRANSFER*/
