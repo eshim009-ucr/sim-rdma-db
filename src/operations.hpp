@@ -4,6 +4,9 @@
 
 #include "search.hpp"
 #include "insert.hpp"
+#ifndef __SYNTHESIS__
+#include <sstream>
+#endif
 
 enum Opcode {
 	NOP = 0,
@@ -25,6 +28,45 @@ struct Response {
 		search_out_t search;
 		insert_out_t insert;
 	};
+	#ifndef __SYNTHESIS__
+	bool operator==(const Response& rhs) const {
+		if (opcode != rhs.opcode) return false;
+		switch (opcode) {
+			case NOP: return true;
+			case SEARCH: return
+				search.status != rhs.search.status &&
+				search.value.data != rhs.search.value.data;
+			case INSERT: return insert != rhs.insert;
+			default: return memcmp(
+				this + sizeof(Opcode),
+				&rhs + sizeof(Opcode),
+				sizeof(Response) - sizeof(Opcode)) == 0;
+		}
+	}
+	bool operator!=(const Response& rhs) const {
+		return !(*this == rhs);
+	}
+	operator std::string() const {
+		std::stringstream ss;
+		switch (opcode) {
+			case NOP:
+				ss << "NOP Response";
+				break;
+			case SEARCH:
+				ss << "Search Response " << ERROR_CODE_NAMES[search.status]
+					<< '(' << (int) search.status << "), " << search.value.data;
+					break;
+			case INSERT:
+				ss << "Insert Response " << ERROR_CODE_NAMES[insert]
+					<< '(' << (int) insert << ')';
+					break;
+			default:
+				ss << "Response Opcode " << (int) opcode;
+				break;
+		}
+		return ss.str();
+	}
+	#endif
 } __attribute__((packed));
 
 
