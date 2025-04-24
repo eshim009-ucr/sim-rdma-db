@@ -34,7 +34,7 @@ Response encode_insert_resp(insert_out_t out) {
 }
 
 
-void sm_decode(
+bool sm_decode(
 	hls::stream<Request>& requests,
 	//! [out] Decoded search instructions
 	hls::stream<search_in_t>& searchInput,
@@ -54,9 +54,10 @@ void sm_decode(
 				break;
 		}
 	}
+	return requests.empty() && searchInput.empty() && insertInput.empty();
 }
 
-void sm_encode(
+bool sm_encode(
 	hls::stream<Response>& responses,
 	hls::stream<search_out_t>& searchOutput,
 	hls::stream<insert_out_t>& insertOutput
@@ -72,4 +73,5 @@ void sm_encode(
 		insertOutput.read(insertResultRaw);
 		responses.write(encode_insert_resp(insertResultRaw));
 	}
+	return searchOutput.empty() && insertOutput.empty() && responses.empty();
 }

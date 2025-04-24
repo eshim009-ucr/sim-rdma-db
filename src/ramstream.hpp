@@ -21,7 +21,7 @@
 
 
 //! @brief Convert a DRAM buffer of requests to an HLS stream
-void sm_ramstream_req(
+bool sm_ramstream_req(
 	//! [out] Streams of requests decoded from memory
 	hls::stream<Request>& requests,
 	//! [in]  Pointer to high bandwidth memory
@@ -29,7 +29,7 @@ void sm_ramstream_req(
 );
 
 //! @brief Write an HLS stream of responses to a DRAM buffer
-void sm_ramstream_resp(
+bool sm_ramstream_resp(
 	//! [in]  Streams of responses to be encoded in memory
 	hls::stream<Response>& responses,
 	//! [out] Pointer to high bandwidth memory

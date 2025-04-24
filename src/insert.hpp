@@ -17,7 +17,7 @@ typedef ErrorCode insert_out_t;
 
 #ifdef HLS
 //! @brief State machine to execute insert operations
-void sm_insert(
+bool sm_insert(
 	//! [in]  Root node of the tree to insert into
 	bptr_t& root,
 	//! [in]  Key/value pairs to insert

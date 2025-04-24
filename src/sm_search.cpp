@@ -4,7 +4,7 @@ extern "C" {
 };
 
 
-void sm_search(
+bool sm_search(
 	bptr_t const& root,
 	hls::stream<search_in_t>& input,
 	hls::stream<search_out_t>& output,
@@ -15,4 +15,6 @@ void sm_search(
 		input.read(key);
 		output.write(search(root, key, hbm));
 	}
+
+	return input.empty() && output.empty();
 }

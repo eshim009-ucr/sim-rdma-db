@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
 	/* SETTING INPUT PARAMETERS */
 	OCL_CHECK(err, err = krnl1.setArg(0, 0));
 	OCL_CHECK(err, err = krnl1.setArg(1, 0));
-	OCL_CHECK(err, err = krnl1.setArg(2, 0));
+	OCL_CHECK(err, err = krnl1.setArg(2, 0x1000));
 	OCL_CHECK(err, err = krnl1.setArg(3, buffer_memory));
 	OCL_CHECK(err, err = krnl1.setArg(4, buffer_requests));
 	OCL_CHECK(err, err = krnl1.setArg(5, buffer_responses));

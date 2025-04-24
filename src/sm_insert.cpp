@@ -5,7 +5,7 @@ extern "C" {
 #include <iostream>
 
 
-void sm_insert(
+bool sm_insert(
 	bptr_t& root,
 	hls::stream<insert_in_t>& input,
 	hls::stream<insert_out_t>& output,
@@ -17,4 +17,6 @@ void sm_insert(
 		input.read(pair);
 		output.write(insert(&root, pair.key, pair.value, hbm));
 	}
+
+	return input.empty() && output.empty();
 }

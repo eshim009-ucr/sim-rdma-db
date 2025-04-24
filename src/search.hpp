@@ -16,7 +16,7 @@ typedef bstatusval_t search_out_t;
 
 #ifdef HLS
 //! @brief State machine to execute search operations
-void sm_search(
+bool sm_search(
 	//! [in]  Root node of the tree to search
 	bptr_t const& root,
 	//! [in]  Keys to search for

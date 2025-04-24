@@ -91,7 +91,7 @@ PLATFORM_BLOCKLIST += nodma
 #Include Required Host Source Files
 HOST_SRCS += ./host.cpp
 # Host compiler global settings
-CXXFLAGS += -fmessage-length=0 -I$(INCLUDES)
+CXXFLAGS += -fmessage-length=0 -I$(INCLUDES) -DFPGA
 LDFLAGS += -lrt -lstdc++
 
 ifneq ($(HOST_ARCH), x86)
@@ -100,7 +100,7 @@ endif
 
 ############################## Setting up Kernel Variables ##############################
 # Kernel compiler global settings
-VPP_FLAGS += -t $(TARGET) --platform $(PLATFORM) --save-temps -I$(INCLUDES) --config config.cfg -DHLS
+VPP_FLAGS += -t $(TARGET) --platform $(PLATFORM) --save-temps -I$(INCLUDES) --config config.cfg -DHLS -DFPGA
 ifneq ($(TARGET), hw)
 	VPP_FLAGS += -g
 endif

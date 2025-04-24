@@ -35,20 +35,24 @@ void krnl(
 	#pragma HLS stream variable=searchOutput type=fifo depth=0x100
 	#pragma HLS stream variable=insertOutput type=fifo depth=0x100
 
-	sm_search(
-		root,
-		searchInput, searchOutput,
-		(Node*) hbm
-	);
-	sm_insert(
-		root,
-		insertInput, insertOutput,
-		(Node*) hbm
-	);
-	sm_ramstream_req(requests, req_buffer);
-	sm_ramstream_resp(responses, resp_buffer);
-	sm_decode(requests, searchInput, insertInput);
-	sm_encode(responses, searchOutput, insertOutput);
+	for (uint_fast64_t i = 0; i < exec; ++i) {
+		if (
+			sm_search(
+				root,
+				searchInput, searchOutput,
+				(Node*) hbm
+			) &&
+			sm_insert(
+				root,
+				insertInput, insertOutput,
+				(Node*) hbm
+			) &&
+			sm_ramstream_req(requests, req_buffer) &&
+			sm_ramstream_resp(responses, resp_buffer) &&
+			sm_decode(requests, searchInput, insertInput) &&
+			sm_encode(responses, searchOutput, insertOutput)
+		) break;
+	}
 
 	return;
 }

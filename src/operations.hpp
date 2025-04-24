@@ -77,7 +77,7 @@ Response encode_insert_resp(insert_out_t out);
 
 #ifdef HLS
 //! @brief State machine to decode and redirect incoming instructions
-void sm_decode(
+bool sm_decode(
 	//! [in]  Incoming instructions
 	hls::stream<Request>& requests,
 	//! [out] Decoded search instructions
@@ -87,7 +87,7 @@ void sm_decode(
 );
 
 //! @brief State machine to encode and queue responses for send
-void sm_encode(
+bool sm_encode(
 	//! [out]  Incoming instructions
 	hls::stream<Response>& responses,
 	//! [in] Search results

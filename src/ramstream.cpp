@@ -6,7 +6,7 @@ static uint_fast64_t req_offset = 0;
 static uint_fast64_t resp_offset = 0;
 
 
-void sm_ramstream_req(
+bool sm_ramstream_req(
 	hls::stream<Request>& requests,
 	uint8_t *hbm
 ) {
@@ -39,10 +39,11 @@ void sm_ramstream_req(
 			}
 			break;
 	}
+	return state == DONE;
 }
 
 
-void sm_ramstream_resp(
+bool sm_ramstream_resp(
 	hls::stream<Response>& responses,
 	uint8_t *hbm
 ) {
@@ -64,6 +65,7 @@ void sm_ramstream_resp(
 			}
 			break;
 	}
+	return state == IDLE;
 }
 
 
