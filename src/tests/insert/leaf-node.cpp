@@ -28,9 +28,7 @@ bool leaf_node(
 	int RDMA_TYPE,
 	int exec,
 
-	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer
+	uint8_t *hbm
 ) {
 	bool pass = true;
 	bptr_t root = 0;
@@ -39,7 +37,7 @@ bool leaf_node(
 	insert_in_t last_in;
 	insert_out_t last_out;
 	Response last_resp;
-	uint_fast64_t offset = 0;
+	uint_fast64_t offset = REQUEST_OFFSET;
 
 	// Set up initial state
 	reset_mem(hbm);
@@ -54,10 +52,10 @@ bool leaf_node(
 	hbm_dump(hbm, 0, sizeof(Node), 4);
 
 	// Evalue Results
-	offset = 0;
+	offset = RESPONSE_OFFSET;
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		last_resp = *((Response*) &resp_buffer[offset]);
+		last_resp = *((Response*) &hbm[offset]);
 		offset += sizeof(Response);
 		last_out = last_resp.insert;
 		#ifdef VERBOSE

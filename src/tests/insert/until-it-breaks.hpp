@@ -21,9 +21,7 @@ bool until_it_breaks(
 	int myBoardNum,
 	int RDMA_TYPE,
 	int exec,
-	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer
+	uint8_t *hbm
 );
 
 

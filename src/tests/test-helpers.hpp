@@ -10,22 +10,20 @@ extern "C" {
 
 #define VERBOSE
 #define INPUT_SEARCH(x) \
-	*((Request*) &req_buffer[offset]) = encode_search_req(x); \
+	*((Request*) &hbm[offset]) = encode_search_req(x); \
 	offset += sizeof(Request); \
 	input_log.write(x);
 #define INPUT_INSERT(key_, value_) \
 	last_in.key = key_; last_in.value.data = value_; \
-	*((Request*) &req_buffer[offset]) = encode_insert_req(last_in); \
+	*((Request*) &hbm[offset]) = encode_insert_req(last_in); \
 	offset += sizeof(Request); \
 	input_log.write(last_in);
 #define SET_IKV(addr, i, key_, value_) \
 	((Node*) hbm)[addr].keys[i] = key_; ((Node*) hbm)[addr].values[i].data = value_;
 #define RUN_KERNEL \
-	uint_fast32_t stepCount = 0; \
-	while (stepCount++ < exec) \
 	krnl( \
 		myBoardNum, RDMA_TYPE, exec, \
-		hbm, req_buffer, resp_buffer, root \
+		hbm, root \
 	);
 
 

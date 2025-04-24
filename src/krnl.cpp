@@ -24,8 +24,6 @@ void krnl(
 	static hls::stream<insert_in_t> insertInput;
 	static hls::stream<search_out_t> searchOutput;
 	static hls::stream<insert_out_t> insertOutput;
-	#pragma HLS stream variable=requests type=fifo depth=0x100
-	#pragma HLS stream variable=requests type=fifo depth=0x100
 	#pragma HLS stream variable=searchInput type=fifo depth=0x100
 	#pragma HLS stream variable=insertInput type=fifo depth=0x100
 	#pragma HLS stream variable=searchOutput type=fifo depth=0x100

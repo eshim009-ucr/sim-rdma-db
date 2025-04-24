@@ -28,9 +28,7 @@ bool split_root(
 	int RDMA_TYPE,
 	int exec,
 
-	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer
+	uint8_t *hbm
 ) {
 	bool pass = true;
 	bptr_t root = 0;
@@ -39,13 +37,13 @@ bool split_root(
 	insert_in_t last_in;
 	insert_out_t last_out;
 	Response last_resp;
-	uint_fast64_t offset = 0;
+	uint_fast64_t offset = REQUEST_OFFSET;
 
 	// Set up initial state
 	reset_mem(hbm);
 	reset_ramstream_offsets();
-	hbm_dump(req_buffer, 0, sizeof(Request), 15);
-	hbm_dump(resp_buffer, 0, sizeof(Response), 15);
+	hbm_dump(hbm, REQUEST_OFFSET, sizeof(Request), 15);
+	hbm_dump(hbm, RESPONSE_OFFSET, sizeof(Response), 15);
 	// Should succeed
 	INPUT_INSERT(0, 0)
 	INPUT_INSERT(5, -5)
@@ -58,10 +56,10 @@ bool split_root(
 	hbm_dump(hbm, 0, sizeof(Node), 5);
 
 	// Evalue Results
-	offset = 0;
+	offset = RESPONSE_OFFSET;
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		last_resp = *((Response*) &resp_buffer[offset]);
+		last_resp = *((Response*) &hbm[offset]);
 		offset += sizeof(Response);
 		last_out = last_resp.insert;
 		#ifdef VERBOSE
@@ -95,8 +93,8 @@ bool split_root(
 		std::cerr << std::endl;
 		pass = false;
 	}
-	hbm_dump(req_buffer, 0, sizeof(Request), 15);
-	hbm_dump(resp_buffer, 0, sizeof(Response), 15);
+	hbm_dump(hbm, REQUEST_OFFSET, sizeof(Request), 15);
+	hbm_dump(hbm, RESPONSE_OFFSET, sizeof(Response), 15);
 
 	return pass;
 }
