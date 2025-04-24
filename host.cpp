@@ -1,5 +1,6 @@
 #include "host.h"
 #include "src/operations.hpp"
+#include "src/ramstream.hpp"
 #include <vector>
 
 
@@ -91,7 +92,7 @@ int main(int argc, char** argv) {
 	std::vector<Request, aligned_allocator<Request> > requests;
 	std::vector<Response, aligned_allocator<Response> >
 		responses, responses_expected;
-	std::vector<Node, aligned_allocator<Node> > memory(MEM_SIZE);
+	std::vector<uint8_t, aligned_allocator<uint8_t> > memory(0x10000);
 	Request tmp_req = {.opcode = INSERT};
 	Response tmp_resp = {.opcode = INSERT, .insert = SUCCESS};
 
@@ -105,32 +106,32 @@ int main(int argc, char** argv) {
 
 	memset(memory.data(), INVALID, MEM_SIZE*sizeof(Node));
 	for (int i = 0; i < MEM_SIZE; ++i) {
-		memory.at(i).lock = 0;
+		((Node*) memory.data())[i].lock = 0;
 	}
+
+	memcpy(memory.data()+REQUEST_OFFSET, requests.data(), sizeof(Request)*requests.size());
+	memcpy(memory.data()+RESPONSE_OFFSET, responses.data(), sizeof(Response)*responses.size());
 
 	/*====================================================Setting up kernel I/O===============================================================*/
 
 	/* INPUT BUFFERS */
-	OCL_CHECK(err, cl::Buffer buffer_requests(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Request)*requests.size(), requests.data(), &err));
+	// OCL_CHECK(err, cl::Buffer buffer_requests(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Request)*requests.size(), requests.data(), &err));
 
 	/* OUTPUT BUFFERS */
-	OCL_CHECK(err, cl::Buffer buffer_responses(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Response)*responses.size(), responses.data(), &err));
-	OCL_CHECK(err, cl::Buffer buffer_memory(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Node)*memory.size(), memory.data(), &err));
+	// OCL_CHECK(err, cl::Buffer buffer_responses(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Response)*responses.size(), responses.data(), &err));
+	OCL_CHECK(err, cl::Buffer buffer_memory(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, memory.size(), memory.data(), &err));
 
 	/* SETTING INPUT PARAMETERS */
 	OCL_CHECK(err, err = krnl1.setArg(0, 0));
 	OCL_CHECK(err, err = krnl1.setArg(1, 0));
 	OCL_CHECK(err, err = krnl1.setArg(2, 0));
 	OCL_CHECK(err, err = krnl1.setArg(3, buffer_memory));
-	OCL_CHECK(err, err = krnl1.setArg(4, buffer_requests));
-	OCL_CHECK(err, err = krnl1.setArg(5, buffer_responses));
-	OCL_CHECK(err, err = krnl1.setArg(6, 0));
+	OCL_CHECK(err, err = krnl1.setArg(4, 0));
 
 	/*====================================================KERNEL===============================================================*/
 	/* HOST -> DEVICE DATA TRANSFER*/
 	std::cout << "HOST -> DEVICE" << std::endl;
 	htod = clock();
-	OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_requests}, 0 /* 0 means from host*/));
 	OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_memory}, 0 /* 0 means from host*/));
 	q.finish();
 	htod = clock() - htod;
@@ -147,7 +148,6 @@ int main(int argc, char** argv) {
 	std::cout << "HOST <- DEVICE" << std::endl;
 	dtoh = clock();
 	OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_memory}, CL_MIGRATE_MEM_OBJECT_HOST));
-	OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_responses}, CL_MIGRATE_MEM_OBJECT_HOST));
 	q.finish();
 	dtoh = clock() - dtoh;
 
@@ -159,6 +159,7 @@ int main(int argc, char** argv) {
 
 	bool match = true;
 	printf("Verifying Responses...\n");
+	memcpy(responses.data(), memory.data()+RESPONSE_OFFSET, sizeof(Response)*responses.size());
 	if (responses.size() != responses_expected.size()) {
 		match = false;
 	} else {
@@ -172,7 +173,7 @@ int main(int argc, char** argv) {
 		}
 	}
 	printf("Verifying memory contents...\n");
-	check_inserted_leaves(memory.data());
+	check_inserted_leaves((Node*) memory.data());
 	printf("Done!\n");
 
 	std::cout << "TEST " << (match ? "PASSED" : "FAILED") << std::endl;

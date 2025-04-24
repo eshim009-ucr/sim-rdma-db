@@ -8,8 +8,6 @@ void krnl(
 	int RDMA_TYPE,
 	int exec,
 	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer,
 	bptr_t root
 ) {
 
@@ -19,8 +17,6 @@ void krnl(
 	#pragma HLS INTERFACE s_axilite port = root
 
 	#pragma HLS INTERFACE m_axi port = hbm bundle = gmem0
-	#pragma HLS INTERFACE m_axi port = req_buffer bundle = gmem1
-	#pragma HLS INTERFACE m_axi port = resp_buffer bundle = gmem2
 
 	static hls::stream<Request> requests;
 	static hls::stream<Response> responses;
@@ -45,8 +41,8 @@ void krnl(
 		insertInput, insertOutput,
 		(Node*) hbm
 	);
-	sm_ramstream_req(requests, req_buffer);
-	sm_ramstream_resp(responses, resp_buffer);
+	sm_ramstream_req(requests, hbm);
+	sm_ramstream_resp(responses, hbm);
 	sm_decode(requests, searchInput, insertInput);
 	sm_encode(responses, searchOutput, insertOutput);
 

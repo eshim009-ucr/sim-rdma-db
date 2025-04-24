@@ -4,7 +4,9 @@
 
 #include "operations.hpp"
 #include "core/defs.h"
+#ifdef HLS
 #include <hls_stream.h>
+#endif
 
 
 #ifndef REQUEST_OFFSET
@@ -20,6 +22,7 @@
 #endif
 
 
+#ifdef HLS
 //! @brief Convert a DRAM buffer of requests to an HLS stream
 void sm_ramstream_req(
 	//! [out] Streams of requests decoded from memory
@@ -27,7 +30,9 @@ void sm_ramstream_req(
 	//! [in]  Pointer to high bandwidth memory
 	uint8_t *hbm
 );
+#endif
 
+#ifdef HLS
 //! @brief Write an HLS stream of responses to a DRAM buffer
 void sm_ramstream_resp(
 	//! [in]  Streams of responses to be encoded in memory
@@ -35,6 +40,7 @@ void sm_ramstream_resp(
 	//! [out] Pointer to high bandwidth memory
 	uint8_t *hbm
 );
+#endif
 
 //! @brief Reset the offsets used to read/write requests/responses
 //!        to their starting position
