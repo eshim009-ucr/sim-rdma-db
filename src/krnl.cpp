@@ -35,23 +35,24 @@ void krnl(
 	#pragma HLS stream variable=searchOutput type=fifo depth=0x100
 	#pragma HLS stream variable=insertOutput type=fifo depth=0x100
 
-	for (uint_fast64_t i = 0; i < exec; ++i) {
-		if (
-			sm_search(
-				root,
-				searchInput, searchOutput,
-				(Node*) hbm
-			) &&
-			sm_insert(
-				root,
-				insertInput, insertOutput,
-				(Node*) hbm
-			) &&
-			sm_ramstream_req(requests, req_buffer) &&
-			sm_ramstream_resp(responses, resp_buffer) &&
-			sm_decode(requests, searchInput, insertInput) &&
-			sm_encode(responses, searchOutput, insertOutput)
-		) break;
+	// Bit vector for each state machine
+	// 1 is done, 0 is not done
+	static bool done[6];
+	for (uint_fast64_t i = 0; i < exec && (done[0] && done[1] && done[2] && done[3] && done[4] && done[5]); ++i) {
+		done[0] = sm_search(
+			root,
+			searchInput, searchOutput,
+			(Node*) hbm
+		);
+		done[1] = sm_insert(
+			root,
+			insertInput, insertOutput,
+			(Node*) hbm
+		);
+		done[2] = sm_ramstream_req(requests, req_buffer);
+		done[3] = sm_ramstream_resp(responses, resp_buffer);
+		done[4] = sm_decode(requests, searchInput, insertInput);
+		done[5] = sm_encode(responses, searchOutput, insertOutput);
 	}
 
 	return;

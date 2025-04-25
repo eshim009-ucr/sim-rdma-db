@@ -21,15 +21,11 @@ extern "C" {
 #define SET_IKV(addr, i, key_, value_) \
 	((Node*) hbm)[addr].keys[i] = key_; ((Node*) hbm)[addr].values[i].data = value_;
 #define RUN_KERNEL \
-	uint_fast32_t stepCount = 0; \
-	while (stepCount++ < exec) \
 	krnl( \
 		myBoardNum, RDMA_TYPE, exec, \
 		hbm, req_buffer, resp_buffer, root \
 	);
 
-
-void reset_mem(uint8_t *hbm);
 
 //!@brief Print a hex dump of a section of HBM grouped by object
 void hbm_dump(

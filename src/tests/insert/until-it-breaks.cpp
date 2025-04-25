@@ -3,6 +3,9 @@
 #include "../../ramstream.hpp"
 #include "../../operations.hpp"
 #include "../test-helpers.hpp"
+extern "C" {
+#include "../../core/memory.h"
+};
 #include <iostream>
 #include <cstdint>
 
@@ -42,7 +45,7 @@ bool until_it_breaks(
 	uint_fast64_t offset = 0;
 
 	// Set up initial state
-	reset_mem(hbm);
+	mem_reset_all((Node*) hbm);
 	reset_ramstream_offsets();
 	// Should succeed
 	for (uint_fast8_t i = 1; i <= (TREE_ORDER/2)*(MAX_LEAVES+1); ++i) {

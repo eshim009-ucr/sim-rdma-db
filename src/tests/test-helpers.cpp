@@ -3,14 +3,6 @@
 #include <iostream>
 
 
-void reset_mem(uint8_t *hbm) {
-	memset(hbm, INVALID, MEM_SIZE*sizeof(Node));
-	for (uint_fast8_t i = 0; i < MEM_SIZE; i++) {
-		init_lock(&((Node*) hbm)[i].lock);
-	}
-}
-
-
 void hbm_dump(uint8_t* hbm, uint_fast64_t offset, size_t size, uint_fast64_t length) {
 	const uint8_t objs_per_line = 80 / (size*2);
 	std::cout << " -  HBM Dump  - " << std::hex;

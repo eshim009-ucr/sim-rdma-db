@@ -11,7 +11,7 @@ bool sm_search(
 	Node const* hbm
 ) {
 	bkey_t key;
-	if (!input.empty()) {
+	if (!input.empty() && !output.full()) {
 		input.read(key);
 		output.write(search(root, key, hbm));
 	}

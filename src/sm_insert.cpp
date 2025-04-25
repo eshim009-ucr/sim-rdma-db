@@ -2,7 +2,6 @@
 extern "C" {
 #include "core/insert.h"
 };
-#include <iostream>
 
 
 bool sm_insert(
@@ -13,7 +12,7 @@ bool sm_insert(
 ) {
 	KvPair pair;
 
-	if (!input.empty()) {
+	if (!input.empty() && !output.full()) {
 		input.read(pair);
 		output.write(insert(&root, pair.key, pair.value, hbm));
 	}

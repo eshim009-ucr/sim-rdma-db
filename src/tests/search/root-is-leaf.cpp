@@ -3,6 +3,9 @@
 #include "../../ramstream.hpp"
 #include "../../operations.hpp"
 #include "../test-helpers.hpp"
+extern "C" {
+#include "../../core/memory.h"
+};
 #include <iostream>
 #include <cstdint>
 
@@ -42,7 +45,7 @@ bool root_is_leaf(
 	uint_fast64_t offset = 0;
 
 	// Set up initial state
-	reset_mem(hbm);
+	mem_reset_all((Node*) hbm);
 	reset_ramstream_offsets();
 	SET_IKV(root, 0, 1, 10)
 	SET_IKV(root, 1, 2, 20)
