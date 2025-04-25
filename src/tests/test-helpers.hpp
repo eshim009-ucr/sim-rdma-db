@@ -29,8 +29,6 @@ extern "C" {
 	);
 
 
-void reset_mem(uint8_t *hbm);
-
 //!@brief Print a hex dump of a section of HBM grouped by object
 void hbm_dump(
 	//! Memory buffer to read from

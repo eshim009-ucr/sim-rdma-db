@@ -3,6 +3,9 @@
 #include "../../ramstream.hpp"
 #include "../../operations.hpp"
 #include "../test-helpers.hpp"
+extern "C" {
+#include "../../src/core/memory.h"
+};
 #include <iostream>
 #include <cstdint>
 
@@ -42,7 +45,7 @@ bool split_root(
 	uint_fast64_t offset = 0;
 
 	// Set up initial state
-	reset_mem(hbm);
+	mem_reset_all((Node*) hbm);
 	reset_ramstream_offsets();
 	hbm_dump(req_buffer, 0, sizeof(Request), 15);
 	hbm_dump(resp_buffer, 0, sizeof(Response), 15);
