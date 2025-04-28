@@ -80,7 +80,7 @@ CMD_ARGS = $(BUILD_DIR)/krnl.xclbin
 SDCARD := sd_card
 
 include ./opencl.mk
-CXXFLAGS += $(opencl_CXXFLAGS) -Wall -O0 -g -std=c++1y
+CXXFLAGS += $(opencl_CXXFLAGS) -Wall -O0 -g -std=c++1y -DFPGA
 LDFLAGS += $(opencl_LDFLAGS)
 
 INCLUDES = ./include

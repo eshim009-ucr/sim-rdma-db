@@ -25,7 +25,7 @@ bool check_inserted_leaves(Node const *memory) {
 						<< "\n\tgot " << next_val << std::endl;
 					match = false;
 				}
-				if (node.node.values[j].data == -next_val) {
+				if (node.node.values[j].data != -next_val) {
 					std::cout << "mem[" << node.addr << "].values[" << j <<"]:"
 						<< "\n\texpected " << node.node.values[j].data
 						<< "\n\tgot " << -next_val << std::endl;
@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
 	/* SETTING INPUT PARAMETERS */
 	OCL_CHECK(err, err = krnl1.setArg(0, 0));
 	OCL_CHECK(err, err = krnl1.setArg(1, 0));
-	OCL_CHECK(err, err = krnl1.setArg(2, 0));
+	OCL_CHECK(err, err = krnl1.setArg(2, 0x100));
 	OCL_CHECK(err, err = krnl1.setArg(3, buffer_memory));
 	OCL_CHECK(err, err = krnl1.setArg(4, buffer_requests));
 	OCL_CHECK(err, err = krnl1.setArg(5, buffer_responses));

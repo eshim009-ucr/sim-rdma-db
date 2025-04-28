@@ -34,17 +34,18 @@ struct Response {
 		switch (opcode) {
 			case NOP: return true;
 			case SEARCH: return
-				search.status != rhs.search.status &&
-				search.value.data != rhs.search.value.data;
-			case INSERT: return insert != rhs.insert;
+				search.status == rhs.search.status &&
+				search.value.data == rhs.search.value.data;
+			case INSERT: return (uint_fast8_t) insert == (uint_fast8_t) rhs.insert;
 			default: return memcmp(
-				this + sizeof(Opcode),
-				&rhs + sizeof(Opcode),
-				sizeof(Response) - sizeof(Opcode)) == 0;
+					this + sizeof(Opcode),
+					&rhs + sizeof(Opcode),
+					sizeof(Response)-sizeof(Opcode)
+				) == 0;
 		}
 	}
 	bool operator!=(const Response& rhs) const {
-		return !(*this == rhs);
+		return (*this == rhs) == false;
 	}
 	operator std::string() const {
 		std::stringstream ss;
@@ -53,13 +54,23 @@ struct Response {
 				ss << "NOP Response";
 				break;
 			case SEARCH:
-				ss << "Search Response " << ERROR_CODE_NAMES[search.status]
-					<< '(' << (int) search.status << "), " << search.value.data;
-					break;
+				ss << "Search Response ";
+				if (search.status >= 0 && search.status <= 6) {
+					ss << ERROR_CODE_NAMES[search.status];
+				} else {
+					ss << "UNKNOWN";
+				}
+				ss << '(' << (int) search.status << "), " << search.value.data;
+				break;
 			case INSERT:
-				ss << "Insert Response " << ERROR_CODE_NAMES[insert]
-					<< '(' << (int) insert << ')';
-					break;
+				ss << "Insert Response ";
+				if (search.status >= 0 && search.status <= 6) {
+					ss << ERROR_CODE_NAMES[search.status];
+				} else {
+					ss << "UNKNOWN";
+				}
+				ss << '(' << (int) insert << ')';
+				break;
 			default:
 				ss << "Response Opcode " << (int) opcode;
 				break;
