@@ -1,6 +1,9 @@
 #include "host.h"
 #include "src/operations.hpp"
 #include <vector>
+extern "C" {
+#include "src/core/io.h"
+};
 
 
 bool check_inserted_leaves(Node const *memory) {
@@ -14,19 +17,19 @@ bool check_inserted_leaves(Node const *memory) {
 		for (li_t j = 0; j < TREE_ORDER; ++j) {
 			if (node.node.keys[j] == INVALID) {
 				if (i == 0 && j == 0) {
-					std::cout << "Fail, memory is empty" << std::endl;
+					std::cerr << "Fail, memory is empty" << std::endl;
 					match = false;
 				}
 				break;
 			} else {
 				if (node.node.keys[j] != next_val) {
-					std::cout << "mem[" << node.addr << "].keys[" << j <<"]:"
+					std::cerr << "mem[" << node.addr << "].keys[" << j <<"]:"
 						<< "\n\texpected " << node.node.keys[j]
 						<< "\n\tgot " << next_val << std::endl;
 					match = false;
 				}
 				if (node.node.values[j].data != -next_val) {
-					std::cout << "mem[" << node.addr << "].values[" << j <<"]:"
+					std::cerr << "mem[" << node.addr << "].values[" << j <<"]:"
 						<< "\n\texpected " << node.node.values[j].data
 						<< "\n\tgot " << -next_val << std::endl;
 					match = false;
@@ -38,7 +41,9 @@ bool check_inserted_leaves(Node const *memory) {
 		node.addr = node.node.next;
 	}
 	if (match) {
-		std::cout << "Verified " << i << " leaves" << std::endl;
+		std::cout << "Verified "
+			<< next_val-1 << " k/v pairs across "
+			<< i << " leaves" << std::endl;
 	}
 	return match;
 }
@@ -94,6 +99,7 @@ int main(int argc, char** argv) {
 	std::vector<Node, aligned_allocator<Node> > memory(MEM_SIZE);
 	Request tmp_req = {.opcode = INSERT};
 	Response tmp_resp = {.opcode = INSERT, .insert = SUCCESS};
+	bptr_t root = 0;
 
 	for (int i = 1; i <= 22; i++) {
 		tmp_req.insert.key = i;
@@ -124,7 +130,7 @@ int main(int argc, char** argv) {
 	OCL_CHECK(err, err = krnl1.setArg(3, buffer_memory));
 	OCL_CHECK(err, err = krnl1.setArg(4, buffer_requests));
 	OCL_CHECK(err, err = krnl1.setArg(5, buffer_responses));
-	OCL_CHECK(err, err = krnl1.setArg(6, 0));
+	OCL_CHECK(err, err = krnl1.setArg(6, root));
 
 	/*====================================================KERNEL===============================================================*/
 	/* HOST -> DEVICE DATA TRANSFER*/
@@ -174,6 +180,8 @@ int main(int argc, char** argv) {
 	printf("Verifying memory contents...\n");
 	check_inserted_leaves(memory.data());
 	printf("Done!\n");
+
+	dump_node_list(stdout, memory.data());
 
 	std::cout << "TEST " << (match ? "PASSED" : "FAILED") << std::endl;
 

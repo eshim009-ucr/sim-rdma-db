@@ -80,6 +80,7 @@ CMD_ARGS = $(BUILD_DIR)/krnl.xclbin
 SDCARD := sd_card
 
 include ./opencl.mk
+CFLAGS += $(opencl_CFLAGS) -Wall -O0 -g -DFPGA
 CXXFLAGS += $(opencl_CXXFLAGS) -Wall -O0 -g -std=c++1y -DFPGA
 LDFLAGS += $(opencl_LDFLAGS)
 
@@ -89,7 +90,9 @@ INCLUDES = ./include
 PLATFORM_BLOCKLIST += nodma
 ############################## Setting up Host Variables ##############################
 #Include Required Host Source Files
-HOST_SRCS += ./host.cpp
+HOST_SRCS_CPP += ./host.cpp
+HOST_SRCS_C += ./src/core/io.c ./src/core/memory.c
+HOST_OBJS += $(subst .cpp,.o,$(HOST_SRCS_CPP)) $(subst .c,.o,$(HOST_SRCS_C))
 # Host compiler global settings
 CXXFLAGS += -fmessage-length=0 -I$(INCLUDES)
 LDFLAGS += -lrt -lstdc++
@@ -148,8 +151,12 @@ else
 endif
 
 ############################## Setting Rules for Host (Building Host Executable) ##############################
-$(EXECUTABLE): $(HOST_SRCS) | check-xrt
-		$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS)
+%.o: %.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+%.o: %.cpp
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+$(EXECUTABLE): $(HOST_OBJS) | check-xrt
+	$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS)
 
 emconfig:$(EMCONFIG_DIR)/emconfig.json
 $(EMCONFIG_DIR)/emconfig.json:
