@@ -30,7 +30,7 @@ extern "C" {
 //!@brief Print a hex dump of a section of HBM grouped by object
 void hbm_dump(
 	//! Memory buffer to read from
-	uint8_t* hbm,
+	uint64_t* hbm,
 	//! Offset at which to start the dump
 	uint_fast64_t offset,
 	//! Size in bytes of object to group by

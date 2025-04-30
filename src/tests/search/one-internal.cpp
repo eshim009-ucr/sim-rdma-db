@@ -31,9 +31,9 @@ bool one_internal(
 	int RDMA_TYPE,
 	int exec,
 
-	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer
+	uint64_t *hbm,
+	uint64_t *req_buffer,
+	uint64_t *resp_buffer
 ) {
 	bool pass = true;
 	bptr_t root = MAX_LEAVES;

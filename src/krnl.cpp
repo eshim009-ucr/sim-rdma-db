@@ -7,9 +7,9 @@ void krnl(
 	int myBoardNum,
 	int RDMA_TYPE,
 	int exec,
-	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer,
+	uint64_t *hbm,
+	uint64_t *req_buffer,
+	uint64_t *resp_buffer,
 	bptr_t root
 ) {
 
@@ -48,8 +48,8 @@ void krnl(
 			insertInput, insertOutput,
 			(Node*) hbm
 		);
-		sm_ramstream_req(requests, req_buffer);
-		sm_ramstream_resp(responses, resp_buffer);
+		sm_ramstream_req(requests, (Request*) req_buffer);
+		sm_ramstream_resp(responses, (Response*) resp_buffer);
 		sm_decode(requests, searchInput, insertInput);
 		sm_encode(responses, searchOutput, insertOutput);
 	}
