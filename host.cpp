@@ -23,17 +23,18 @@ bool check_inserted_leaves(Node const *memory) {
 				break;
 			} else {
 				if (node.node.keys[j] != next_val) {
-					std::cerr << "mem[" << node.addr << "].keys[" << j <<"]:"
-						<< "\n\texpected " << node.node.keys[j]
-						<< "\n\tgot " << next_val << std::endl;
+					std::cerr << "mem[" << node.addr << "].keys[" << (uint) j <<"]:"
+						<< "\n\texpected " << (int) node.node.keys[j]
+						<< "\n\tgot " << (int) next_val << std::endl;
 					match = false;
 				}
 				if (node.node.values[j].data != -next_val) {
-					std::cerr << "mem[" << node.addr << "].values[" << j <<"]:"
-						<< "\n\texpected " << node.node.values[j].data
-						<< "\n\tgot " << -next_val << std::endl;
+					std::cerr << "mem[" << node.addr << "].values[" << (uint) j <<"]:"
+						<< "\n\texpected " << (int) node.node.values[j].data
+						<< "\n\tgot " << (int) -next_val << std::endl;
 					match = false;
 				}
+				std::cout << "Verified value " << next_val << std::endl;
 				next_val++;
 			}
 		}
