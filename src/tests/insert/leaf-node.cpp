@@ -31,9 +31,9 @@ bool leaf_node(
 	int RDMA_TYPE,
 	int exec,
 
-	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer
+	Node *hbm,
+	Request *req_buffer,
+	Response *resp_buffer
 ) {
 	bool pass = true;
 	bptr_t root = 0;
@@ -45,7 +45,7 @@ bool leaf_node(
 	uint_fast64_t offset = 0;
 
 	// Set up initial state
-	mem_reset_all((Node*) hbm);
+	mem_reset_all(hbm);
 	reset_ramstream_offsets();
 	// Should succeed
 	INPUT_INSERT(0, 2)
@@ -54,7 +54,7 @@ bool leaf_node(
 
 	// Perform Operations
 	RUN_KERNEL
-	hbm_dump(hbm, 0, sizeof(Node), 4);
+	hbm_dump((uint8_t*) hbm, 0, sizeof(Node), 4);
 
 	// Evalue Results
 	offset = 0;

@@ -6,6 +6,7 @@
 extern "C" {
 #include "../../core/node.h"
 };
+#include "../../operations.hpp"
 #include <hls_stream.h>
 
 
@@ -21,9 +22,9 @@ bool root_is_leaf(
 	int myBoardNum,
 	int RDMA_TYPE,
 	int exec,
-	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer
+	Node *hbm,
+	Request *req_buffer,
+	Response *resp_buffer
 );
 
 

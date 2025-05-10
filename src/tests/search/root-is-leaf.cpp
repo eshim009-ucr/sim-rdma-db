@@ -31,9 +31,9 @@ bool root_is_leaf(
 	int RDMA_TYPE,
 	int exec,
 
-	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer
+	Node *hbm,
+	Request *req_buffer,
+	Response *resp_buffer
 ) {
 	bool pass = true;
 	bptr_t root = 0;
@@ -45,13 +45,13 @@ bool root_is_leaf(
 	uint_fast64_t offset = 0;
 
 	// Set up initial state
-	mem_reset_all((Node*) hbm);
+	mem_reset_all(hbm);
 	reset_ramstream_offsets();
 	SET_IKV(root, 0, 1, 10)
 	SET_IKV(root, 1, 2, 20)
 	SET_IKV(root, 2, 4, 40)
 	SET_IKV(root, 3, 5, 50)
-	hbm_dump(hbm, 0, sizeof(Node), 2);
+	hbm_dump((uint8_t*) hbm, 0, sizeof(Node), 2);
 	// Should fail
 	INPUT_SEARCH(0)
 	INPUT_SEARCH(3)
@@ -61,8 +61,8 @@ bool root_is_leaf(
 	INPUT_SEARCH(2)
 	INPUT_SEARCH(4)
 	INPUT_SEARCH(5)
-	hbm_dump(req_buffer, 0, sizeof(Request), 15);
-	hbm_dump(resp_buffer, 0, sizeof(Response), 15);
+	hbm_dump((uint8_t*) req_buffer, 0, sizeof(Request), 15);
+	hbm_dump((uint8_t*) resp_buffer, 0, sizeof(Response), 15);
 
 	// Perform Operations
 	RUN_KERNEL

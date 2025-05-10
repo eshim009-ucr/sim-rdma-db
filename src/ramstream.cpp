@@ -8,7 +8,7 @@ static uint_fast64_t resp_offset = 0;
 
 void sm_ramstream_req(
 	hls::stream<Request>& requests,
-	uint8_t *hbm
+	Request *req_buffer
 ) {
 	static enum {IDLE, READ, DONE} state = IDLE;
 	Request req;
@@ -19,8 +19,7 @@ void sm_ramstream_req(
 			break;
 		case READ:
 			if (!requests.full()) {
-				req = *((Request*) &hbm[req_offset]);
-				req_offset += sizeof(Request);
+				req = req_buffer[req_offset++];
 				if (req.opcode == NOP) {
 					state = DONE;
 				} else {
@@ -44,7 +43,7 @@ void sm_ramstream_req(
 
 void sm_ramstream_resp(
 	hls::stream<Response>& responses,
-	uint8_t *hbm
+	Response *resp_buffer
 ) {
 	static enum {IDLE, WRITE, RESET} state = IDLE;
 	Response resp;
@@ -57,8 +56,7 @@ void sm_ramstream_resp(
 			break;
 		case WRITE:
 			responses.read(resp);
-			*((Response*) &hbm[resp_offset]) = resp;
-			resp_offset += sizeof(Response);
+			resp_buffer[resp_offset++] = resp;
 			if (responses.empty()) {
 				state = IDLE;
 			}
