@@ -48,7 +48,7 @@ bool until_it_breaks(
 	mem_reset_all((Node*) hbm);
 	reset_ramstream_offsets();
 	// Should succeed
-	for (uint_fast8_t i = 1; i <= (TREE_ORDER/2)*(MAX_LEAVES+1); ++i) {
+	for (uint_fast8_t i = 1; i <= 6; ++i) {
 		INPUT_INSERT(i, -i)
 	}
 
