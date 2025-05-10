@@ -59,8 +59,7 @@ bool until_it_breaks(
 	offset = 0;
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		last_resp = *((Response*) &resp_buffer[offset]);
-		offset += sizeof(Response);
+		last_resp = resp_buffer[offset++];
 		last_out = last_resp.insert;
 		#ifdef VERBOSE
 		std::cout << "Insert(k=" << last_in.key

@@ -71,8 +71,7 @@ bool root_is_leaf(
 	offset = 0;
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		last_resp = *((Response*) &resp_buffer[offset]);
-		offset += sizeof(Response);
+		last_resp = resp_buffer[offset++];
 		last_out = last_resp.search;
 		#ifdef VERBOSE
 		std::cout << "Search(" << last_in << "): ";
