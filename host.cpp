@@ -28,9 +28,9 @@ bool check_inserted_leaves(Node const *memory) {
 						<< "\n\tgot " << (int) next_val << std::endl;
 					match = false;
 				}
-				if (node.node.values[j].data != -next_val) {
+				if (node.node.values[j] != -next_val) {
 					std::cerr << "mem[" << node.addr << "].values[" << (uint) j <<"]:"
-						<< "\n\texpected " << (int) node.node.values[j].data
+						<< "\n\texpected " << (int) node.node.values[j]
 						<< "\n\tgot " << (int) -next_val << std::endl;
 					match = false;
 				}
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 
 	for (int i = 1; i <= 22; i++) {
 		tmp_req.insert.key = i;
-		tmp_req.insert.value.data = -i;
+		tmp_req.insert.value = -i;
 		requests.push_back(tmp_req);
 		responses_expected.push_back(tmp_resp);
 	}

@@ -65,7 +65,7 @@ bool leaf_node(
 		last_out = last_resp.insert;
 		#ifdef VERBOSE
 		std::cout << "Insert(k=" << last_in.key
-			<< ", v=" << last_in.value.data << "): ";
+			<< ", v=" << last_in.value << "): ";
 		if (last_out != SUCCESS) {
 			std::cout << "Error: "
 				<< ERROR_CODE_NAMES[last_out]
@@ -76,7 +76,7 @@ bool leaf_node(
 		#endif
 		if (last_out != SUCCESS) {
 			std::cerr << "For insert input k=" << last_in.key
-				<< ", v=" << last_in.value.data
+				<< ", v=" << last_in.value
 				<< ": Expected SUCCESS, got "
 				<< ERROR_CODE_NAMES[last_out]
 				<< '(' << (int) last_out << ')' << std::endl;
@@ -89,7 +89,7 @@ bool leaf_node(
 		std::cerr << "Contains the data:";
 		do {
 			input_log.read(last_in);
-			std::cerr << "\n\t k=" << last_in.key << " v=" << last_in.value.data;
+			std::cerr << "\n\t k=" << last_in.key << " v=" << last_in.value;
 		} while (!input_log.empty());
 		std::cerr << std::endl;
 		pass = false;

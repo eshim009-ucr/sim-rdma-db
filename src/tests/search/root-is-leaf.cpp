@@ -80,8 +80,8 @@ bool root_is_leaf(
 				<< ERROR_CODE_NAMES[last_out.status]
 				<< '(' << (int) last_out.status << ')' << std::endl;
 		} else {
-			std::cout << last_out.value.data<< "\t0x" << std::hex
-				<< last_out.value.data << std::dec << std::endl;
+			std::cout << last_out.value<< "\t0x" << std::hex
+				<< last_out.value << std::dec << std::endl;
 		}
 		#endif
 		if (last_in % 3 == 0) {
@@ -100,10 +100,10 @@ bool root_is_leaf(
 					<< '(' << (int) last_out.status << ')' << std::endl;
 				pass = false;
 			}
-			if (last_out.value.data != 10*last_in) {
+			if (last_out.value != 10*last_in) {
 				std::cerr << "For search input " << last_in
 					<< ": Expected " << 10*last_in << ", got "
-					<< last_out.value.data << std::endl;
+					<< last_out.value << std::endl;
 				pass = false;
 			}
 		}

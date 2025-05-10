@@ -13,11 +13,11 @@ extern "C" {
 	req_buffer[offset++] = encode_search_req(x); \
 	input_log.write(x);
 #define INPUT_INSERT(key_, value_) \
-	last_in.key = key_; last_in.value.data = value_; \
+	last_in.key = key_; last_in.value = value_; \
 	req_buffer[offset++] = encode_insert_req(last_in); \
 	input_log.write(last_in);
 #define SET_IKV(addr, i, key_, value_) \
-	hbm[addr].keys[i] = key_; hbm[addr].values[i].data = value_;
+	hbm[addr].keys[i] = key_; hbm[addr].values[i] = value_;
 #define RUN_KERNEL \
 	krnl( \
 		myBoardNum, RDMA_TYPE, exec, \

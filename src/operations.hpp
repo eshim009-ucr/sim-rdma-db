@@ -35,7 +35,7 @@ struct Response {
 			case NOP: return true;
 			case SEARCH: return
 				search.status == rhs.search.status &&
-				search.value.data == rhs.search.value.data;
+				search.value == rhs.search.value;
 			case INSERT: return (uint_fast8_t) insert == (uint_fast8_t) rhs.insert;
 			default: return memcmp(
 					this + sizeof(Opcode),
@@ -60,7 +60,7 @@ struct Response {
 				} else {
 					ss << "UNKNOWN";
 				}
-				ss << '(' << (int) search.status << "), " << search.value.data;
+				ss << '(' << (int) search.status << "), " << search.value;
 				break;
 			case INSERT:
 				ss << "Insert Response ";
