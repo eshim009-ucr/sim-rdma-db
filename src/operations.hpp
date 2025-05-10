@@ -20,7 +20,7 @@ struct Request {
 		search_in_t search;
 		insert_in_t insert;
 	};
-} __attribute__((packed));
+};
 
 struct Response {
 	Opcode opcode;
@@ -78,7 +78,7 @@ struct Response {
 		return ss.str();
 	}
 	#endif
-} __attribute__((packed));
+};
 
 
 Request encode_search_req(search_in_t in);
