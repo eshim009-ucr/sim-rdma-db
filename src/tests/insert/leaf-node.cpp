@@ -4,6 +4,7 @@
 #include "../../operations.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
+#include "../../src/core/io.h"
 #include "../../src/core/memory.h"
 };
 #include <iostream>
@@ -93,6 +94,7 @@ bool leaf_node(
 		std::cerr << std::endl;
 		pass = false;
 	}
+	dump_node_list(stdout, hbm);
 
 	return pass;
 }

@@ -4,6 +4,7 @@
 #include "../../operations.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
+#include "../../src/core/io.h"
 #include "../../src/core/memory.h"
 };
 #include <iostream>
@@ -92,6 +93,7 @@ bool until_it_breaks(
 		std::cerr << std::endl;
 		pass = false;
 	}
+	dump_node_list(stdout, hbm);
 
 	return pass;
 }

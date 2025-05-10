@@ -4,6 +4,7 @@
 #include "../../operations.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
+#include "../../src/core/io.h"
 #include "../../src/core/memory.h"
 };
 #include <iostream>
@@ -99,6 +100,7 @@ bool split_root(
 	}
 	hbm_dump((uint8_t*) req_buffer, 0, sizeof(Request), 15);
 	hbm_dump((uint8_t*) resp_buffer, 0, sizeof(Response), 15);
+	dump_node_list(stdout, hbm);
 
 	return pass;
 }
