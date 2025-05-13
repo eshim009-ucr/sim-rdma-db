@@ -35,9 +35,9 @@ void krnl(
 	#pragma HLS stream variable=searchOutput type=fifo depth=0x100
 	#pragma HLS stream variable=insertOutput type=fifo depth=0x100
 
-	uint_fast32_t stepCount = 0;
+	uint_fast32_t stepCount = 0, opsIn = 0, opsOut = 0;
 
-	while (stepCount++ < exec) {
+	while (opsOut < exec) {
 		sm_search(
 			root,
 			searchInput, searchOutput,
@@ -50,8 +50,8 @@ void krnl(
 		);
 		sm_ramstream_req(requests, req_buffer);
 		sm_ramstream_resp(responses, resp_buffer);
-		sm_decode(requests, searchInput, insertInput);
-		sm_encode(responses, searchOutput, insertOutput);
+		sm_decode(requests, searchInput, insertInput, opsIn);
+		sm_encode(responses, searchOutput, insertOutput, opsOut);
 	}
 
 	return;

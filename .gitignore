@@ -1,6 +1,7 @@
 # User Preferences
 .vscode/
 # Output Files
+.ipcache/
 build*
 host
 *.o

@@ -1,5 +1,6 @@
 #include "host.h"
 #include "src/operations.hpp"
+#include "src/tests/test-helpers.hpp"
 #include <vector>
 extern "C" {
 #include "src/core/io.h"
@@ -116,18 +117,19 @@ int main(int argc, char** argv) {
 	}
 
 	/*====================================================Setting up kernel I/O===============================================================*/
+	for (int i = 1; i <= 22; ++i) {
 
 	/* INPUT BUFFERS */
-	OCL_CHECK(err, cl::Buffer buffer_requests(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Request)*requests.size(), requests.data(), &err));
+	OCL_CHECK(err, cl::Buffer buffer_requests(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE, sizeof(Request)*requests.size(), requests.data(), &err));
 
 	/* OUTPUT BUFFERS */
-	OCL_CHECK(err, cl::Buffer buffer_responses(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Response)*responses.size(), responses.data(), &err));
-	OCL_CHECK(err, cl::Buffer buffer_memory(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Node)*memory.size(), memory.data(), &err));
+	OCL_CHECK(err, cl::Buffer buffer_responses(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE, sizeof(Response)*responses.size(), responses.data(), &err));
+	OCL_CHECK(err, cl::Buffer buffer_memory(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE, sizeof(Node)*memory.size(), memory.data(), &err));
 
 	/* SETTING INPUT PARAMETERS */
 	OCL_CHECK(err, err = krnl1.setArg(0, 0));
 	OCL_CHECK(err, err = krnl1.setArg(1, 0));
-	OCL_CHECK(err, err = krnl1.setArg(2, 0x100));
+	OCL_CHECK(err, err = krnl1.setArg(2, 1)); // Only run one operation at a time
 	OCL_CHECK(err, err = krnl1.setArg(3, buffer_memory));
 	OCL_CHECK(err, err = krnl1.setArg(4, buffer_requests));
 	OCL_CHECK(err, err = krnl1.setArg(5, buffer_responses));
@@ -157,6 +159,14 @@ int main(int argc, char** argv) {
 	OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_responses}, CL_MIGRATE_MEM_OBJECT_HOST));
 	q.finish();
 	dtoh = clock() - dtoh;
+
+	std::cout << "MEMORY DUMP " << i << std::endl;
+	dump_node_list(stdout, memory.data());
+	std::cout << "Leaves" << std::endl;
+	hbm_dump((uint8_t*) memory.data(), 0, sizeof(Node), MAX_LEAVES);
+	std::cout << "Internal" << std::endl;
+	hbm_dump((uint8_t*) memory.data(), MAX_LEAVES*sizeof(Node), sizeof(Node), MAX_NODES_PER_LEVEL*2);
+	}
 
 	/*====================================================VERIFICATION & TIMING===============================================================*/
 

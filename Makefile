@@ -90,7 +90,7 @@ INCLUDES = ./include
 PLATFORM_BLOCKLIST += nodma
 ############################## Setting up Host Variables ##############################
 #Include Required Host Source Files
-HOST_SRCS_CPP += ./host.cpp
+HOST_SRCS_CPP += ./host.cpp ./src/tests/test-helpers.cpp
 HOST_SRCS_C += ./src/core/io.c ./src/core/memory.c
 HOST_OBJS += $(subst .cpp,.o,$(HOST_SRCS_CPP)) $(subst .c,.o,$(HOST_SRCS_C))
 # Host compiler global settings
