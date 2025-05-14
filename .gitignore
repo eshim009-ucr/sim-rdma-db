@@ -2,7 +2,6 @@
 .vscode/
 # Output Files
 build*
-host
 *.o
 # Log files
 *.log
