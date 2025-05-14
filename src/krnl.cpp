@@ -4,23 +4,21 @@
 
 
 void krnl(
-	int myBoardNum,
-	int RDMA_TYPE,
-	int exec,
 	uint8_t *hbm,
 	uint8_t *req_buffer,
 	uint8_t *resp_buffer,
-	bptr_t root
+	bptr_t root,
+	int loop_max,
+	int op_max,
+	bool reset
 ) {
-
-	#pragma HLS INTERFACE s_axilite port = myBoardNum
-	#pragma HLS INTERFACE s_axilite port = RDMA_TYPE
-	#pragma HLS INTERFACE s_axilite port = exec
-	#pragma HLS INTERFACE s_axilite port = root
-
-	#pragma HLS INTERFACE m_axi port = hbm bundle = gmem0
-	#pragma HLS INTERFACE m_axi port = req_buffer bundle = gmem1
-	#pragma HLS INTERFACE m_axi port = resp_buffer bundle = gmem2
+	#pragma HLS INTERFACE m_axi port=hbm bundle=gmem0
+	#pragma HLS INTERFACE m_axi port=req_buffer bundle=gmem1
+	#pragma HLS INTERFACE m_axi port=resp_buffer bundle=gmem2
+	#pragma HLS INTERFACE s_axilite port=root
+	#pragma HLS INTERFACE s_axilite port=loop_max
+	#pragma HLS INTERFACE s_axilite port=op_max
+	#pragma HLS INTERFACE s_axilite port=reset
 
 	static hls::stream<Request> requests;
 	static hls::stream<Response> responses;
@@ -35,9 +33,16 @@ void krnl(
 	#pragma HLS stream variable=searchOutput type=fifo depth=0x100
 	#pragma HLS stream variable=insertOutput type=fifo depth=0x100
 
-	static uint_fast32_t stepCount = 0, opsIn = 0, opsOut = 0;
+	uint_fast32_t step_count = 0;
+	uint_fast32_t ops_in = 0;
+	uint_fast32_t ops_out = 0;
+	if (reset) {
+		step_count = 0;
+		ops_in = 0;
+		ops_out = 0;
+	}
 
-	while (opsOut < exec) {
+	while (ops_out < op_max && step_count++ < loop_max) {
 		sm_search(
 			root,
 			searchInput, searchOutput,
@@ -50,8 +55,8 @@ void krnl(
 		);
 		sm_ramstream_req(requests, req_buffer);
 		sm_ramstream_resp(responses, resp_buffer);
-		sm_decode(requests, searchInput, insertInput, opsIn);
-		sm_encode(responses, searchOutput, insertOutput, opsOut);
+		sm_decode(requests, searchInput, insertInput, ops_in);
+		sm_encode(responses, searchOutput, insertOutput, ops_out);
 	}
 
 	return;

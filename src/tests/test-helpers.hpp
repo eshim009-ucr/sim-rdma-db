@@ -20,11 +20,11 @@ extern "C" {
 	input_log.write(last_in);
 #define SET_IKV(addr, i, key_, value_) \
 	((Node*) hbm)[addr].keys[i] = key_; ((Node*) hbm)[addr].values[i].data = value_;
-#define RUN_KERNEL \
-	krnl( \
-		myBoardNum, RDMA_TYPE, exec, \
-		hbm, req_buffer, resp_buffer, root \
-	);
+#define KERNEL_ARG_DECS \
+	uint8_t *hbm, uint8_t *req_buffer, uint8_t *resp_buffer, bptr_t root, \
+	int loop_max, int op_max, bool reset
+#define KERNEL_ARG_VARS \
+	hbm, req_buffer, resp_buffer, root, loop_max, op_max, reset
 
 
 //!@brief Print a hex dump of a section of HBM grouped by object

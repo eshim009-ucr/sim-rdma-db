@@ -58,15 +58,20 @@ struct htUpdateResp
 
 
 void krnl(
-	int myBoardNum,
-	int RDMA_TYPE,
-	int exec,
 	//! [inout] Pointer to on-chip high-bandwidth memory
 	uint8_t *hbm,
+	//! [in]    Buffer to hold the list of operation requests
 	uint8_t *req_buffer,
+	//! [out]   Buffer to hold responses from operations
 	uint8_t *resp_buffer,
 	//! [inout] Address within HBM that holds the root of the tree
 	//!
 	//! Can be modified by operation kernels
-	bptr_t root
+	bptr_t root,
+	//! [in]    Maximum number of main loop iterations to attempt to execute
+	int loop_max,
+	//! [in]    Maximum number of operations to attempt to execute
+	int op_max,
+	//! [in]    Reset operation counter register
+	bool reset
 );

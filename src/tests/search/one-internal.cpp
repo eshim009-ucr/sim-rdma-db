@@ -10,33 +10,9 @@ extern "C" {
 #include <cstdint>
 
 
-bool one_internal(
-	//Outgoing RDMA
-	hls::stream<pkt256>& m_axis_tx_meta,
-	hls::stream<pkt64>& m_axis_tx_data,
-	hls::stream<pkt64>& s_axis_tx_status,
-
-	//Local BRAM
-	hls::stream<pkt256>& m_axis_bram_write_cmd,
-	hls::stream<pkt256>& m_axis_bram_read_cmd,
-	hls::stream<pkt512>& m_axis_bram_write_data,
-	hls::stream<pkt512>& s_axis_bram_read_data,
-
-	//Incoming
-	hls::stream<pkt64>& s_axis_update,
-
-	//Book keeping
-	int myBoardNum,
-
-	int RDMA_TYPE,
-	int exec,
-
-	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer
-) {
+bool one_internal(KERNEL_ARG_DECS) {
 	bool pass = true;
-	bptr_t root = MAX_LEAVES;
+	root = MAX_LEAVES;
 	hls::stream<search_in_t> input_log;
 	uint_fast8_t ops_in, ops_out;
 	search_in_t last_in;
@@ -80,7 +56,7 @@ bool one_internal(
 	hbm_dump(resp_buffer, 0, sizeof(Response), 15);
 
 	// Perform Operations
-	RUN_KERNEL
+	krnl(KERNEL_ARG_VARS);
 
 	// Evalue Results
 	offset = 0;
