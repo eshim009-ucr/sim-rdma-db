@@ -35,7 +35,7 @@ void krnl(
 	#pragma HLS stream variable=searchOutput type=fifo depth=0x100
 	#pragma HLS stream variable=insertOutput type=fifo depth=0x100
 
-	uint_fast32_t stepCount = 0, opsIn = 0, opsOut = 0;
+	static uint_fast32_t stepCount = 0, opsIn = 0, opsOut = 0;
 
 	while (opsOut < exec) {
 		sm_search(
