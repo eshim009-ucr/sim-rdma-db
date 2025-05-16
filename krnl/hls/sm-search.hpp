@@ -1,9 +1,9 @@
-#ifndef SEARCH_HPP
-#define SEARCH_HPP
+#ifndef SM_SEARCH_HPP
+#define SM_SEARCH_HPP
 
 
 extern "C" {
-#include "core/node.h"
+#include "../core/node.h"
 };
 #ifdef HLS
 #include <hls_stream.h>

@@ -2,7 +2,7 @@
 #define TEST__LEAF_NODE_HPP
 
 
-#include "../../types.hpp"
+#include "../../hls/types.hpp"
 extern "C" {
 #include "../../core/node.h"
 };

@@ -1,10 +1,10 @@
 #include "split-root.hpp"
-#include "../../krnl.hpp"
-#include "../../ramstream.hpp"
-#include "../../operations.hpp"
+#include "../../hls/krnl.hpp"
+#include "../../hls/ramstream.hpp"
+#include "../../hls/operations.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
-#include "../../src/core/memory.h"
+#include "../../core/memory.h"
 };
 #include <iostream>
 #include <cstdint>

@@ -2,7 +2,7 @@
 #define TEST__ONE_INTERNAL_HPP
 
 
-#include "../../types.hpp"
+#include "../../hls/types.hpp"
 extern "C" {
 #include "../../core/node.h"
 };

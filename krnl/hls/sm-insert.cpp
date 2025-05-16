@@ -1,6 +1,6 @@
-#include "insert.hpp"
+#include "sm-insert.hpp"
 extern "C" {
-#include "core/insert.h"
+#include "../core/insert.h"
 };
 #include <iostream>
 

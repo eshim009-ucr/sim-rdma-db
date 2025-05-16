@@ -3,7 +3,7 @@
 
 
 extern "C" {
-#include "core/types.h"
+#include "../core/types.h"
 };
 #ifdef HLS
 #include <ap_axi_sdata.h>

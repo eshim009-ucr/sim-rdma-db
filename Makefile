@@ -90,8 +90,8 @@ INCLUDES = ./include
 PLATFORM_BLOCKLIST += nodma
 ############################## Setting up Host Variables ##############################
 #Include Required Host Source Files
-HOST_SRCS_CPP += ./host.cpp
-HOST_SRCS_C += ./src/core/io.c ./src/core/memory.c
+HOST_SRCS_CPP += $(wildcard host/*.cpp)
+HOST_SRCS_C += $(wildcard host/*.c)
 HOST_OBJS += $(subst .cpp,.o,$(HOST_SRCS_CPP)) $(subst .c,.o,$(HOST_SRCS_C))
 # Host compiler global settings
 CXXFLAGS += -fmessage-length=0 -I$(INCLUDES)
@@ -111,7 +111,7 @@ endif
 KRNL := krnl
 
 
-EXECUTABLE = ./host
+EXECUTABLE = ./host_exe
 EMCONFIG_DIR = $(TEMP_DIR)
 EMU_DIR = $(SDCARD)/data/emulation
 
@@ -135,7 +135,14 @@ build: check-vitis check-device $(BINARY_CONTAINERS)
 xclbin: build
 
 ############################## Setting Rules for Binary Containers (Building Kernels) ##############################
-$(TEMP_DIR)/krnl.xo: src/sm_insert.cpp src/krnl.cpp src/core/node.c src/core/insert.c src/core/search.c src/core/tree-helpers.c src/core/insert-helpers.c src/core/memory.c src/core/split.c src/operations.cpp src/ramstream.cpp src/rdma.cpp src/sm_search.cpp
+$(TEMP_DIR)/krnl.xo: $(wildcard krnl/hls/*.cpp) \
+	krnl/core/insert-helpers.c \
+	krnl/core/insert.c \
+	krnl/core/memory.c \
+	krnl/core/node.c \
+	krnl/core/search.c \
+	krnl/core/split.c \
+	krnl/core/tree-helpers.c
 	mkdir -p $(TEMP_DIR)
 	$(VPP) $(VPP_FLAGS) -c -k $(KRNL) --temp_dir $(TEMP_DIR)  -I'$(<D)' -o'$@' $^
 BINARY_CONTAINER_krnl_OBJS += $(TEMP_DIR)/krnl.xo
@@ -206,7 +213,7 @@ endif
 clean:
 	-$(RMDIR) $(EXECUTABLE) $(XCLBIN)/{*sw_emu*,*hw_emu*}
 	-$(RMDIR) profile_* TempConfig system_estimate.xtxt *.rpt *.csv
-	-$(RMDIR) src/*.ll *v++* .Xil emconfig.json dltmp* xmltmp* *.log *.jou *.wcfg *.wdb
+	-$(RMDIR) krnl/*.ll *v++* .Xil emconfig.json dltmp* xmltmp* *.log *.jou *.wcfg *.wdb
 	-$(RMDIR) *.o
 
 cleanall: clean

@@ -26,24 +26,24 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
 
 
 set(EXAMPLE_HLS_DEPENDS
-	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/sm_insert.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/krnl.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/hls/sm-insert.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/hls/krnl.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/core/node.c
 	${CMAKE_CURRENT_SOURCE_DIR}/core/insert.c
 	${CMAKE_CURRENT_SOURCE_DIR}/core/insert-helpers.c
 	${CMAKE_CURRENT_SOURCE_DIR}/core/memory.c
 	${CMAKE_CURRENT_SOURCE_DIR}/core/split.c
-	${CMAKE_CURRENT_SOURCE_DIR}/operations.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/ramstream.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/rdma.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/sm_search.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/tests/test-helpers.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/tests/insert/leaf-node.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/tests/insert/split-root.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/tests/insert/until-it-breaks.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/tests/search/one-internal.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/tests/search/root-is-leaf.cpp)
+	${CMAKE_CURRENT_SOURCE_DIR}/hls/operations.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/hls/ramstream.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/hls/rdma.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/hls/sm-search.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/test/test-helpers.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/test/insert/leaf-node.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/test/insert/split-root.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/test/insert/until-it-breaks.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/test/search/one-internal.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/test/search/root-is-leaf.cpp)
 
 
 #Setup HLS custom targets

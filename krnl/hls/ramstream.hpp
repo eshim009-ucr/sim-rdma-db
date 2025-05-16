@@ -3,7 +3,7 @@
 
 
 #include "operations.hpp"
-#include "core/defs.h"
+#include "../core/defs.h"
 #include <hls_stream.h>
 
 

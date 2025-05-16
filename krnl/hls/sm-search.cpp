@@ -1,6 +1,6 @@
-#include "search.hpp"
+#include "sm-search.hpp"
 extern "C" {
-#include "core/search.h"
+#include "../core/search.h"
 };
 
 

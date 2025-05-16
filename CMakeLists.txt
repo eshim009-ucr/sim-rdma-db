@@ -16,4 +16,4 @@ if (NOT VITIS_HLS_FOUND)
 	message(FATAL_ERROR "Vitis HLS not found.")
 endif()
 
-add_subdirectory(src)
+add_subdirectory(krnl)

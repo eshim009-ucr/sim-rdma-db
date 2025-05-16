@@ -1,10 +1,10 @@
-#ifndef INSERT_HPP
-#define INSERT_HPP
+#ifndef SM_INSERT_HPP
+#define SM_INSERT_HPP
 
 
 #include "types.hpp"
 extern "C" {
-#include "core/node.h"
+#include "../core/node.h"
 };
 #ifdef HLS
 #include <hls_stream.h>

@@ -1,5 +1,5 @@
-#include "tests/tests.hpp"
-#include "operations.hpp"
+#include "tests.hpp"
+#include "../hls/operations.hpp"
 #include <iostream>
 
 

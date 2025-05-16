@@ -1,8 +1,8 @@
-#include "host.h"
-#include "src/operations.hpp"
+#include "main.hpp"
+#include "../krnl/hls/operations.hpp"
 #include <vector>
 extern "C" {
-#include "src/core/io.h"
+#include "../krnl/core/io.h"
 };
 
 

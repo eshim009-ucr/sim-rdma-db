@@ -2,8 +2,8 @@
 #define OPERATIONS_HPP
 
 
-#include "search.hpp"
-#include "insert.hpp"
+#include "sm-search.hpp"
+#include "sm-insert.hpp"
 #ifndef __SYNTHESIS__
 #include <sstream>
 #endif
