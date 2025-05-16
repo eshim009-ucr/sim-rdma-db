@@ -59,11 +59,11 @@ struct htUpdateResp
 
 void krnl(
 	//! [inout] Pointer to on-chip high-bandwidth memory
-	uint8_t *hbm,
+	Node *hbm,
 	//! [in]    Buffer to hold the list of operation requests
-	uint8_t *req_buffer,
+	Request *req_buffer,
 	//! [out]   Buffer to hold responses from operations
-	uint8_t *resp_buffer,
+	Response *resp_buffer,
 	//! [inout] Address within HBM that holds the root of the tree
 	//!
 	//! Can be modified by operation kernels

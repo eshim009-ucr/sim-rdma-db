@@ -4,9 +4,9 @@
 
 
 void krnl(
-	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer,
+	Node *hbm,
+	Request *req_buffer,
+	Response *resp_buffer,
 	bptr_t root,
 	int loop_max,
 	int op_max,
@@ -27,7 +27,7 @@ void krnl(
 	static hls::stream<search_out_t> searchOutput;
 	static hls::stream<insert_out_t> insertOutput;
 	#pragma HLS stream variable=requests type=fifo depth=0x100
-	#pragma HLS stream variable=requests type=fifo depth=0x100
+	#pragma HLS stream variable=responses type=fifo depth=0x100
 	#pragma HLS stream variable=searchInput type=fifo depth=0x100
 	#pragma HLS stream variable=insertInput type=fifo depth=0x100
 	#pragma HLS stream variable=searchOutput type=fifo depth=0x100
@@ -46,12 +46,12 @@ void krnl(
 		sm_search(
 			root,
 			searchInput, searchOutput,
-			(Node*) hbm
+			hbm
 		);
 		sm_insert(
 			root,
 			insertInput, insertOutput,
-			(Node*) hbm
+			hbm
 		);
 		sm_ramstream_req(requests, req_buffer);
 		sm_ramstream_resp(responses, resp_buffer);

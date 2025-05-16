@@ -4,6 +4,7 @@
 #include "../../operations.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
+#include "../../src/core/io.h"
 #include "../../src/core/memory.h"
 };
 #include <iostream>
@@ -20,10 +21,10 @@ bool split_root(KERNEL_ARG_DECS) {
 	uint_fast64_t offset = 0;
 
 	// Set up initial state
-	mem_reset_all((Node*) hbm);
+	mem_reset_all(hbm);
 	reset_ramstream_offsets();
-	hbm_dump(req_buffer, 0, sizeof(Request), 15);
-	hbm_dump(resp_buffer, 0, sizeof(Response), 15);
+	hbm_dump((uint8_t*) req_buffer, 0, sizeof(Request), 15);
+	hbm_dump((uint8_t*) resp_buffer, 0, sizeof(Response), 15);
 	// Should succeed
 	INPUT_INSERT(0, 0)
 	INPUT_INSERT(5, -5)
@@ -39,8 +40,7 @@ bool split_root(KERNEL_ARG_DECS) {
 	offset = 0;
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		last_resp = *((Response*) &resp_buffer[offset]);
-		offset += sizeof(Response);
+		last_resp = resp_buffer[offset++];
 		last_out = last_resp.insert;
 		#ifdef VERBOSE
 		std::cout << "Insert(k=" << last_in.key
@@ -73,8 +73,9 @@ bool split_root(KERNEL_ARG_DECS) {
 		std::cerr << std::endl;
 		pass = false;
 	}
-	hbm_dump(req_buffer, 0, sizeof(Request), 15);
-	hbm_dump(resp_buffer, 0, sizeof(Response), 15);
+	hbm_dump((uint8_t*) req_buffer, 0, sizeof(Request), 15);
+	hbm_dump((uint8_t*) resp_buffer, 0, sizeof(Response), 15);
+	dump_node_list(stdout, hbm);
 
 	return pass;
 }

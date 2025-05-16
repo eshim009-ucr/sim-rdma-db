@@ -21,7 +21,7 @@ bool one_internal(KERNEL_ARG_DECS) {
 	uint_fast64_t offset = 0;
 
 	// Set up initial state
-	mem_reset_all((Node*) hbm);
+	mem_reset_all(hbm);
 	reset_ramstream_offsets();
 	// Root
 	SET_IKV(root, 0, 5, 1)
@@ -36,7 +36,7 @@ bool one_internal(KERNEL_ARG_DECS) {
 	SET_IKV(2, 1, 8, -8)
 	SET_IKV(2, 2, 10, -10)
 	SET_IKV(2, 3, 11, -11)
-	hbm_dump(hbm, 0, sizeof(Node), 4);
+	hbm_dump((uint8_t*) hbm, 0, sizeof(Node), 4);
 	// Should fail
 	INPUT_SEARCH(0)
 	INPUT_SEARCH(3)
@@ -52,8 +52,8 @@ bool one_internal(KERNEL_ARG_DECS) {
 	INPUT_SEARCH(8)
 	INPUT_SEARCH(10)
 	INPUT_SEARCH(11)
-	hbm_dump(req_buffer, 0, sizeof(Request), 15);
-	hbm_dump(resp_buffer, 0, sizeof(Response), 15);
+	hbm_dump((uint8_t*) req_buffer, 0, sizeof(Request), 15);
+	hbm_dump((uint8_t*) resp_buffer, 0, sizeof(Response), 15);
 
 	// Perform Operations
 	krnl(KERNEL_ARG_VARS);
@@ -62,8 +62,7 @@ bool one_internal(KERNEL_ARG_DECS) {
 	offset = 0;
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		last_resp = *((Response*) &resp_buffer[offset]);
-		offset += sizeof(Response);
+		last_resp = resp_buffer[offset++];
 		last_out = last_resp.search;
 		#ifdef VERBOSE
 		std::cout << "Search(" << last_in << "): ";
@@ -111,8 +110,8 @@ bool one_internal(KERNEL_ARG_DECS) {
 		std::cerr << std::endl;
 		pass = false;
 	}
-	hbm_dump(req_buffer, 0, sizeof(Request), 15);
-	hbm_dump(resp_buffer, 0, sizeof(Response), 15);
+	hbm_dump((uint8_t*) req_buffer, 0, sizeof(Request), 15);
+	hbm_dump((uint8_t*) resp_buffer, 0, sizeof(Response), 15);
 
 	return pass;
 }

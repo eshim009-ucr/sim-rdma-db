@@ -5,9 +5,9 @@
 
 int main() {
 	uint passed = 0, failed = 0;
-	uint8_t hbm[sizeof(Node) * MEM_SIZE];
-	uint8_t req_buffer[sizeof(Request) * 0x100];
-	uint8_t resp_buffer[sizeof(Response) * 0x100];
+	Node hbm[MEM_SIZE];
+	Request req_buffer[0x100];
+	Response resp_buffer[0x100];
 	bptr_t root = 0;
 	int loop_max = 0x100;
 	int op_max = 0x0c0;

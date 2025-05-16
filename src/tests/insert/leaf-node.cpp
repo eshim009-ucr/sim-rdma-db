@@ -4,6 +4,7 @@
 #include "../../operations.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
+#include "../../src/core/io.h"
 #include "../../src/core/memory.h"
 };
 #include <iostream>
@@ -20,7 +21,7 @@ bool leaf_node(KERNEL_ARG_DECS) {
 	uint_fast64_t offset = 0;
 
 	// Set up initial state
-	mem_reset_all((Node*) hbm);
+	mem_reset_all(hbm);
 	reset_ramstream_offsets();
 	// Should succeed
 	INPUT_INSERT(0, 2)
@@ -35,8 +36,7 @@ bool leaf_node(KERNEL_ARG_DECS) {
 	offset = 0;
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		last_resp = *((Response*) &resp_buffer[offset]);
-		offset += sizeof(Response);
+		last_resp = resp_buffer[offset++];
 		last_out = last_resp.insert;
 		#ifdef VERBOSE
 		std::cout << "Insert(k=" << last_in.key
@@ -69,6 +69,7 @@ bool leaf_node(KERNEL_ARG_DECS) {
 		std::cerr << std::endl;
 		pass = false;
 	}
+	dump_node_list(stdout, hbm);
 
 	return pass;
 }
