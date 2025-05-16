@@ -1,7 +1,6 @@
 #include "root-is-leaf.hpp"
 #include "../../krnl.hpp"
 #include "../../ramstream.hpp"
-#include "../../operations.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
 #include "../../src/core/memory.h"

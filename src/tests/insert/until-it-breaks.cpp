@@ -1,7 +1,6 @@
 #include "until-it-breaks.hpp"
 #include "../../krnl.hpp"
 #include "../../ramstream.hpp"
-#include "../../operations.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
 #include "../../src/core/io.h"

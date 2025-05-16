@@ -1,7 +1,6 @@
 #include "split-root.hpp"
 #include "../../krnl.hpp"
 #include "../../ramstream.hpp"
-#include "../../operations.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
 #include "../../src/core/io.h"
@@ -34,7 +33,7 @@ bool split_root(KERNEL_ARG_DECS) {
 
 	// Perform Operations
 	krnl(KERNEL_ARG_VARS);
-	hbm_dump(hbm, 0, sizeof(Node), 5);
+	hbm_dump((uint8_t*) hbm, 0, sizeof(Node), 5);
 
 	// Evalue Results
 	offset = 0;
