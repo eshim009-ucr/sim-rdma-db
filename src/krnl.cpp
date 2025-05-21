@@ -7,7 +7,6 @@ void krnl(
 	Node *hbm,
 	Request *req_buffer,
 	Response *resp_buffer,
-	bptr_t root,
 	int loop_max,
 	int op_max,
 	bool reset
@@ -15,7 +14,6 @@ void krnl(
 	#pragma HLS INTERFACE m_axi port=hbm bundle=gmem0
 	#pragma HLS INTERFACE m_axi port=req_buffer bundle=gmem1
 	#pragma HLS INTERFACE m_axi port=resp_buffer bundle=gmem2
-	#pragma HLS INTERFACE s_axilite port=root
 	#pragma HLS INTERFACE s_axilite port=loop_max
 	#pragma HLS INTERFACE s_axilite port=op_max
 	#pragma HLS INTERFACE s_axilite port=reset
@@ -33,6 +31,7 @@ void krnl(
 	#pragma HLS stream variable=searchOutput type=fifo depth=0x100
 	#pragma HLS stream variable=insertOutput type=fifo depth=0x100
 
+	static bptr_t root = 0;
 	uint_fast32_t step_count = 0;
 	uint_fast32_t ops_in = 0;
 	uint_fast32_t ops_out = 0;

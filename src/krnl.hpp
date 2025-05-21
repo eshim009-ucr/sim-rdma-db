@@ -64,10 +64,6 @@ void krnl(
 	Request *req_buffer,
 	//! [out]   Buffer to hold responses from operations
 	Response *resp_buffer,
-	//! [inout] Address within HBM that holds the root of the tree
-	//!
-	//! Can be modified by operation kernels
-	bptr_t root,
 	//! [in]    Maximum number of main loop iterations to attempt to execute
 	int loop_max,
 	//! [in]    Maximum number of operations to attempt to execute

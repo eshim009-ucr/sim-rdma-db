@@ -101,7 +101,6 @@ int main(int argc, char** argv) {
 	std::vector<Node, aligned_allocator<Node> > memory(MEM_SIZE);
 	Request tmp_req = {.opcode = INSERT};
 	Response tmp_resp = {.opcode = INSERT, .insert = SUCCESS};
-	bptr_t root = 0;
 
 	for (int i = 1; i <= 22; i++) {
 		tmp_req.insert.key = i;
@@ -115,6 +114,8 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < MEM_SIZE; ++i) {
 		memory.at(i).lock = 0;
 	}
+	std::cout << "Requests" << std::endl;
+	hbm_dump((uint8_t*) requests.data(), 0, sizeof(Request), 4);
 
 	/*====================================================Setting up kernel I/O===============================================================*/
 	for (int i = 1; i <= 22; ++i) {
@@ -130,10 +131,9 @@ int main(int argc, char** argv) {
 	OCL_CHECK(err, err = krnl1.setArg(0, buffer_memory));
 	OCL_CHECK(err, err = krnl1.setArg(1, buffer_requests));
 	OCL_CHECK(err, err = krnl1.setArg(2, buffer_responses));
-	OCL_CHECK(err, err = krnl1.setArg(3, root));
-	OCL_CHECK(err, err = krnl1.setArg(4, 0x100));
-	OCL_CHECK(err, err = krnl1.setArg(5, 1)); // Only run one operation at a time
-	OCL_CHECK(err, err = krnl1.setArg(6, true));
+	OCL_CHECK(err, err = krnl1.setArg(3, 4));
+	OCL_CHECK(err, err = krnl1.setArg(4, 1)); // Only run one operation at a time
+	OCL_CHECK(err, err = krnl1.setArg(5, true));
 
 	/*====================================================KERNEL===============================================================*/
 	/* HOST -> DEVICE DATA TRANSFER*/
@@ -164,8 +164,10 @@ int main(int argc, char** argv) {
 	dump_node_list(stdout, memory.data());
 	std::cout << "Leaves" << std::endl;
 	hbm_dump((uint8_t*) memory.data(), 0, sizeof(Node), MAX_LEAVES);
-	std::cout << "Internal" << std::endl;
-	hbm_dump((uint8_t*) memory.data(), MAX_LEAVES*sizeof(Node), sizeof(Node), MAX_NODES_PER_LEVEL*2);
+	for (int j = 0; j < MAX_LEVELS-1; ++j) {
+		std::cout << "Internal Level " << (j+1) << std::endl;
+		hbm_dump((uint8_t*) memory.data(), (MAX_LEAVES+MAX_NODES_PER_LEVEL*j)*sizeof(Node), sizeof(Node), MAX_NODES_PER_LEVEL);
+	}
 	}
 
 	/*====================================================VERIFICATION & TIMING===============================================================*/
