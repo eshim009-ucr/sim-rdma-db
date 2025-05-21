@@ -10,21 +10,19 @@ extern "C" {
 
 #define VERBOSE
 #define INPUT_SEARCH(x) \
-	*((Request*) &req_buffer[offset]) = encode_search_req(x); \
-	offset += sizeof(Request); \
+	req_buffer[offset++] = encode_search_req(x); \
 	input_log.write(x);
 #define INPUT_INSERT(key_, value_) \
 	last_in.key = key_; last_in.value.data = value_; \
-	*((Request*) &req_buffer[offset]) = encode_insert_req(last_in); \
-	offset += sizeof(Request); \
+	req_buffer[offset++] = encode_insert_req(last_in); \
 	input_log.write(last_in);
 #define SET_IKV(addr, i, key_, value_) \
-	((Node*) hbm)[addr].keys[i] = key_; ((Node*) hbm)[addr].values[i].data = value_;
-#define RUN_KERNEL \
-	krnl( \
-		myBoardNum, RDMA_TYPE, exec, \
-		hbm, req_buffer, resp_buffer, root \
-	);
+	hbm[addr].keys[i] = key_; hbm[addr].values[i].data = value_;
+#define KERNEL_ARG_DECS \
+	Node *hbm, Request *req_buffer, Response *resp_buffer, bptr_t root, \
+	int loop_max, int op_max, bool reset
+#define KERNEL_ARG_VARS \
+	hbm, req_buffer, resp_buffer, root, loop_max, op_max, reset
 
 
 //!@brief Print a hex dump of a section of HBM grouped by object

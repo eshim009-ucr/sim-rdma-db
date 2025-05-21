@@ -10,6 +10,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
 
 set(FPGA_PART xcu280-fsvh2892-2L-e CACHE STRING "FPGA part")
 set(CLOCK_PERIOD 300.000000MHz CACHE STRING "Target clock period in nanoseconds")
+set(DEFS "-DHLS" CACHE STRING "Compile-time options")
 
 
 # Installation directory
