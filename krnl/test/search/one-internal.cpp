@@ -1,7 +1,6 @@
 #include "one-internal.hpp"
 #include "../../hls/krnl.hpp"
 #include "../../hls/ramstream.hpp"
-#include "../../hls/operations.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
 #include "../../core/memory.h"
@@ -10,33 +9,9 @@ extern "C" {
 #include <cstdint>
 
 
-bool one_internal(
-	//Outgoing RDMA
-	hls::stream<pkt256>& m_axis_tx_meta,
-	hls::stream<pkt64>& m_axis_tx_data,
-	hls::stream<pkt64>& s_axis_tx_status,
-
-	//Local BRAM
-	hls::stream<pkt256>& m_axis_bram_write_cmd,
-	hls::stream<pkt256>& m_axis_bram_read_cmd,
-	hls::stream<pkt512>& m_axis_bram_write_data,
-	hls::stream<pkt512>& s_axis_bram_read_data,
-
-	//Incoming
-	hls::stream<pkt64>& s_axis_update,
-
-	//Book keeping
-	int myBoardNum,
-
-	int RDMA_TYPE,
-	int exec,
-
-	uint8_t *hbm,
-	uint8_t *req_buffer,
-	uint8_t *resp_buffer
-) {
+bool one_internal(KERNEL_ARG_DECS) {
 	bool pass = true;
-	bptr_t root = MAX_LEAVES;
+	root = MAX_LEAVES;
 	hls::stream<search_in_t> input_log;
 	uint_fast8_t ops_in, ops_out;
 	search_in_t last_in;
@@ -45,7 +20,7 @@ bool one_internal(
 	uint_fast64_t offset = 0;
 
 	// Set up initial state
-	mem_reset_all((Node*) hbm);
+	mem_reset_all(hbm);
 	reset_ramstream_offsets();
 	// Root
 	SET_IKV(root, 0, 5, 1)
@@ -60,7 +35,7 @@ bool one_internal(
 	SET_IKV(2, 1, 8, -8)
 	SET_IKV(2, 2, 10, -10)
 	SET_IKV(2, 3, 11, -11)
-	hbm_dump(hbm, 0, sizeof(Node), 4);
+	hbm_dump((uint8_t*) hbm, 0, sizeof(Node), 4);
 	// Should fail
 	INPUT_SEARCH(0)
 	INPUT_SEARCH(3)
@@ -76,18 +51,17 @@ bool one_internal(
 	INPUT_SEARCH(8)
 	INPUT_SEARCH(10)
 	INPUT_SEARCH(11)
-	hbm_dump(req_buffer, 0, sizeof(Request), 15);
-	hbm_dump(resp_buffer, 0, sizeof(Response), 15);
+	hbm_dump((uint8_t*) req_buffer, 0, sizeof(Request), 15);
+	hbm_dump((uint8_t*) resp_buffer, 0, sizeof(Response), 15);
 
 	// Perform Operations
-	RUN_KERNEL
+	krnl(KERNEL_ARG_VARS);
 
 	// Evalue Results
 	offset = 0;
 	while (!input_log.empty()) {
 		input_log.read(last_in);
-		last_resp = *((Response*) &resp_buffer[offset]);
-		offset += sizeof(Response);
+		last_resp = resp_buffer[offset++];
 		last_out = last_resp.search;
 		#ifdef VERBOSE
 		std::cout << "Search(" << last_in << "): ";
@@ -135,8 +109,8 @@ bool one_internal(
 		std::cerr << std::endl;
 		pass = false;
 	}
-	hbm_dump(req_buffer, 0, sizeof(Request), 15);
-	hbm_dump(resp_buffer, 0, sizeof(Response), 15);
+	hbm_dump((uint8_t*) req_buffer, 0, sizeof(Request), 15);
+	hbm_dump((uint8_t*) resp_buffer, 0, sizeof(Response), 15);
 
 	return pass;
 }

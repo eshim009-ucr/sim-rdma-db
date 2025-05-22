@@ -18,28 +18,28 @@ config_interface -m_axi_max_widen_bitwidth=512
 config_rtl -register_reset_num=3
 
 # Testbench / Entry Point
-add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
+add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
 # Tree Logic
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/sm-insert.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/krnl.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/node.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/insert.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/search.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/tree-helpers.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/insert-helpers.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/memory.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/split.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/operations.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/ramstream.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/rdma.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/sm-search.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/sm-insert.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/krnl.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/node.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/insert.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/search.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/tree-helpers.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/insert-helpers.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/memory.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/core/split.c -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/operations.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/ramstream.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/rdma.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files ${CMAKE_CURRENT_SOURCE_DIR}/hls/sm-search.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
 # Tests
-add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/test-helpers.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/insert/leaf-node.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/insert/split-root.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/insert/until-it-breaks.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/search/one-internal.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
-add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/search/root-is-leaf.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} -DHLS"
+add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/test-helpers.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/insert/leaf-node.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/insert/split-root.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/insert/until-it-breaks.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/search/one-internal.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
+add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test/search/root-is-leaf.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR} ${DEFS}"
 
 
 # Check which command

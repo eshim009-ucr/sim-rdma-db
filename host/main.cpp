@@ -100,7 +100,6 @@ int main(int argc, char** argv) {
 	std::vector<Node, aligned_allocator<Node> > memory(MEM_SIZE);
 	Request tmp_req = {.opcode = INSERT};
 	Response tmp_resp = {.opcode = INSERT, .insert = SUCCESS};
-	bptr_t root = 0;
 
 	for (int i = 1; i <= 22; i++) {
 		tmp_req.insert.key = i;
@@ -118,20 +117,19 @@ int main(int argc, char** argv) {
 	/*====================================================Setting up kernel I/O===============================================================*/
 
 	/* INPUT BUFFERS */
-	OCL_CHECK(err, cl::Buffer buffer_requests(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Request)*requests.size(), requests.data(), &err));
+	OCL_CHECK(err, cl::Buffer buffer_requests(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE, sizeof(Request)*requests.size(), requests.data(), &err));
 
 	/* OUTPUT BUFFERS */
-	OCL_CHECK(err, cl::Buffer buffer_responses(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Response)*responses.size(), responses.data(), &err));
-	OCL_CHECK(err, cl::Buffer buffer_memory(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(Node)*memory.size(), memory.data(), &err));
+	OCL_CHECK(err, cl::Buffer buffer_responses(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE, sizeof(Response)*responses.size(), responses.data(), &err));
+	OCL_CHECK(err, cl::Buffer buffer_memory(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE, sizeof(Node)*memory.size(), memory.data(), &err));
 
 	/* SETTING INPUT PARAMETERS */
-	OCL_CHECK(err, err = krnl1.setArg(0, 0));
-	OCL_CHECK(err, err = krnl1.setArg(1, 0));
-	OCL_CHECK(err, err = krnl1.setArg(2, 0x100));
-	OCL_CHECK(err, err = krnl1.setArg(3, buffer_memory));
-	OCL_CHECK(err, err = krnl1.setArg(4, buffer_requests));
-	OCL_CHECK(err, err = krnl1.setArg(5, buffer_responses));
-	OCL_CHECK(err, err = krnl1.setArg(6, root));
+	OCL_CHECK(err, err = krnl1.setArg(0, buffer_memory));
+	OCL_CHECK(err, err = krnl1.setArg(1, buffer_requests));
+	OCL_CHECK(err, err = krnl1.setArg(2, buffer_responses));
+	OCL_CHECK(err, err = krnl1.setArg(3, (uint32_t) (6*requests.size())));
+	OCL_CHECK(err, err = krnl1.setArg(4, (uint32_t) (1.25*requests.size())));
+	OCL_CHECK(err, err = krnl1.setArg(5, true));
 
 	/*====================================================KERNEL===============================================================*/
 	/* HOST -> DEVICE DATA TRANSFER*/
