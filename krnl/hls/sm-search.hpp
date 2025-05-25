@@ -10,10 +10,6 @@ extern "C" {
 #endif
 
 
-typedef bkey_t search_in_t;
-typedef bstatusval_t search_out_t;
-
-
 #ifdef HLS
 //! @brief State machine to execute search operations
 void sm_search(

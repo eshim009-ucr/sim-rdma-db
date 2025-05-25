@@ -140,6 +140,7 @@ $(TEMP_DIR)/krnl.xo: $(wildcard krnl/hls/*.cpp) \
 	krnl/core/insert.c \
 	krnl/core/memory.c \
 	krnl/core/node.c \
+	krnl/core/operations.c \
 	krnl/core/search.c \
 	krnl/core/split.c \
 	krnl/core/tree-helpers.c

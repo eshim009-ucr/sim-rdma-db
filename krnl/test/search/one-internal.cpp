@@ -11,7 +11,7 @@ extern "C" {
 
 bool one_internal(KERNEL_ARG_DECS) {
 	bool pass = true;
-	root = MAX_LEAVES;
+	bptr_t root = MAX_LEAVES;
 	hls::stream<search_in_t> input_log;
 	uint_fast8_t ops_in, ops_out;
 	search_in_t last_in;

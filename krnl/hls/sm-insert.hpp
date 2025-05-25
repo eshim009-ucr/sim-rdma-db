@@ -11,10 +11,6 @@ extern "C" {
 #endif
 
 
-typedef KvPair insert_in_t;
-typedef ErrorCode insert_out_t;
-
-
 #ifdef HLS
 //! @brief State machine to execute insert operations
 void sm_insert(

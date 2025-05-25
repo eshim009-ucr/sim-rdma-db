@@ -19,10 +19,10 @@ extern "C" {
 #define SET_IKV(addr, i, key_, value_) \
 	hbm[addr].keys[i] = key_; hbm[addr].values[i].data = value_;
 #define KERNEL_ARG_DECS \
-	Node *hbm, Request *req_buffer, Response *resp_buffer, bptr_t root, \
+	Node *hbm, Request *req_buffer, Response *resp_buffer, \
 	int loop_max, int op_max, bool reset
 #define KERNEL_ARG_VARS \
-	hbm, req_buffer, resp_buffer, root, loop_max, op_max, reset
+	hbm, req_buffer, resp_buffer, loop_max, op_max, reset
 
 
 //!@brief Print a hex dump of a section of HBM grouped by object
