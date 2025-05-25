@@ -18,12 +18,6 @@ typedef ap_axiu<16, 0, 0, 0> pkt16;
 typedef ap_axiu<8, 0, 0, 0> pkt8;
 #endif
 
-//! @brief Key/value pair
-struct KvPair {
-	bkey_t key;
-	bval_t value;
-};
-
 //! @brief Contains an address and whether or not to change the lock status in
 //! main memory before returning a result
 struct RwOp {

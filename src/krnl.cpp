@@ -1,4 +1,6 @@
 #include "operations.hpp"
+#include "search.hpp"
+#include "insert.hpp"
 #include "ramstream.hpp"
 #include "krnl.hpp"
 
