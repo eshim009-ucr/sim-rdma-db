@@ -76,8 +76,8 @@ if __name__ == '__main__':
 		exit(1)
 	else:
 		fname_in = argv[1]
-		fname_req = f"{argv[1][:-3]}_req.bin"
-		fname_resp = f"{argv[1][:-3]}_resp.bin"
+		fname_req = f"{argv[1][:-4]}_req.bin"
+		fname_resp = f"{argv[1][:-4]}_resp.bin"
 		with open(fname_in) as fin:
 			lines = fin.readlines()
 		with open(fname_req, "wb") as fout_req:

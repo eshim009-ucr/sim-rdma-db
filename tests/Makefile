@@ -6,3 +6,6 @@ all: $(REQ_BINS) $(RESP_BINS)
 
 %_req.bin %_resp.bin: %.csv
 	./encode.py $^
+
+clean:
+	rm -f $(REQ_BINS) $(RESP_BINS)
