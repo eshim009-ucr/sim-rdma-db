@@ -18,7 +18,11 @@
 	}
 
 #include <vector>
+#if __has_include("CL/opencl.hpp")
 #include <CL/opencl.hpp>
+#else
+#include <CL/cl2.hpp>
+#endif
 
 
 std::vector<cl::Device> get_devices(const std::string& vendor_name);
