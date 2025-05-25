@@ -1,10 +1,10 @@
 #pragma once
 
 
-#include "operations.hpp"
 #include "types.hpp"
 extern "C" {
 #include "../core/node.h"
+#include "../core/operations.h"
 };
 #include <hls_stream.h>
 #include <iostream>

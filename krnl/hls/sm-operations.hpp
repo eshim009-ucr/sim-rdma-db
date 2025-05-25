@@ -4,7 +4,7 @@
 
 #include <hls_stream.h>
 extern "C" {
-#include "core/operations.h"
+#include "../core/operations.h"
 };
 
 

@@ -1,6 +1,6 @@
-#include "operations.hpp"
-#include "search.hpp"
-#include "insert.hpp"
+#include "sm-operations.hpp"
+#include "sm-search.hpp"
+#include "sm-insert.hpp"
 #include "ramstream.hpp"
 #include "krnl.hpp"
 
