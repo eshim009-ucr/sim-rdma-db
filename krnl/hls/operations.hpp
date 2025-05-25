@@ -2,15 +2,10 @@
 #define OPERATIONS_HPP
 
 
-#include "sm-search.hpp"
-#include "sm-insert.hpp"
 #include <hls_stream.h>
 extern "C" {
 #include "core/operations.h"
 };
-#ifndef __SYNTHESIS__
-#include <sstream>
-#endif
 
 
 //! @brief State machine to decode and redirect incoming instructions

@@ -1,8 +1,10 @@
 #include "main.hpp"
-#include "../krnl/hls/operations.hpp"
+#include "cpp-ext.hpp"
 #include <vector>
 extern "C" {
-#include "../krnl/core/io.h"
+#include "node.h"
+#include "operations.h"
+#include "io.h"
 };
 
 
@@ -170,8 +172,8 @@ int main(int argc, char** argv) {
 		for (size_t i = 0; i < responses_expected.size(); i++) {
 			if (responses_expected[i] != responses[i]) {
 				std::cout << "responses[" << i <<"]:"
-					<< "\n\texpected " << static_cast<std::string>(responses_expected[i])
-					<< "\n\tgot " << static_cast<std::string>(responses[i]) << std::endl;
+					<< "\n\texpected " << to_str(responses_expected[i])
+					<< "\n\tgot " << to_str(responses[i]) << std::endl;
 				match = false;
 			}
 		}

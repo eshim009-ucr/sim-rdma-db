@@ -215,7 +215,7 @@ clean:
 	-$(RMDIR) $(EXECUTABLE) $(XCLBIN)/{*sw_emu*,*hw_emu*}
 	-$(RMDIR) profile_* TempConfig system_estimate.xtxt *.rpt *.csv
 	-$(RMDIR) krnl/*.ll *v++* .Xil emconfig.json dltmp* xmltmp* *.log *.jou *.wcfg *.wdb
-	-$(RMDIR) *.o
+	-$(RMDIR) $(HOST_OBJS)
 
 cleanall: clean
 	-$(RMDIR) build_dir* sd_card*
