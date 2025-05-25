@@ -1,6 +1,8 @@
-#include "main.hpp"
+#include "device.hpp"
+#include "alloc.hpp"
 #include "cpp-ext.hpp"
 #include <vector>
+#include <iostream>
 extern "C" {
 #include "node.h"
 #include "operations.h"
