@@ -2,7 +2,6 @@
 #define SM_INSERT_HPP
 
 
-#include "types.hpp"
 extern "C" {
 #include "../core/node.h"
 };

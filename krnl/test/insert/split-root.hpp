@@ -2,7 +2,6 @@
 #define TEST__SPLIT_ROOT_HPP
 
 
-#include "../../hls/types.hpp"
 extern "C" {
 #include "../../core/node.h"
 };

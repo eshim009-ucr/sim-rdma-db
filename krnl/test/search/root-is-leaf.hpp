@@ -2,7 +2,6 @@
 #define TEST__ROOT_IS_LEAF_HPP
 
 
-#include "../../hls/types.hpp"
 extern "C" {
 #include "../../core/node.h"
 };

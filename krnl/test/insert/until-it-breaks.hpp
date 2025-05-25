@@ -2,7 +2,6 @@
 #define TEST__UNTIL_IT_BREAKS_HPP
 
 
-#include "../../hls/types.hpp"
 extern "C" {
 #include "../../core/node.h"
 };
