@@ -17,7 +17,7 @@ vector<cl::Device> get_devices(const string& vendor_name) {
 	vector<cl::Platform> platforms;
 	OCL_CHECK(err, err = cl::Platform::get(&platforms));
 	cl::Platform platform;
-	
+
 	for (i = 0; i < platforms.size(); i++) {
 		platform = platforms[i];
 		OCL_CHECK(err,

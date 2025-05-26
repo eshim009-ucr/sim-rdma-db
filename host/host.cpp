@@ -24,11 +24,11 @@ static void setup_ocl(
 		OCL_CHECK(err,
 			context = cl::Context(device, nullptr, nullptr, nullptr, &err));
 		OCL_CHECK(err, q = cl::CommandQueue(context, device, 0, &err));
-		
+
 		std::cout << "Trying to program device[" << i << "]: "
 			<< device.getInfo<CL_DEVICE_NAME>() << std::endl;
 		cl::Program program(context, {device}, bins, nullptr, &err);
-		
+
 		if (err != CL_SUCCESS) {
 			std::cerr << "Failed to program device[" << i << "]"
 				<< " with xclbin file '" << binaryFile << "'!\n";
@@ -127,15 +127,14 @@ static void run_kernel(
 
 
 TreeOutput run_fpga_tree(TreeInput& input, std::string const& binaryFile) {
-	std::string fname = "krnl.xclbin";
 	cl::Context context;
 	cl::Kernel krnl;
 	cl::CommandQueue q;
-	
+
 	TreeOutput output;
 	output.responses.resize(input.requests.size(), {.opcode=NOP});
-	
-	setup_ocl(fname, context, krnl, q);
+
+	setup_ocl(binaryFile, context, krnl, q);
 	run_kernel(
 		context, krnl, q,
 		input.requests, output.responses, input.memory
