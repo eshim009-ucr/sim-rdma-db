@@ -9,7 +9,7 @@ Node memory[MEM_SIZE];
 
 
 int main(int argc, char** argv) {
-	if (argc < 4 {
+	if (argc < 4) {
 		std::cout << "Usage: " << argv[0]
 			<< "exe <XCLBIN File> <Request.BIN Files>" << std::endl;
 		return EXIT_FAILURE;
