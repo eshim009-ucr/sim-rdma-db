@@ -13,6 +13,9 @@ M_EMIN=2
 M_EMAX=7
 
 
+mkdir -p batch_results
+
+
 for m_exp in `seq $M_EMIN $M_EMAX`; do
 	m=$(( 2 ** $m_exp ))
 	echo ' _________________________________'
@@ -24,5 +27,7 @@ for m_exp in `seq $M_EMIN $M_EMAX`; do
 	cd ../..
 
 	make cleanall build TARGET=hw
-	mv build_dir.hw.xilinx_u280* "../build_m$m"
+	make build host
+	mv build_dir.hw.xilinx_u280* "batch_results/build_m$m"
+	cp host_exe "batch_results/host-exe_m$m"
 done

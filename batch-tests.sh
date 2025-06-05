@@ -31,14 +31,14 @@ for m_exp in `seq $M_EMIN $M_EMAX`; do
 		echo "--- 10^$i Entries, Sequential Insert ---"
 		for j in `seq $RERUNS`; do
 			echo " -  Run $j/$RERUNS  - "
-			../blink exe "krnl_m$m.xclbin" \
+			../host-exe_m$m exe "krnl_m$m.xclbin" \
 				"insert_sequential_1e$(echo $i)_req.bin" then \
 				"search_sequential_1e$(echo $i)_req.bin"
 		done
 		echo "--- 10^$i Entries, Random Insert ---"
 		for j in `seq $RERUNS`; do
 			echo " -  Run $j/$RERUNS  - "
-			../blink exe "krnl_m$m.xclbin" \
+			../host-exe_m$m exe "krnl_m$m.xclbin" \
 				"insert_random_1e$(echo $i)_req.bin" then \
 				"search_random_1e$(echo $i)_req.bin"
 		done
