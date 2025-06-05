@@ -23,6 +23,6 @@ for m_exp in `seq $M_EMIN $M_EMAX`; do
 	./update-defs.py $m $SAFE_SZ_MAX
 	cd ../..
 
-	make cleanall build hw
+	make build hw
 	cp build_dir.hw.xilinx_u280*/krnl.xclbin "krnl_m$m.xclbin"
 done
