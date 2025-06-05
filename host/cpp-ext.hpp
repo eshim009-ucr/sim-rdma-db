@@ -2,7 +2,9 @@
 #define CPP_EXT_HPP
 
 
+extern "C" {
 #include "operations.h"
+};
 #include <string>
 
 
