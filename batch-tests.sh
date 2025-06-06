@@ -12,6 +12,7 @@ SAFE_SZ_MAX=$(( 2 * $SZ_MAX ))
 M_EMIN=2
 M_EMAX=7
 
+BOARD='0000:37:00.1'
 
 for m_exp in `seq $M_EMIN $M_EMAX`; do
 	m=$(( 2 ** $m_exp ))
@@ -31,14 +32,16 @@ for m_exp in `seq $M_EMIN $M_EMAX`; do
 		echo "--- 10^$i Entries, Sequential Insert ---"
 		for j in `seq $RERUNS`; do
 			echo " -  Run $j/$RERUNS  - "
-			../host-exe_m$m exe "krnl_m$m.xclbin" \
+#			xbutil reset -d $BOARD
+			../host-exe_m$m exe "../krnl-m$(echo $m)_6491688.xclbin" \
 				"insert_sequential_1e$(echo $i)_req.bin" then \
 				"search_sequential_1e$(echo $i)_req.bin"
 		done
 		echo "--- 10^$i Entries, Random Insert ---"
 		for j in `seq $RERUNS`; do
 			echo " -  Run $j/$RERUNS  - "
-			../host-exe_m$m exe "krnl_m$m.xclbin" \
+#			xbutil reset -d $BOARD
+			../host-exe_m$m exe "../krnl-m$(echo $m)_6491688.xclbin" \
 				"insert_random_1e$(echo $i)_req.bin" then \
 				"search_random_1e$(echo $i)_req.bin"
 		done
@@ -52,7 +55,8 @@ for m_exp in `seq $M_EMIN $M_EMAX`; do
 		for i in `seq $SZ_EMIN $SZ_EMAX`; do
 			for j in `seq $RERUNS`; do
 				echo " -  10^$i Entries, Run $j/$RERUNS  - "
-				../blink exe "krnl_m$m.xclbin" \
+#				xbutil reset -d $BOARD
+				../host-exe_m$m exe "../krnl-m$(echo $m)_6491688.xclbin" \
 					"insert_random_1e$(echo $i)_req.bin" then \
 					"mixed-rw_$r_ratio-$(echo $w_ratio)_1e$(echo $i)_req.bin"
 			done
