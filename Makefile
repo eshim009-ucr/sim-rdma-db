@@ -136,14 +136,13 @@ xclbin: build
 
 ############################## Setting Rules for Binary Containers (Building Kernels) ##############################
 $(TEMP_DIR)/krnl.xo: $(wildcard krnl/hls/*.cpp) \
-	krnl/core/insert-helpers.c \
+	krnl/core/defs.h \
 	krnl/core/insert.c \
 	krnl/core/memory.c \
 	krnl/core/node.c \
 	krnl/core/operations.c \
 	krnl/core/search.c \
-	krnl/core/split.c \
-	krnl/core/tree-helpers.c
+	krnl/core/util.c
 	mkdir -p $(TEMP_DIR)
 	$(VPP) $(VPP_FLAGS) -c -k $(KRNL) --temp_dir $(TEMP_DIR)  -I'$(<D)' -o'$@' $^
 BINARY_CONTAINER_krnl_OBJS += $(TEMP_DIR)/krnl.xo
