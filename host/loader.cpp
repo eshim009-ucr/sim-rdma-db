@@ -1,1 +1,0 @@
-../krnl/core/loader.cpp

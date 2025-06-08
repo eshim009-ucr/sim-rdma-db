@@ -1,1 +1,0 @@
-../krnl/core/types.h

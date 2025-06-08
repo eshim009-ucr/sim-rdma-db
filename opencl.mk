@@ -1,6 +1,6 @@
 # Definition of include file locations
 ifneq ($(HOST_ARCH), x86)
-	xrt_path = $(SYSROOT)/opt/xilinx/xrt/
+	xrt_path = $(SYSROOT)/opt/xilinx/xrt
 	OPENCL_INCLUDE:= $(xrt_path)/include/xrt
 else
 	xrt_path = $(XILINX_XRT)
