@@ -28,14 +28,16 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
 
 set(EXAMPLE_HLS_DEPENDS
 	${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/core/defs.h
+	${CMAKE_CURRENT_SOURCE_DIR}/core/insert.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/io.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/memory.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/node.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/operations.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/search.c
+	${CMAKE_CURRENT_SOURCE_DIR}/core/util.c
 	${CMAKE_CURRENT_SOURCE_DIR}/hls/sm-insert.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/hls/krnl.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/core/node.c
-	${CMAKE_CURRENT_SOURCE_DIR}/core/insert.c
-	${CMAKE_CURRENT_SOURCE_DIR}/core/insert-helpers.c
-	${CMAKE_CURRENT_SOURCE_DIR}/core/memory.c
-	${CMAKE_CURRENT_SOURCE_DIR}/core/operations.c
-	${CMAKE_CURRENT_SOURCE_DIR}/core/split.c
 	${CMAKE_CURRENT_SOURCE_DIR}/hls/sm-operations.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/hls/ramstream.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/hls/rdma.cpp

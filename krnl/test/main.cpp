@@ -1,5 +1,7 @@
 #include "tests.hpp"
-#include "../hls/operations.hpp"
+extern "C" {
+#include "../core/operations.h"
+};
 #include <iostream>
 
 
