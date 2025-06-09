@@ -57,7 +57,6 @@ static void run_kernel(
 ) {
 	constexpr int FROM_HOST_FLAGS = 0;
 	cl_int err;
-	auto start, end;
 	double duration_us;
 
 	// INPUT BUFFERS
@@ -101,10 +100,10 @@ static void run_kernel(
 	));
 	// STARTING KERNEL(S)
 	std::cout << "STARTING KERNEL(S)" << std::endl;
-	start = std::chrono::high_resolution_clock::now();
+	auto start = std::chrono::high_resolution_clock::now();
 	OCL_CHECK(err, err = q.enqueueTask(krnl1));
 	q.finish();
-	end = std::chrono::high_resolution_clock::now();
+	auto end = std::chrono::high_resolution_clock::now();
 	std::cout << "KERNEL(S) FINISHED" << std::endl;
 	// DEVICE -> HOST DATA TRANSFER
 	std::cout << "HOST <- DEVICE" << std::endl;
