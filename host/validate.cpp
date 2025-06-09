@@ -31,7 +31,6 @@ bool check_inserted_leaves(Node const *memory) {
 						<< "\n\tgot " << (int) -next_val << std::endl;
 					match = false;
 				}
-				std::cout << "Verified value " << next_val << std::endl;
 				next_val++;
 			}
 		}

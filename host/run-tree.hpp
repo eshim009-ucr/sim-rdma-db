@@ -18,6 +18,7 @@ struct TreeInput {
 struct TreeOutput {
 	std::vector<Response, aligned_allocator<Response> > responses;
 	std::vector<Node, aligned_allocator<Node> > memory;
+	double duration_us;
 	TreeOutput();
 };
 

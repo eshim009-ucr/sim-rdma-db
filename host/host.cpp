@@ -47,7 +47,7 @@ static void setup_ocl(
 }
 
 
-static void run_kernel(
+static double run_kernel(
 	cl::Context& context,
 	cl::Kernel& krnl1,
 	cl::CommandQueue& q,
@@ -117,6 +117,7 @@ static void run_kernel(
 
 	duration_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count() / 1000.0;
 	printf("Computation : %lf us\n", duration_us);
+	return duration_us;
 }
 
 
@@ -129,7 +130,7 @@ TreeOutput run_fpga_tree(TreeInput& input, std::string const& binaryFile) {
 	output.responses.resize(input.requests.size(), {.opcode=NOP});
 
 	setup_ocl(binaryFile, context, krnl, q);
-	run_kernel(
+	output.duration_us = run_kernel(
 		context, krnl, q,
 		input.requests, output.responses, input.memory
 	);

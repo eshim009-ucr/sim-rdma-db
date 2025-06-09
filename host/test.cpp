@@ -6,19 +6,39 @@ extern "C" {
 #include "cpp-ext.hpp"
 
 
-void setup_data(
-	std::vector<Request, aligned_allocator<Request> >& requests,
-	std::vector<Response, aligned_allocator<Response> >& responses_expected,
-	std::vector<Node, aligned_allocator<Node> >& memory
+void setup_insert_then_search(
+	std::vector<Request, aligned_allocator<Request> >& insert_reqs,
+	std::vector<Response, aligned_allocator<Response> >& insert_resps_expected,
+	std::vector<Request, aligned_allocator<Request> >& search_reqs,
+	std::vector<Response, aligned_allocator<Response> >& search_resps_expected,
+	std::vector<Node, aligned_allocator<Node> >& memory,
+	KeyPattern key_pattern,
+	uint_fast64_t entry_count
 ) {
-	Request tmp_req = {.opcode = INSERT};
-	Response tmp_resp = {.opcode = INSERT, .insert = SUCCESS};
+	Request tmp_insert_req = {.opcode = INSERT};
+	Response tmp_insert_resp = {.opcode = INSERT, .insert = SUCCESS};
+	Request tmp_search_req = {.opcode = SEARCH};
+	Response tmp_search_resp = {.opcode = SEARCH, .search={.status = SUCCESS}};
 
-	for (int i = 1; i <= 22; i++) {
-		tmp_req.insert.key = i;
-		tmp_req.insert.value.data = -i;
-		requests.push_back(tmp_req);
-		responses_expected.push_back(tmp_resp);
+	for (uint_fast64_t i = 1; i <= entry_count; i++) {
+		// Insert
+		switch (key_pattern) {
+			case SEQUENTIAL:
+				tmp_insert_req.insert.key = i;
+				tmp_insert_req.insert.value.data = -i;
+				break;
+			case RANDOM:
+				tmp_insert_req.insert.value.data = rand();
+				tmp_insert_req.insert.value.data = rand();
+				break;
+		}
+		insert_reqs.push_back(tmp_insert_req);
+		insert_resps_expected.push_back(tmp_insert_resp);
+		// Search
+		tmp_search_req.search = i;
+		tmp_search_resp.search.value.data = -i;
+		search_reqs.push_back(tmp_search_req);
+		search_resps_expected.push_back(tmp_search_resp);
 	}
 
 	memory.resize(MEM_SIZE);
