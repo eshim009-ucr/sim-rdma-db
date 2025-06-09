@@ -126,23 +126,20 @@ static void run_kernel(
 }
 
 
-void run_fpga_tree(
-	std::vector<Request, aligned_allocator<Request> >& requests,
-	std::vector<Response, aligned_allocator<Response> >& responses,
-	std::vector<Node, aligned_allocator<Node> >& memory,
-	std::string const& binaryFile
-) {
+TreeOutput run_fpga_tree(TreeInput& input, std::string const& binaryFile) {
 	cl::Context context;
 	cl::Kernel krnl;
 	cl::CommandQueue q;
 
 	TreeOutput output;
-	output.responses.resize(requests.size(), {.opcode=NOP});
+	output.responses.resize(input.requests.size(), {.opcode=NOP});
 
 	setup_ocl(binaryFile, context, krnl, q);
 	run_kernel(
 		context, krnl, q,
-		requests, responses, memory
+		input.requests, output.responses, input.memory
 	);
-	memcpy(memory.data(), memory.data(), MEM_SIZE*sizeof(Node));
+	memcpy(output.memory.data(), input.memory.data(), MEM_SIZE*sizeof(Node));
+
+	return output;
 }

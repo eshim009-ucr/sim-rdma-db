@@ -1,42 +1,18 @@
-#include "node.h"
-#include "thread-runner.hpp"
+#include "host.hpp"
+#include "test.hpp"
+#include "run-tree.hpp"
 #include <iostream>
-#include <cstring>
-#include <cstdio>
 
 
-FILE *log_stream = fopen("main.log", "w");
-Node *memory;
-
-
-static void on_alloc_fail() {
-	uint_fast64_t tmp = 1000;
-	uint_fast8_t i = 0;
-	char prefixes[] = {' ', 'k', 'M', 'G', 'T'};
-	while (tmp-1 < MEM_SIZE) {
-		i++;
-		tmp *= 1000;
+int main(int argc, char** argv) {
+	if (argc != 2) {
+		std::cout << "Usage: " << argv[0] << " <XCLBIN File>" << std::endl;
+		return EXIT_FAILURE;
 	}
-	std::cerr << "Failed to allocate "
-		<< ((double)MEM_SIZE/(tmp/1000)) << prefixes[i] << "B memory" << std::endl;
-}
+	TreeInput input;
+	std::vector<Response, aligned_allocator<Response> > responses_expected;
+	setup_data(input.requests, responses_expected, input.memory);
+	TreeOutput output = run_fpga_tree(input, argv[1]);
 
-
-int main(int argc, char **argv) {
-	int exitstatus = 0;
-	if (argc > 2 && strcmp(argv[1], "exe") == 0) {
-		memory = (Node*) malloc(MEM_SIZE * sizeof(Node));
-		if (memory == nullptr) {
-			on_alloc_fail();
-			return 1;
-		} else {
-			exitstatus = run_from_file(argc, argv);
-			free(memory);
-		}
-	} else {
-		std::cerr << "Usage:\n\t"
-			<< argv[0] << " exe [Request File(s)]" << std::endl;
-		return 1;
-	}
-	return exitstatus;
+	return verify(output.responses, responses_expected, output.memory);
 }

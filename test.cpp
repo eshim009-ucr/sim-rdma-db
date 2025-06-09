@@ -1,9 +1,13 @@
 #include "test.hpp"
 extern "C" {
+#include "defs.h"
 #include "io.h"
+#include "memory.h"
+#include "operations.h"
 };
 #include "validate.hpp"
 #include "cpp-ext.hpp"
+#include <stdint.h>
 
 
 void setup_data(
@@ -14,7 +18,7 @@ void setup_data(
 	Request tmp_req = {.opcode = INSERT};
 	Response tmp_resp = {.opcode = INSERT, .insert = SUCCESS};
 
-	for (int i = 1; i <= 22; i++) {
+	for (uint_fast64_t i = 1; i <= ENTRY_MAX; i++) {
 		tmp_req.insert.key = i;
 		tmp_req.insert.value.data = -i;
 		requests.push_back(tmp_req);
@@ -22,10 +26,7 @@ void setup_data(
 	}
 
 	memory.resize(MEM_SIZE);
-	memset(memory.data(), INVALID, MEM_SIZE*sizeof(Node));
-	for (uint_fast64_t i = 0; i < MEM_SIZE; ++i) {
-		memory.at(i).lock = LOCK_INIT;
-	}
+	mem_reset_all(memory.data());
 }
 
 
