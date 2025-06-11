@@ -2,12 +2,11 @@
 #define TEST__ROOT_IS_LEAF_HPP
 
 
-#include "../../types.hpp"
 extern "C" {
 #include "../../core/node.h"
+#include "../../core/operations.h"
 };
 #include "../test-helpers.hpp"
-#include "../../operations.hpp"
 #include <hls_stream.h>
 
 

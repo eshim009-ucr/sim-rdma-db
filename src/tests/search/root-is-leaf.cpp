@@ -3,7 +3,7 @@
 #include "../../ramstream.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
-#include "../../src/core/memory.h"
+#include "../../core/memory.h"
 };
 #include <iostream>
 #include <cstdint>
@@ -11,6 +11,7 @@ extern "C" {
 
 bool root_is_leaf(KERNEL_ARG_DECS) {
 	bool pass = true;
+	bptr_t root = 0;
 	hls::stream<search_in_t> input_log;
 	uint_fast8_t ops_in, ops_out;
 	search_in_t last_in;

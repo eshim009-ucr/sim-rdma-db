@@ -1,3 +1,5 @@
+#include "search.hpp"
+#include "insert.hpp"
 #include "operations.hpp"
 #include "ramstream.hpp"
 #include "krnl.hpp"

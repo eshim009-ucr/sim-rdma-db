@@ -135,7 +135,7 @@ build: check-vitis check-device $(BINARY_CONTAINERS)
 xclbin: build
 
 ############################## Setting Rules for Binary Containers (Building Kernels) ##############################
-$(TEMP_DIR)/krnl.xo: src/sm_insert.cpp src/krnl.cpp src/core/node.c src/core/insert.c src/core/search.c src/core/tree-helpers.c src/core/insert-helpers.c src/core/memory.c src/core/split.c src/operations.cpp src/ramstream.cpp src/rdma.cpp src/sm_search.cpp
+$(TEMP_DIR)/krnl.xo: src/sm_insert.cpp src/krnl.cpp src/core/node.c src/core/insert.c src/core/search.c src/core/tree-helpers.c src/core/insert-helpers.c src/core/memory.c src/core/split.c src/sm_operations.cpp src/ramstream.cpp src/rdma.cpp src/sm_search.cpp
 	mkdir -p $(TEMP_DIR)
 	$(VPP) $(VPP_FLAGS) -c -k $(KRNL) --temp_dir $(TEMP_DIR)  -I'$(<D)' -o'$@' $^
 BINARY_CONTAINER_krnl_OBJS += $(TEMP_DIR)/krnl.xo

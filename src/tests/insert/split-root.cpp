@@ -3,8 +3,8 @@
 #include "../../ramstream.hpp"
 #include "../test-helpers.hpp"
 extern "C" {
-#include "../../src/core/io.h"
-#include "../../src/core/memory.h"
+#include "../../core/io.h"
+#include "../../core/memory.h"
 };
 #include <iostream>
 #include <cstdint>
