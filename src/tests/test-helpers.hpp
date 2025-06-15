@@ -10,12 +10,14 @@ extern "C" {
 
 #define VERBOSE
 #define INPUT_SEARCH(x) \
-	req_buffer[offset++] = encode_search_req(x); \
+	req_buffer[offset].opcode = SEARCH; \
+	req_buffer[offset++].search = x; \
 	input_log.write(x);
 #define INPUT_INSERT(key_, value_) \
-	last_in.key = key_; last_in.value.data = value_; \
-	req_buffer[offset++] = encode_insert_req(last_in); \
-	input_log.write(last_in);
+	req_buffer[offset].opcode = INSERT; \
+	req_buffer[offset].insert.key = key_; \
+	req_buffer[offset].insert.value.data = value_; \
+	input_log.write(req_buffer[offset++].insert);
 #define SET_IKV(addr, i, key_, value_) \
 	hbm[addr].keys[i] = key_; hbm[addr].values[i].data = value_;
 #define KERNEL_ARG_DECS \
