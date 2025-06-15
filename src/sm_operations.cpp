@@ -35,12 +35,16 @@ void sm_encode(
 	Response searchResultEnc, insertResultEnc;
 	if (!searchOutput.empty()) {
 		searchOutput.read(searchResultRaw);
-		responses.write(encode_search_resp(searchResultRaw));
+		searchResultEnc.opcode = SEARCH;
+		searchResultEnc.search = searchResultRaw;
+		responses.write(searchResultEnc);
 		opsOut++;
 	}
 	if (!insertOutput.empty()) {
 		insertOutput.read(insertResultRaw);
-		responses.write(encode_insert_resp(insertResultRaw));
+		searchResultEnc.opcode = INSERT;
+		searchResultEnc.insert = insertResultRaw;
+		responses.write(insertResultEnc);
 		opsOut++;
 	}
 }
